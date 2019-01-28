@@ -1,0 +1,33 @@
+body {
+    background-color: #fff;
+    font-family: sans-serif;
+    margin-left:10px;
+  }
+  h1 {
+    font-weight: normal;
+    font-size: 140%;
+  }
+
+  .column {
+  float: left;
+  width: 25%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+  }
+
+  .column-right {
+      width: 400px;
+      padding: 0px;
+      float: right;
+  }
+  /* Clear floats after the columns */
+  .row:after {
+      content: "";
+      display: table;
+      clear: both;
+      
+  }
+
+  .button-success {
+          background: rgb(28, 184, 65); /* this is a green */
+  }
