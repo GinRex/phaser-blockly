@@ -9,7 +9,7 @@ const ReactBlocklyComponent = {
   BlocklyToolbox,
   BlocklyToolboxBlock,
   BlocklyToolboxCategory,
-  BlocklyWorkspace,
+  BlocklyWorkspace
 };
 
 export default ReactBlocklyComponent;

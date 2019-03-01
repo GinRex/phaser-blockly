@@ -1,29 +1,51 @@
 {
-  "name": "phaser3-project-template",
-  "version": "1.0.9",
-  "description": "A Phaser 3 Project Template",
-  "main": "src/index.js",
+  "name": "react-blockly-component",
+  "version": "3.2.0",
+  "description": "A React wrapper for the Blockly visual programming editor",
+  "main": "dist-modules",
   "scripts": {
-    "build": "webpack",
-    "start": "npm run build && webpack-dev-server --port=8000"
+    "build": "webpack --config webpack.config.js",
+    "lint": "eslint --ext .js,.jsx src",
+    "lint:fix": "eslint --fix --ext .js,.jsx src",
+    "start": "webpack-dev-server --config webpack.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "babel ./src --out-dir ./dist-modules",
+    "prepublish:watch": "babel ./src --watch --out-dir ./dist-modules",
+    "prepare": "npm run prepublishOnly"
+  },
+  "author": "Nat Budin <nbudin@patientslikeme.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@material-ui/core": "^3.9.2",
+    "immutable": "^3.8.2",
+    "prop-types": "^15.6.0",
+    "react-immutable-proptypes": "^2.1.0"
+  },
+  "peerDependencies": {
+    "react": "^15.0 || ^16.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.1.2",
+    "babel-loader": "^7.1",
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.14.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.5.1",
+    "expose-loader": "^0.7.3",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "webpack": "^3.0",
+    "webpack-dev-server": "^2.9"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/photonstorm/phaser3-project-template.git"
-  },
-  "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
-  "license": "MIT",
-  "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
-  "bugs": {
-    "url": "https://github.com/photonstorm/phaser3-project-template/issues"
-  },
-  "homepage": "https://github.com/photonstorm/phaser3-project-template#readme",
-  "devDependencies": {
-    "webpack-dev-server": "^2.11.0",
-    "webpack": "^3.4.1",
-    "raw-loader": "^0.5.1"
-  },
-  "dependencies": {
-    "phaser": "^3.3.0"
+    "url": "https://github.com/patientslikeme/react-blockly-component/"
   }
 }
