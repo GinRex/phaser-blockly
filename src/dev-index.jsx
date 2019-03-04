@@ -8,6 +8,7 @@ import parseWorkspaceXml from './BlocklyHelper';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Game from './Game';
 
 const styles = theme => ({
   button: {
@@ -59,8 +60,8 @@ class TestEditor extends React.Component {
 
   workspaceDidChange = (workspace) => {
     const newXml = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
-    this.setState({object1Xml: newXml})
-    document.getElementById('generated-xml').innerText = newXml;
+    this.setState({ object1Xml: newXml })
+    // document.getElementById('generated-xml').innerText = newXml;
 
     const code = Blockly.JavaScript.workspaceToCode(workspace);
     document.getElementById('code').value = code;
@@ -70,30 +71,38 @@ class TestEditor extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div style={{ height: 500, width: 500 }}>
-        <ReactBlocklyComponent.BlocklyEditor
-          toolboxCategories={this.state.toolboxCategories}
-          workspaceConfiguration={{
-            grid: {
-              spacing: 20,
-              length: 3,
-              colour: '#ccc',
-              snap: true,
-            },
-          }}
-          initialXml={this.state.object1Xml}
-          wrapperDivClassName="fill-height"
-          workspaceDidChange={this.workspaceDidChange}
-        />
-        <Button onClick={()=> this.setState({xml: this.state.object1Xml})} variant="contained" color="primary" className={classes.button}>
-          Primary
+      <div>
+        <Button onClick={() => this.setState({ xml: this.state.object1Xml })} variant="contained" color="primary" className={classes.button}>
+          Run JS
+          </Button>
+        <div class="row" >
+          <div class="col-sm-8" style={{ height: 500 }}>
+            <ReactBlocklyComponent.BlocklyEditor
+              toolboxCategories={this.state.toolboxCategories}
+              workspaceConfiguration={{
+                grid: {
+                  spacing: 20,
+                  length: 3,
+                  colour: '#ccc',
+                  snap: true,
+                },
+              }}
+              initialXml={this.state.object1Xml}
+              wrapperDivClassName="fill-height"
+              workspaceDidChange={this.workspaceDidChange}
+            />
+            <Button onClick={() => this.setState({ xml: this.state.object1Xml })} variant="contained" color="primary" className={classes.button}>
+              Ghost
+          </Button>
+            <Button onClick={() => {
+              var xml = Blockly.Xml.textToDom(this.state.object2Xml);
+              Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
+            }} variant="contained" color="secondary" className={classes.button}>
+              Hero
       </Button>
-        <Button onClick={()=> {
-          var xml = Blockly.Xml.textToDom(this.state.object2Xml);
-          Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
-          } }  variant="contained" color="secondary" className={classes.button}>
-          Secondary
-      </Button>
+          </div>
+          <div class="col-sm-4"><Game /></div>
+        </div>
       </div>
     )
   }
