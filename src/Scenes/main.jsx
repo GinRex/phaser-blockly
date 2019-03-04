@@ -13,7 +13,6 @@ export default class MainScene extends Phaser.Scene {
     preload() {
         this.load.image('picA', 'assets/Hero.gif')
         this.load.image('picB', 'assets/ghost.png')
-        // this.load.image('picB', 'https://img.fortunefrenzy.co.uk/wp-content/uploads/2013/11/Small_Mario_NSMBU.png');
     }
 
     create() {
