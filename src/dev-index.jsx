@@ -37,11 +37,13 @@ class TestEditor extends React.Component {
           name:"hero",
           sprite: require("../public/assets/hero.gif"),
           workspace: "",
+          jsCode:"",
           key:"0"
         },
         {
           name:"ghost",
           sprite: require("../public/assets/ghost.png"),
+          jsCode: "",
           workspace: "",
           key:"1"
         }
@@ -75,8 +77,10 @@ class TestEditor extends React.Component {
 
   workspaceDidChange = (workspace) => {
     const newXml = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
+    const code = Blockly.JavaScript.workspaceToCode(workspace);
     let currentGameobject = this.state.gameObjects[this.state.slectedGameobjectIndex];
     currentGameobject.workspace = newXml;
+    currentGameobject.jsCode = code;
 
     let gameObjects = this.state.gameObjects;
     gameObjects[this.state.slectedGameobjectIndex] = currentGameobject;
@@ -85,7 +89,7 @@ class TestEditor extends React.Component {
     console.log(this.state.gameObjects)
     // document.getElementById('generated-xml').innerText = newXml;
 
-    const code = Blockly.JavaScript.workspaceToCode(workspace);
+    
     document.getElementById('code').value = code;
   }
 
@@ -135,7 +139,7 @@ class TestEditor extends React.Component {
             })}
             </div>
           </div>
-          <div class="col-sm-2"><Game /></div>
+          <div class="col-sm-2"><Game gameObjects={this.state.gameObjects} /></div>
         </div>
       </div>
     )
