@@ -25,13 +25,28 @@ class TestEditor extends React.Component {
     super(props);
     this.state = {
       toolboxCategories: parseWorkspaceXml(ConfigFiles.INITIAL_TOOLBOX_XML),
-      object1Xml: ConfigFiles.INITIAL_XML,
-      object2Xml: '<xml xmlns="http://www.w3.org/1999/xhtml"><variables><variable type="" id="rCEP]pi#{8UX41lty{t$">a</variable></variables><block type="text" id="mOSfJXap0{c#x-*q:HkM" x="70" y="30"><field name="TEXT"></field></block><block type="controls_if" id="HSe:?8S6@G-3/*fXTKwE" x="70" y="110"><value name="IF0"><block type="variables_get" id="v(.qZU$a,.wUET$pf(W:"><field name="VAR" id="rCEP]pi#{8UX41lty{t$" variabletype="">a</field></block></value><statement name="DO0"><block type="math_change" id="n`qjCPqq12b}F2)g08EQ"><field name="VAR" id="rCEP]pi#{8UX41lty{t$" variabletype="">a</field><value name="DELTA"><shadow type="math_number" id="H@%Q}nG5DP@VlqEOCU%f"><field name="NUM">1</field></shadow></value></block></statement></block></xml>',
-      xml: ConfigFiles.INITIAL_XML,
+      gameObjects: [],
+      slectedGameobjectIndex: 0,
     };
   }
 
   componentDidMount = () => {
+    this.setState({
+      gameObjects:[
+        {
+          name:"hero",
+          sprite: "../public/assets/hero.gif",
+          workspace: "",
+          key:"0"
+        },
+        {
+          name:"ghost",
+          sprite: "../public/assets/ghost.png",
+          workspace: "",
+          key:"1"
+        }
+      ]
+    })
     window.setTimeout(() => {
       this.setState({
         toolboxCategories: this.state.toolboxCategories.concat([
@@ -60,7 +75,14 @@ class TestEditor extends React.Component {
 
   workspaceDidChange = (workspace) => {
     const newXml = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
-    this.setState({ object1Xml: newXml })
+    let currentGameobject = this.state.gameObjects[this.state.slectedGameobjectIndex];
+    currentGameobject.workspace = newXml;
+
+    let gameObjects = this.state.gameObjects;
+    gameObjects[this.state.slectedGameobjectIndex] = currentGameobject;
+
+    this.setState({ gameObjects: gameObjects })
+    console.log(this.state.gameObjects)
     // document.getElementById('generated-xml').innerText = newXml;
 
     const code = Blockly.JavaScript.workspaceToCode(workspace);
@@ -87,19 +109,29 @@ class TestEditor extends React.Component {
                   snap: true,
                 },
               }}
-              initialXml={this.state.object1Xml}
+              // initialXml={this.state.object1Xml}
               wrapperDivClassName="fill-height"
               workspaceDidChange={this.workspaceDidChange}
             />
-            <Button onClick={() => this.setState({ xml: this.state.object1Xml })} variant="contained" color="primary" className={classes.button}>
-              Ghost
+            <div >
+
+            </div>
+            {this.state.gameObjects.map((gameObject) => {
+              return(
+                <Button onClick={() => {
+                  this.setState({slectedGameobjectIndex: gameObject.key })
+                  console.log(this.state.slectedGameobjectIndex)
+                  Blockly.mainWorkspace.clear();
+                  if (gameObject.workspace !== '') {
+                    console.log('loaded')
+                    var xml = Blockly.Xml.textToDom(gameObject.workspace);
+                    Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
+                  }
+                }} variant="contained" color="secondary" className={classes.button}>
+                  {gameObject.name}
           </Button>
-            <Button onClick={() => {
-              var xml = Blockly.Xml.textToDom(this.state.object2Xml);
-              Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
-            }} variant="contained" color="secondary" className={classes.button}>
-              Hero
-      </Button>
+              )
+            })}
           </div>
           <div class="col-sm-4"><Game /></div>
         </div>

@@ -48,9 +48,6 @@ export default class MainScene extends Phaser.Scene {
 
     }
 
-    update() {
-    }
-
     tint() {
         alert('asdasd')
         console.log('asdasd')
