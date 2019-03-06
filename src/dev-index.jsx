@@ -35,13 +35,13 @@ class TestEditor extends React.Component {
       gameObjects:[
         {
           name:"hero",
-          sprite: "../public/assets/hero.gif",
+          sprite: require("../public/assets/hero.gif"),
           workspace: "",
           key:"0"
         },
         {
           name:"ghost",
-          sprite: "../public/assets/ghost.png",
+          sprite: require("../public/assets/ghost.png"),
           workspace: "",
           key:"1"
         }
@@ -95,10 +95,10 @@ class TestEditor extends React.Component {
     return (
       <div>
         <Button onClick={() => this.setState({ xml: this.state.object1Xml })} variant="contained" color="primary" className={classes.button}>
-          Run JS
+          Build and Run
           </Button>
         <div class="row" >
-          <div class="col-sm-8" style={{ height: 500 }}>
+          <div class="col-sm-10" style={{ height: 500 }}>
             <ReactBlocklyComponent.BlocklyEditor
               toolboxCategories={this.state.toolboxCategories}
               workspaceConfiguration={{
@@ -113,27 +113,29 @@ class TestEditor extends React.Component {
               wrapperDivClassName="fill-height"
               workspaceDidChange={this.workspaceDidChange}
             />
-            <div >
-
-            </div>
+            <div style={{borderWidth:3, borderColor:"black", width:600, height: 150, backgroundColor:"red", margin: 10}}>
             {this.state.gameObjects.map((gameObject) => {
+              // const thumbnail = require('./public/assets/ghost.png');
               return(
-                <Button onClick={() => {
-                  this.setState({slectedGameobjectIndex: gameObject.key })
-                  console.log(this.state.slectedGameobjectIndex)
-                  Blockly.mainWorkspace.clear();
-                  if (gameObject.workspace !== '') {
-                    console.log('loaded')
-                    var xml = Blockly.Xml.textToDom(gameObject.workspace);
-                    Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
-                  }
-                }} variant="contained" color="secondary" className={classes.button}>
-                  {gameObject.name}
-          </Button>
+                <img 
+                  src={gameObject.sprite}
+                  onClick={() => {
+                    this.setState({slectedGameobjectIndex: gameObject.key })
+                    console.log(this.state.slectedGameobjectIndex)
+                    Blockly.mainWorkspace.clear();
+                    if (gameObject.workspace !== '') {
+                      console.log('loaded')
+                      var xml = Blockly.Xml.textToDom(gameObject.workspace);
+                      Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
+                    }
+                  }}
+                  style={{width: 100, height:100, margin:5, backgroundColor: gameObject.key == this.state.slectedGameobjectIndex ? "yellow" : "white", borderWidth:3, borderRadius:20}}
+                  alt={gameObject.name} />
               )
             })}
+            </div>
           </div>
-          <div class="col-sm-4"><Game /></div>
+          <div class="col-sm-2"><Game /></div>
         </div>
       </div>
     )
