@@ -75,32 +75,206 @@ class BlocklyPart extends React.Component {
         }
       ]
     })
+
+    Blockly.Blocks['motion_foward'] = {
+      init: function() {
+        this.appendValueInput("DISTANCE")
+            .setCheck("Number")
+            .appendField("foward");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(150);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['motion_turn_right'] = {
+      init: function() {
+        this.appendValueInput("DEGREES")
+            .setCheck("Number")
+            .appendField("turn right");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(150);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['motion_turn_left'] = {
+      init: function() {
+        this.appendValueInput("DEGREES")
+            .setCheck("Number")
+            .appendField("turn left");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(150);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['motion_point_in_direction'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("point in direction (degrees)");
+        this.appendValueInput("ANGLE")
+            .setCheck("Number")
+            .setAlign(Blockly.ALIGN_RIGHT)
+            .appendField(new Blockly.FieldAngle(90), "A");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(150);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['motion_point_in_direction_of_target'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("point in direction of target");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(150);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['motion_point_in_direction_of_point'] = {
+      init: function() {
+          this.appendDummyInput()
+                  .appendField("motion point in direction of point");
+          this.appendValueInput("x")
+                  .setCheck("Number")
+                  .appendField("x");
+          this.appendValueInput("y")
+                  .setCheck("Number")
+                  .appendField("y");
+          this.setPreviousStatement(true, null);
+          this.setNextStatement(true, null);
+          this.setColour(150);
+          this.setTooltip('');
+          this.setHelpUrl('');
+      }
+  };
+
+    Blockly.Blocks['motion_set_x_to'] = {
+      init: function() {
+        this.appendValueInput("X")
+            .setCheck("Number")
+            .appendField("set x to");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(150);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['motion_set_y_to'] = {
+      init: function() {
+        this.appendValueInput("Y")
+            .setCheck("Number")
+            .appendField("set y to");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(150);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
     window.setTimeout(() => {
       this.setState({
         toolboxCategories: this.state.toolboxCategories.concat([
           {
-            name: 'Text2',
+            name: 'Motion',
+            colour: 150,
             blocks: [
-              { type: 'text' },
-              {
-                type: 'text_print',
-                values: {
-                  TEXT: {
-                    type: 'text',
-                    shadow: true,
-                    fields: {
-                      TEXT: 'fuck',
-                    },
-                  },
-                },
-              },
-              {
-                type: ''
-              }
+              { type: 'motion_foward' },
+              { type: 'motion_turn_right'},
+              { type: 'motion_turn_left' },
+              { type: 'motion_point_in_direction'},
+              { type: 'motion_point_in_direction_of_target'},
+              { type: 'motion_point_in_direction_of_point'},
+              { type: 'motion_set_x_to' },
+              { type: 'motion_set_y_to'},
             ],
           },
         ]),
       });
+
+      Blockly.JavaScript['motion_foward'] = function(block) {
+        var value_distance = Blockly.JavaScript.valueToCode(block, 'DISTANCE', Blockly.JavaScript.ORDER_ATOMIC);
+        // TODO: Assemble JavaScript into code variable.
+        var argument0 = Blockly.JavaScript.valueToCode(block, 'DISTANCE',
+          Blockly.JavaScript.ORDER_NONE) || '\'\'';
+        var code = 'foward('+argument0+');\n';
+        return code;
+      };
+      Blockly.JavaScript['motion_turn_right'] = function(block) {
+        var value_distance = Blockly.JavaScript.valueToCode(block, 'DEGREES', Blockly.JavaScript.ORDER_ATOMIC);
+        // TODO: Assemble JavaScript into code variable.
+        var argument0 = Blockly.JavaScript.valueToCode(block, 'DEGREES',
+          Blockly.JavaScript.ORDER_NONE) || '\'\'';
+        var code = 'turn_right('+argument0+');\n';
+        return code;
+      };
+
+      Blockly.JavaScript['motion_turn_left'] = function(block) {
+        var value_distance = Blockly.JavaScript.valueToCode(block, 'DEGREES', Blockly.JavaScript.ORDER_ATOMIC);
+        // TODO: Assemble JavaScript into code variable.
+        var argument0 = Blockly.JavaScript.valueToCode(block, 'DEGREES',
+          Blockly.JavaScript.ORDER_NONE) || '\'\'';
+        var code = 'turn_left('+argument0+');\n';
+        return code;
+      };
+
+      Blockly.JavaScript['motion_point_in_direction'] = function(block) {
+        var angle_a = block.getFieldValue('A');
+        var value_angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC);
+        // TODO: Assemble JavaScript into code variable.
+        var argument0 = Blockly.JavaScript.valueToCode(block, 'ANGLE',
+          Blockly.JavaScript.ORDER_NONE) || '\'\'';
+        var angle_final=argument0=="''"?angle_a:argument0;
+        var code = 'point_in_direction_degrees('+angle_final+');\n';
+        return code;
+      };
+
+      Blockly.JavaScript['motion_point_in_direction_of_target'] = function(block) {
+        // TODO: Assemble JavaScript into code variable.
+        var code = 'point_spriteA_in_direction_spriteB();\n';
+        return code;
+      };
+
+      Blockly.JavaScript['motion_point_in_direction_of_point'] = function(block) {
+        var value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
+        var value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
+        // TODO: Assemble JavaScript into code variable.
+        var code = 'point_sprite_in_direction_to_point('+value_x+','+value_y+');\n';
+        return code;
+    };
+
+      Blockly.JavaScript['motion_set_x_to'] = function(block) {
+        var value_distance = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);
+        // TODO: Assemble JavaScript into code variable.
+        var argument0 = Blockly.JavaScript.valueToCode(block, 'X',
+          Blockly.JavaScript.ORDER_NONE) || '\'\'';
+        var code = 'set_x_to('+argument0+');\n';
+        return code;
+      };
+
+      Blockly.JavaScript['motion_set_y_to'] = function(block) {
+        var value_distance = Blockly.JavaScript.valueToCode(block, 'Y', Blockly.JavaScript.ORDER_ATOMIC);
+        // TODO: Assemble JavaScript into code variable.
+        var argument0 = Blockly.JavaScript.valueToCode(block, 'Y',
+          Blockly.JavaScript.ORDER_NONE) || '\'\'';
+        var code = 'set_y_to('+argument0+');\n';
+        return code;
+      };
     }, 20);
   }
 
