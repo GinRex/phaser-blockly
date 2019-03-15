@@ -22,6 +22,8 @@
     "phaser": "^3.16.2",
     "prop-types": "^15.6.0",
     "react-immutable-proptypes": "^2.1.0",
+    "react-redux": "^6.0.1",
+    "redux": "^4.0.1",
     "url-loader": "^1.1.2"
   },
   "peerDependencies": {

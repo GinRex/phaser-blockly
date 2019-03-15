@@ -1,13 +1,18 @@
 import 'phaser';
+import store from '../store';
+// import { connect } from "react-redux";
 
-
-export default class MainScene extends Phaser.Scene {
+class MainScene extends Phaser.Scene {
     constructor(props) {
         super(props)
     }
 
     MainScene() {
-        Phaser.Scene.call(this, { key: 'demoA', active: true });
+        Phaser.Scene.call(this, { key: 'main', active: false });
+    }
+
+    init(data) {
+        console.log(store.getState())
     }
 
     preload() {
@@ -15,7 +20,11 @@ export default class MainScene extends Phaser.Scene {
         this.load.image('picB', 'assets/ghost.png')
     }
 
-    create() {
+
+
+    create(data) {
+
+        console.log(data.gameObjects)
         var Hero = this.add.sprite(400, 400, 'picA').setDisplaySize(100, 100).setInteractive();
         var Ghost = this.add.sprite(300, 200, 'picB').setDisplaySize(100, 100).setInteractive();
 
@@ -48,6 +57,9 @@ export default class MainScene extends Phaser.Scene {
 
     }
 
+    //set time out
+    // set theo event 
+
     tint() {
         alert('asdasd')
         console.log('asdasd')
@@ -58,3 +70,11 @@ export default class MainScene extends Phaser.Scene {
     }
 
 };
+
+export default MainScene
+
+// const mapStateToProps = ({ showUi }) => ({
+//     showUi
+//   });
+
+// export default connect(mapStateToProps(MainScene))
