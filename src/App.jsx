@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import Game from "./Game";
 import Blockly from "./dev-index";
 import { Provider } from "react-redux";
-
-import store from "./store";
+import { PersistGate } from 'redux-persist/integration/react'
+import { store, persistor } from "./store/configureStore";
 
 class App extends Component {
     render() {
         return (
             <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
                 <div>
                     <div class="row" >
                         <div class="col-sm-10" style={{ height: 500 }}><Blockly /></div>
@@ -19,6 +20,7 @@ class App extends Component {
                         </div>
                     </div>
                 </div>
+                </PersistGate>
             </Provider>
         );
     }

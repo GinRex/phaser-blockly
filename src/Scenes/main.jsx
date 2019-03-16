@@ -1,10 +1,12 @@
 import 'phaser';
-import store from '../store';
+import { store } from '../store/configureStore';
 // import { connect } from "react-redux";
 
 class MainScene extends Phaser.Scene {
+    
     constructor(props) {
         super(props)
+        store.subscribe(this.restartGame)
     }
 
     restartGame = () => {
@@ -35,7 +37,6 @@ class MainScene extends Phaser.Scene {
         }
 
         // store.subscribe(this.injectedCode)
-        store.subscribe(this.restartGame)
 
         this.Hero = this.add.sprite(400, 400, 'picA').setDisplaySize(100, 100).setInteractive();
         this.Ghost = this.add.sprite(300, 200, 'picB').setDisplaySize(100, 100).setInteractive();

@@ -10,8 +10,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Game from './Game';
 import { connect } from "react-redux";
-import store from './store';
-import { TOGGLE_UI, BUILD_GAME } from "./store/gameReducer";
+import { store } from './store/configureStore';
+import { BUILD_GAME } from "./store/gameReducer";
 
 
 
@@ -54,6 +54,10 @@ class BlocklyPart extends React.Component {
         }
       ]
     })
+
+    if (store.getState().gameObjects.length) {
+      this.setState({gameObjects: store.getState().gameObjects})
+    }
 
     Blockly.Blocks['motion_foward'] = {
       init: function() {
@@ -268,7 +272,6 @@ class BlocklyPart extends React.Component {
     gameObjects[this.state.slectedGameobjectIndex] = currentGameobject;
 
     this.setState({ gameObjects: gameObjects })
-    console.log(this.state.gameObjects)
     // document.getElementById('generated-xml').innerText = newXml;
 
 
@@ -281,8 +284,7 @@ class BlocklyPart extends React.Component {
     return (
       <div style={{height: 500}}>
         <Button onClick={() => {
-          this.setState({ xml: this.state.object1Xml })
-          store.dispatch({ type: TOGGLE_UI });
+          // this.setState({ xml: this.state.object1Xml })
           store.dispatch({type: BUILD_GAME, gameObjects: this.state.gameObjects});
         }} 
           variant="contained" color="primary" 
@@ -298,7 +300,10 @@ class BlocklyPart extends React.Component {
               snap: true,
             },
           }}
-          // initialXml={this.state.object1Xml}
+          initialXml={store.getState().gameObjects.length ? 
+            store.getState().gameObjects[this.state.slectedGameobjectIndex].workspace :
+            null
+          }
           wrapperDivClassName="fill-height"
           workspaceDidChange={this.workspaceDidChange}
         />
