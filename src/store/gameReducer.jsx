@@ -1,13 +1,19 @@
 export const TOGGLE_UI = "TOGGLE_UI";
+export const BUILD_GAME = "BUILD_GAME";
 
 const initState = {
   showUi: false,
-  gameObjects: []
+  gameObjects: [],
+  gameState: 'STOP',
 };
 
 export const toggleUi = () => ({
   type: TOGGLE_UI,
-  gameObjects: [1]
+});
+
+export const buildGame = (gameObjects) => ({
+  type: BUILD_GAME,
+  gameObjects
 });
 
 export const gameReducer = (
@@ -18,7 +24,8 @@ export const gameReducer = (
   switch (action.type) {
     case TOGGLE_UI:
       return { ...state, showUi: !state.showUi };
-
+    case BUILD_GAME:
+      return { ...state, gameState: 'BUILD', gameObjects: action.gameObjects};
     default:
       return state;
   }

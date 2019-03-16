@@ -7,12 +7,14 @@ class MainScene extends Phaser.Scene {
         super(props)
     }
 
-    MainScene() {
-        Phaser.Scene.call(this, { key: 'main', active: false });
+    restartGame = () => {
+        console.log(store.getState());
+        this.scene.restart();
     }
 
-    init(data) {
-        console.log(store.getState())
+
+    MainScene() {
+        Phaser.Scene.call(this, { key: 'main', active: false });
     }
 
     preload() {
@@ -20,18 +22,28 @@ class MainScene extends Phaser.Scene {
         this.load.image('picB', 'assets/ghost.png')
     }
 
+    create() {
 
+        if (store.getState().gameObjects.length !== 0) { 
+            console.log('abc')
+            // console.log(store.getState())
+            var gameObjects = store.getState().gameObjects;
+            gameObjects.forEach(object => {
+                eval(object.jsCode);
+            });
+            
+        }
 
-    create(data) {
+        // store.subscribe(this.injectedCode)
+        store.subscribe(this.restartGame)
 
-        console.log(data.gameObjects)
-        var Hero = this.add.sprite(400, 400, 'picA').setDisplaySize(100, 100).setInteractive();
-        var Ghost = this.add.sprite(300, 200, 'picB').setDisplaySize(100, 100).setInteractive();
+        this.Hero = this.add.sprite(400, 400, 'picA').setDisplaySize(100, 100).setInteractive();
+        this.Ghost = this.add.sprite(300, 200, 'picB').setDisplaySize(100, 100).setInteractive();
 
         // Hero.on('pointerdown', () => this.tint()).on('pointerup', () => this.clearTint());
 
-        this.input.setDraggable(Hero);
-        this.input.setDraggable(Ghost);
+        this.input.setDraggable(this.Hero);
+        this.input.setDraggable(this.Ghost);
 
 
         this.input.on('dragstart', function (pointer, gameObject) {
@@ -55,6 +67,10 @@ class MainScene extends Phaser.Scene {
 
         });
 
+    }
+
+    update() {
+        
     }
 
     //set time out

@@ -13,7 +13,10 @@ class App extends Component {
                     <div class="row" >
                         <div class="col-sm-10" style={{ height: 500 }}><Blockly /></div>
 
-                        <div class="col-sm-2"><Game /></div>
+                        <div class="col-sm-2">
+                        <Game />
+                        <textarea id="code" style={{height: 200, width: 400}} value=""></textarea>
+                        </div>
                     </div>
                 </div>
             </Provider>

@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Game from './Game';
 import { connect } from "react-redux";
 import store from './store';
-import { TOGGLE_UI } from "./store/gameReducer";
+import { TOGGLE_UI, BUILD_GAME } from "./store/gameReducer";
 
 
 
@@ -51,27 +51,6 @@ class BlocklyPart extends React.Component {
           jsCode: "",
           workspace: "",
           key: "1"
-        },
-        {
-          name: "hero",
-          sprite: require("../public/assets/hero.gif"),
-          workspace: "",
-          jsCode: "",
-          key: "2"
-        },
-        {
-          name: "ghost",
-          sprite: require("../public/assets/ghost.png"),
-          jsCode: "",
-          workspace: "",
-          key: "3"
-        },
-        {
-          name: "hero",
-          sprite: require("../public/assets/hero.gif"),
-          workspace: "",
-          jsCode: "",
-          key: "4"
         }
       ]
     })
@@ -304,6 +283,7 @@ class BlocklyPart extends React.Component {
         <Button onClick={() => {
           this.setState({ xml: this.state.object1Xml })
           store.dispatch({ type: TOGGLE_UI });
+          store.dispatch({type: BUILD_GAME, gameObjects: this.state.gameObjects});
         }} 
           variant="contained" color="primary" 
           className={classes.button}>Build and Run
