@@ -11,5 +11,7 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, gameReducer)
 
-export const store = createStore(persistedReducer);
+// export const store = createStore(persistedReducer);
+export const store = createStore(gameReducer);
+
 export const persistor = persistStore(store);

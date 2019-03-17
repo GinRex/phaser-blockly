@@ -24,7 +24,7 @@ const INITIAL_TOOLBOX_CATEGORIES = [{
             type: 'text',
             shadow: true,
             fields: {
-              TEXT: 'abc'
+              TEXT: 'fuck'
             }
           }
         }
@@ -40,7 +40,7 @@ const INITIAL_TOOLBOX_CATEGORIES = [{
         type: 'text',
         shadow: true,
         fields: {
-          TEXT: 'abc'
+          TEXT: 'fuck'
         }
       }
     }

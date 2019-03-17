@@ -9,7 +9,7 @@ class App extends Component {
     render() {
         return (
             <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
+            {/* <PersistGate loading={null} persistor={persistor}> */}
                 <div>
                     <div class="row" >
                         <div class="col-sm-10" style={{ height: 500 }}><Blockly /></div>
@@ -20,7 +20,7 @@ class App extends Component {
                         </div>
                     </div>
                 </div>
-                </PersistGate>
+                {/* </PersistGate> */}
             </Provider>
         );
     }

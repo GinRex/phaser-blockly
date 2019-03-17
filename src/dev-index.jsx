@@ -12,8 +12,9 @@ import Game from './Game';
 import { connect } from "react-redux";
 import { store } from './store/configureStore';
 import { BUILD_GAME } from "./store/gameReducer";
-
-
+// import fs from 'fs';
+// var FileSaver = require('file-saver');
+// import * as fs from 'fs';
 
 const styles = theme => ({
   button: {
@@ -35,28 +36,38 @@ class BlocklyPart extends React.Component {
     };
   }
 
-  componentDidMount = () => {
-    this.setState({
-      gameObjects: [
-        {
-          name: "hero",
-          sprite: require("../public/assets/hero.gif"),
-          workspace: "",
-          jsCode: "",
-          key: "0"
-        },
-        {
-          name: "ghost",
-          sprite: require("../public/assets/ghost.png"),
-          jsCode: "",
-          workspace: "",
-          key: "1"
-        }
-      ]
-    })
+  createFile = () => {
+    // var blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
+    // FileSaver.saveAs(blob, "testObject.js");
 
-    if (store.getState().gameObjects.length) {
+    // fs.appendFile('mynewfile1.txt', 'Hello content!', function (err) {
+    //   if (err) throw err;
+    //   console.log('Saved!');
+    // });
+  } 
+
+  componentDidMount = () => {
+    if (store.getState().gameObjects.length !== 0) {
       this.setState({gameObjects: store.getState().gameObjects})
+    } else {
+      this.setState({
+        gameObjects: [
+          {
+            name: "hero",
+            sprite: require("../public/assets/hero.gif"),
+            workspace: "",
+            jsCode: "",
+            key: "0"
+          },
+          {
+            name: "ghost",
+            sprite: require("../public/assets/ghost.png"),
+            jsCode: "",
+            workspace: "",
+            key: "1"
+          }
+        ]
+      })
     }
 
     Blockly.Blocks['motion_foward'] = {
@@ -169,8 +180,6 @@ class BlocklyPart extends React.Component {
         this.setHelpUrl('http://www.example.com/');
       }
     };
-
-    window.setTimeout(() => {
       this.setState({
         toolboxCategories: this.state.toolboxCategories.concat([
           {
@@ -258,7 +267,6 @@ class BlocklyPart extends React.Component {
         var code = 'set_y_to('+argument0+');\n';
         return code;
       };
-    }, 20);
   }
 
   workspaceDidChange = (workspace) => {
@@ -285,6 +293,7 @@ class BlocklyPart extends React.Component {
       <div style={{height: 500}}>
         <Button onClick={() => {
           // this.setState({ xml: this.state.object1Xml })
+          this.createFile()
           store.dispatch({type: BUILD_GAME, gameObjects: this.state.gameObjects});
         }} 
           variant="contained" color="primary" 

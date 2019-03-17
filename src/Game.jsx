@@ -17,6 +17,15 @@ export default class Game extends React.Component {
     width: 600,
     height: 600,
     parent: "phaser-game",
+    physics: {
+      default: 'arcade',
+      arcade: {
+          gravity: {
+              y: 800
+          },
+          debug: false
+      }
+    },
     scene: [MainScene]
   };
 
@@ -24,21 +33,7 @@ export default class Game extends React.Component {
     console.log(this.props)
     
     const game = new Phaser.Game(this.config);
-    
-    
-    // game.scene.start('main', {gameObjects: this.props.gameObjects, new: '2'})
-    console.log('asdasd')
-    // this.runGame();
   }
-
-  runGame() {
-    // const game = new Phaser.Game(this.config);
-    game.scene.start('main', {gameObjects: this.props.gameObjects, new: '2'})
-    // this.scene.launch('main', this.props.gameObjects)
-  }
-  // shouldComponentUpdate() {
-  //   return false;
-  // }
 
   render() {
     console.log(this.props)

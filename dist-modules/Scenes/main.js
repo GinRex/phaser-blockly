@@ -1,21 +1,20 @@
 import 'phaser';
 import { store } from '../store/configureStore';
 import Hero from './Hero';
-import Ghost from './Ghost';
 // import { connect } from "react-redux";
 
 class MainScene extends Phaser.Scene {
-    
+
     constructor(props) {
-        super(props)
-        store.subscribe(this.restartGame)
-    }
+        super(props);
 
-    restartGame = () => {
-        console.log(store.getState());
-        this.scene.restart();
-    }
+        this.restartGame = () => {
+            console.log(store.getState());
+            this.scene.restart();
+        };
 
+        store.subscribe(this.restartGame);
+    }
 
     MainScene() {
         Phaser.Scene.call(this, { key: 'main', active: false });
@@ -23,7 +22,7 @@ class MainScene extends Phaser.Scene {
 
     preload() {
         this.load.image('hero', 'assets/Hero.gif');
-        this.load.image('ghost', 'assets/ghost.png')
+        this.load.image('picB', 'assets/ghost.png');
     }
 
     create() {
@@ -35,7 +34,7 @@ class MainScene extends Phaser.Scene {
         //     gameObjects.forEach(object => {
         //         eval(object.jsCode);
         //     });
-            
+
         // }
 
         this.Hero = new Hero({
@@ -45,16 +44,7 @@ class MainScene extends Phaser.Scene {
             y: 400,
             width: 100,
             height: 100
-        })
-
-        this.Ghost = new Ghost({
-            scene: this,
-            key: 'ghost',
-            x: 200,
-            y: 200,
-            width: 100,
-            height: 100
-        })
+        });
         // this.Hero = this.add.sprite(400, 400, 'picA').setDisplaySize(100, 100).setInteractive();
         // this.Ghost = this.add.sprite(300, 200, 'picB').setDisplaySize(100, 100).setInteractive();
 
@@ -81,19 +71,16 @@ class MainScene extends Phaser.Scene {
         //     gameObject.clearTint();
 
         // });
-
     }
 
-    update() {
-    
-    }
+    update() {}
 
     //set time out
     // set theo event 
 
     tint() {
-        alert('asdasd')
-        console.log('asdasd')
+        alert('asdasd');
+        console.log('asdasd');
     }
 
     clearTint() {
@@ -102,4 +89,4 @@ class MainScene extends Phaser.Scene {
 
 };
 
-export default MainScene
+export default MainScene;
