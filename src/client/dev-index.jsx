@@ -54,14 +54,14 @@ class BlocklyPart extends React.Component {
         gameObjects: [
           {
             name: "hero",
-            sprite: require("../public/assets/hero.gif"),
+            sprite: require("../../public/assets/hero.gif"),
             workspace: "",
             jsCode: "",
             key: "0"
           },
           {
             name: "ghost",
-            sprite: require("../public/assets/ghost.png"),
+            sprite: require("../../public/assets/ghost.png"),
             jsCode: "",
             workspace: "",
             key: "1"

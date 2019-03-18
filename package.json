@@ -4,6 +4,9 @@
   "description": "A React wrapper for the Blockly visual programming editor",
   "main": "dist-modules",
   "scripts": {
+    "client": "webpack-dev-server --config webpack.config.js",
+    "server": "nodemon src/server/index.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "webpack --config webpack.config.js",
     "lint": "eslint --ext .js,.jsx src",
     "lint:fix": "eslint --fix --ext .js,.jsx src",
@@ -17,9 +20,12 @@
   "license": "MIT",
   "dependencies": {
     "@material-ui/core": "^3.9.2",
+    "concurrently": "^4.1.0",
+    "express": "^4.16.4",
     "file-loader": "^3.0.1",
     "file-saver": "^2.0.1",
     "immutable": "^3.8.2",
+    "nodemon": "^1.18.10",
     "phaser": "^3.16.2",
     "prop-types": "^15.6.0",
     "react-immutable-proptypes": "^2.1.0",
@@ -33,7 +39,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26",
-    "babel-core": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^8.1.2",
     "babel-loader": "^7.1",
     "babel-plugin-transform-object-assign": "^6.22.0",
