@@ -180,6 +180,112 @@ class BlocklyPart extends React.Component {
         this.setHelpUrl('http://www.example.com/');
       }
     };
+    //////////EVENT
+    Blockly.Blocks['events_when_event_happens'] = {
+      init: function() {
+        this.appendStatementInput("EVENT_CODE")
+            .setCheck(null)
+            .appendField("when event happens");
+        this.appendValueInput("EVENT_NAME")
+            .setCheck(null)
+            .appendField(new Blockly.FieldDropdown([["Select an event", "NO_EVENT_SELECTED"], ["On statup", "ON_STARTUP"], ["Each frame", "EACH_FRAME"], ["Left key pressed", "LEFT_KEY_PRESSED"], ["Right key pressed", "RIGHT_KEY_PRESSED"], ["Up key pressed", "UP_KEY_PRESSED"], ["Down key pressed", "DOWN_KEY_PRESSED"]]), "EVENT");
+        this.setColour(65);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['sprites_destroy_current_sprite'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Destroy current sprite");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+
+    /////SPRITES
+    Blockly.Blocks['sprites_create_clone_of_current_sprite'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("create clone of current sprite");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['sprites_destroy_current_sprite'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Destroy current sprite");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['sprites_hide_current_sprite'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Hide sprite");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['sprites_show_current_sprite'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Show sprite");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['sprites_for_each_clone_of_current_sprite'] = {
+      init: function() {
+        this.appendStatementInput("STATEMENT_CODE")
+            .setCheck(null)
+            .appendField("for each clone of current sprite");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(120);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+
+    Blockly.Blocks['sprites_is_colliding_with_target'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("Is colliding with target");
+        this.setOutput(true, "Boolean");
+        this.setColour(210);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      //oncgange Javascript generation
+      }
+    };
+
+
+
+
+
       this.setState({
         toolboxCategories: this.state.toolboxCategories.concat([
           {
@@ -194,6 +300,25 @@ class BlocklyPart extends React.Component {
               { type: 'motion_point_in_direction_of_point'},
               { type: 'motion_set_x_to' },
               { type: 'motion_set_y_to'},
+            ],
+          },
+          {
+            name: 'Event',
+            colour: 250,
+            blocks: [
+              { type: 'events_when_event_happens' }
+            ],
+          },
+          {
+            name: 'Sprites',
+            colour: 250,
+            blocks: [
+              { type: 'sprites_create_clone_of_current_sprite' },
+              { type: 'sprites_destroy_current_sprite' },
+              { type: 'sprites_hide_current_sprite' },
+              { type: 'sprites_show_current_sprite' },
+              { type: 'sprites_for_each_clone_of_current_sprite' },
+              { type: 'sprites_is_colliding_with_target' }
             ],
           },
         ]),
@@ -267,6 +392,73 @@ class BlocklyPart extends React.Component {
         var code = 'set_y_to('+argument0+');\n';
         return code;
       };
+
+
+///////EVENT
+
+Blockly.JavaScript['events_when_event_happens'] = function(block) {
+  var statements_event_code = Blockly.JavaScript.statementToCode(block, 'EVENT_CODE');
+  var dropdown_event = block.getFieldValue('EVENT');
+  var value_event_name = Blockly.JavaScript.valueToCode(block, 'EVENT_NAME', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  if(dropdown_event=="NO_EVENT_SELECTED") {
+    return "//error, you did not select an event in the 'when event happens' block\n"
+  }
+  var code = 'function ' + dropdown_event +'(){\n'+statements_event_code+'\n}';
+  return code;
+};
+
+
+//SPRITES
+Blockly.JavaScript['sprites_create_clone_of_current_sprite'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = 'clone_sprite();\n';
+  return code;
+};
+
+Blockly.JavaScript['sprites_destroy_current_sprite'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = 'destroy_current_sprite();\n';
+  return code;
+};
+
+Blockly.JavaScript['sprites_hide_current_sprite'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = 'hide_current_sprite();\n';
+  return code;
+};
+
+Blockly.JavaScript['sprites_show_current_sprite'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = 'show_current_sprite();\n';
+  return code;
+};
+
+Blockly.JavaScript['sprites_for_each_clone_of_current_sprite'] = function(block) {
+  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
+  // TODO: Assemble JavaScript into code variable.
+  code=	'var game_object;\n';
+  code+=	'game_object=find_sprite_object_by_name(current_sprite_name);\n';
+  code+=	'for(var clone in game_object.clones){\n';
+  code+='	debug_current_sprite_name=current_sprite_name;\n';
+  code+='	current_clone=clone;\n';
+  code+=statements_statement_code+'\n';
+  code+='}\n';
+  code+='current_clone=null;\n';
+  return code;
+};
+
+Blockly.JavaScript['sprites_is_colliding_with_target'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = "is_colliding_with_target()";
+  // TODO: Change ORDER_NONE to the correct strength.
+  //return [code, Blockly.JavaScript.ORDER_NONE];
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
+
+
+
   }
 
   workspaceDidChange = (workspace) => {
