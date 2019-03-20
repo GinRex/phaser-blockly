@@ -40,5 +40,8 @@ module.exports = {
     proxy: {
       '/api': 'http://localhost:8080',
     },
+    watchOptions: {
+      ignored: [path.resolve(__dirname, 'public')],
+    },
   },
 };

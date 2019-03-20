@@ -1,20 +1,20 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import axios from 'axios';
+
 import ReactBlocklyComponent from './index';
 import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Game from './Game';
-import { connect } from "react-redux";
 import { store } from './store/configureStore';
-import { BUILD_GAME } from "./store/gameReducer";
-// import fs from 'fs';
-// var FileSaver = require('file-saver');
-// import * as fs from 'fs';
+import { BUILD_GAME } from './store/gameReducer';
+
+
+// const images = require.context('../../public/assets', false);
+
 
 const styles = theme => ({
   button: {
@@ -30,46 +30,18 @@ class BlocklyPart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedFile: null,
       toolboxCategories: parseWorkspaceXml(ConfigFiles.INITIAL_TOOLBOX_XML),
       gameObjects: [],
-      slectedGameobjectIndex: 0,
+      slectedGameobjectIndex: '',
+      imgSrc: null,
     };
   }
 
-  createFile = () => {
-    // var blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
-    // FileSaver.saveAs(blob, "testObject.js");
-
-    // fs.appendFile('mynewfile1.txt', 'Hello content!', function (err) {
-    //   if (err) throw err;
-    //   console.log('Saved!');
-    // });
-  } 
-
   componentDidMount = () => {
     if (store.getState().gameObjects.length !== 0) {
-      this.setState({gameObjects: store.getState().gameObjects})
-    } else {
-      this.setState({
-        gameObjects: [
-          {
-            name: "hero",
-            sprite: require("../../public/assets/hero.gif"),
-            workspace: "",
-            jsCode: "",
-            key: "0"
-          },
-          {
-            name: "ghost",
-            sprite: require("../../public/assets/ghost.png"),
-            jsCode: "",
-            workspace: "",
-            key: "1"
-          }
-        ]
-      })
+      this.setState({ gameObjects: store.getState().gameObjects });
     }
-
     Blockly.Blocks['motion_foward'] = {
       init: function() {
         this.appendValueInput("DISTANCE")
@@ -272,14 +244,17 @@ class BlocklyPart extends React.Component {
   workspaceDidChange = (workspace) => {
     const newXml = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
     const code = Blockly.JavaScript.workspaceToCode(workspace);
-    let currentGameobject = this.state.gameObjects[this.state.slectedGameobjectIndex];
-    currentGameobject.workspace = newXml;
-    currentGameobject.jsCode = code;
+    let currentGameobject = this.state.gameObjects.find(gameObject => gameObject.key === this.state.slectedGameobjectIndex);
+    if (currentGameobject) {
+      currentGameobject.workspace = newXml;
+      currentGameobject.jsCode = code;
 
-    let gameObjects = this.state.gameObjects;
-    gameObjects[this.state.slectedGameobjectIndex] = currentGameobject;
+      let gameObjects = this.state.gameObjects;
+      let index = gameObjects.findIndex(gameObject => gameObject.key === this.state.slectedGameobjectIndex);
+      gameObjects[index] = currentGameobject;
 
-    this.setState({ gameObjects: gameObjects })
+      this.setState({ gameObjects: gameObjects })
+    }
     // document.getElementById('generated-xml').innerText = newXml;
 
 
@@ -287,15 +262,46 @@ class BlocklyPart extends React.Component {
   }
 
 
+  // upload image
+  onChangeHandler = (event) => {
+    console.log(event.target.files[0]);
+    this.setState({
+      selectedFile: event.target.files[0],
+      loaded: 0,
+    })
+  }
+
+  onClickHandler = () => {
+    const data = new FormData();
+    data.append('file', this.state.selectedFile);
+    axios.post('http://localhost:8080/api/uploadImage', data, {})
+      .then((res) => {
+        console.log(res);
+        this.setState({
+          gameObjects: [...this.state.gameObjects,
+            {
+              name: res.data.name,
+              filename: res.data.filename,
+              // sprite: require(`../../public/assets/${res.data.filename}`),
+              workspace: '',
+              jsCode: '',
+              key: res.data.name,
+            },
+          ],
+        });
+      });
+  }
+
+
   render() {
     const { classes } = this.props;
     return (
-      <div style={{height: 500}}>
-        <Button onClick={() => {
-          // this.setState({ xml: this.state.object1Xml })
-          this.createFile()
-          store.dispatch({type: BUILD_GAME, gameObjects: this.state.gameObjects});
-        }} 
+      <div style={{ height: 500 }}>
+        <Button
+          onClick={() => {
+            this.createFile();
+            store.dispatch({ type: BUILD_GAME, gameObjects: this.state.gameObjects });
+          }}
           variant="contained" color="primary" 
           className={classes.button}>Build and Run
         </Button>
@@ -309,41 +315,53 @@ class BlocklyPart extends React.Component {
               snap: true,
             },
           }}
-          initialXml={store.getState().gameObjects.length ? 
-            store.getState().gameObjects[this.state.slectedGameobjectIndex].workspace :
+          initialXml={store.getState().gameObjects.length ?
+            store.getState().gameObjects.find(gameObject => gameObject.key === this.state.slectedGameobjectIndex).workspace :
             null
           }
           wrapperDivClassName="fill-height"
           workspaceDidChange={this.workspaceDidChange}
         />
-        <div style={{ borderWidth: 3, borderColor: "black", width: 600, height: 150, backgroundColor: "red", margin: 10 }}>
+        <input type="file" name="file" onChange={this.onChangeHandler} />
+        <button type="button" class='btn btn-success btn-block' onClick={this.onClickHandler}>Upload</button>
+        <div style={{
+          borderWidth: 3, borderColor: 'black', width: 600, height: 150, backgroundColor: 'red', margin: 10,
+          }}
+        >
           {this.state.gameObjects.map((gameObject) => {
             // const thumbnail = require('./public/assets/ghost.png');
-            return (
-              <img
-                src={gameObject.sprite}
-                onClick={() => {
-                  this.setState({ slectedGameobjectIndex: gameObject.key })
-                  console.log(this.state.slectedGameobjectIndex)
-                  Blockly.mainWorkspace.clear();
-                  if (gameObject.workspace !== '') {
-                    console.log('loaded')
-                    var xml = Blockly.Xml.textToDom(gameObject.workspace);
-                    Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
-                  }
-                }}
-                style={{ width: 100, height: 100, margin: 5, backgroundColor: gameObject.key == this.state.slectedGameobjectIndex ? "yellow" : "white", borderWidth: 3, borderRadius: 20 }}
-                alt={gameObject.name} />
-            )
+            import(`../../public/assets/${gameObject.filename}`).then((src) => {
+              // this.setState({ imgSrc: src });
+              console.log(this.state);
+            });
+              return (
+                <img
+                  onClick={() => {
+                    this.setState({ slectedGameobjectIndex: gameObject.key })
+                    console.log(this.state.slectedGameobjectIndex)
+                    Blockly.mainWorkspace.clear();
+                    if (gameObject.workspace !== '') {
+                      console.log('loaded')
+                      var xml = Blockly.Xml.textToDom(gameObject.workspace);
+                      Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
+                    }
+                  }}
+                  src={this.state.imgSrc !== null ? this.state.imgSrc : null}
+                  style={{
+                    width: 100, height: 100, margin: 5, backgroundColor: gameObject.key === this.state.slectedGameobjectIndex ? "yellow" : "white", borderWidth: 3, borderRadius: 20,
+                  }}
+                  alt={gameObject.name}
+                />
+            );
           })}
         </div>
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = ({ showUi }) => ({
-    showUi
-  });
+  showUi,
+});
 
-export default connect(mapStateToProps)(withStyles(styles)(BlocklyPart))
+export default connect(mapStateToProps)(withStyles(styles)(BlocklyPart));
