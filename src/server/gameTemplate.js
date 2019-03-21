@@ -3,6 +3,9 @@ import MainScene from './Scenes/Main';
 import * as React from 'react';
 
 export default class Game extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   componentDidMount() {
     const config = {
       type: Phaser.AUTO,

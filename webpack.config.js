@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
-  entry: ['./src/client/app.jsx'],
+  entry: ['webpack/hot/dev-server/', './src/client/app.jsx'],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'react-blockly-component.js',
@@ -28,11 +28,13 @@ module.exports = {
       React: 'react',
       ReactDOM: 'react-dom',
     }),
+    new webpack.HotModuleReplacementPlugin(),
   ],
   resolve: {
     extensions: ['.js', '.jsx'],
   },
   devServer: {
+    hot: true,
     contentBase: './public',
     filename: 'react-blockly-component.js',
     port: 3000,
@@ -41,7 +43,10 @@ module.exports = {
       '/api': 'http://localhost:8080',
     },
     watchOptions: {
-      ignored: [path.resolve(__dirname, 'public')],
+      ignored: [
+        path.resolve(__dirname, 'public'),
+        // path.resolve(__dirname, 'src/client/Game'),
+      ],
     },
   },
 };

@@ -40,7 +40,11 @@ class BlocklyPart extends React.Component {
 
   componentDidMount = () => {
     if (store.getState().gameObjects.length !== 0) {
-      this.setState({ gameObjects: store.getState().gameObjects });
+      console.log(store.getState());
+      this.setState({
+        gameObjects: store.getState().gameObjects,
+        slectedGameobjectIndex: store.getState().gameObjects[0].key,
+      });
     }
     Blockly.Blocks['motion_foward'] = {
       init: function() {
@@ -451,6 +455,7 @@ Blockly.JavaScript['sprites_is_colliding_with_target'] = function(block) {
 
 
     document.getElementById('code').value = code;
+    // store.dispatch({ type: BUILD_GAME, gameObjects: this.state.gameObjects });
   }
 
 
@@ -481,6 +486,16 @@ Blockly.JavaScript['sprites_is_colliding_with_target'] = function(block) {
             },
           ],
         });
+        store.dispatch({ type: BUILD_GAME, gameObjects: this.state.gameObjects });
+      });
+  }
+
+  onClickBuildGame = () => {
+    console.log('updatecode');
+    const data = this.state.gameObjects;
+    axios.post('http://localhost:8080/api/updateCode', data, {})
+      .then((res) => {
+        console.log(res);
       });
   }
 
@@ -491,8 +506,9 @@ Blockly.JavaScript['sprites_is_colliding_with_target'] = function(block) {
       <div style={{ height: 500 }}>
         <Button
           onClick={() => {
-            this.createFile();
+            // this.createFile();
             store.dispatch({ type: BUILD_GAME, gameObjects: this.state.gameObjects });
+            this.onClickBuildGame();
           }}
           variant="contained" color="primary" 
           className={classes.button}>Build and Run
@@ -507,10 +523,10 @@ Blockly.JavaScript['sprites_is_colliding_with_target'] = function(block) {
               snap: true,
             },
           }}
-          initialXml={store.getState().gameObjects.length ?
-            store.getState().gameObjects.find(gameObject => gameObject.key === this.state.slectedGameobjectIndex).workspace :
-            null
-          }
+          // initialXml={store.getState().gameObjects.length && this.state.slectedGameobjectIndex !== '' ?
+          //   store.getState().gameObjects.find(gameObject => gameObject.key === this.state.slectedGameobjectIndex).workspace :
+          //   null
+          // }
           wrapperDivClassName="fill-height"
           workspaceDidChange={this.workspaceDidChange}
         />

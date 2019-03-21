@@ -1,4 +1,4 @@
-export default class Name extends Phaser.GameObjects.Sprite {
+export default class Zelda extends Phaser.GameObjects.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, config.key);
     config.scene.physics.world.enable(this);
@@ -9,9 +9,10 @@ export default class Name extends Phaser.GameObjects.Sprite {
     this.x = config.x;
     this.y = config.y;
     this.setDisplaySize(config.width, config.height);
-    // constructor here
   }
   update() {
+
     // update here
   }
 }
+
