@@ -9,10 +9,9 @@ export default class Zelda extends Phaser.GameObjects.Sprite {
     this.x = config.x;
     this.y = config.y;
     this.setDisplaySize(config.width, config.height);
+    // constructor here
   }
   update() {
-
     // update here
   }
 }
-

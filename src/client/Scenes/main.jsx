@@ -1,5 +1,5 @@
 import 'phaser';
-import { store } from '../store/configureStore';
+import store from '../store/configureStore';
 import Hero from './Hero';
 import Ghost from './Ghost';
 // import { connect } from "react-redux";
@@ -11,7 +11,7 @@ class MainScene extends Phaser.Scene {
   }
 
   restartGame = () => {
-    console.log(store.getState());
+    // console.log(store.default.getState());
     this.scene.restart();
   };
 
@@ -25,10 +25,10 @@ class MainScene extends Phaser.Scene {
   }
 
   create() {
-    // if (store.getState().gameObjects.length !== 0) {
+    // if (store.default.getState().gameObjects.length !== 0) {
     //     console.log('abc')
-    //     // console.log(store.getState())
-    //     var gameObjects = store.getState().gameObjects;
+    //     // console.log(store.default.getState())
+    //     var gameObjects = store.default.getState().gameObjects;
     //     gameObjects.forEach(object => {
     //         eval(object.jsCode);
     //     });

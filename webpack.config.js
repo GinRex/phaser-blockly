@@ -2,7 +2,10 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
-  entry: ['webpack/hot/dev-server/', './src/client/app.jsx'],
+  entry: [
+    // 'webpack/hot/dev-server/',
+    './src/client/app.jsx',
+  ],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'react-blockly-component.js',
@@ -28,6 +31,7 @@ module.exports = {
       React: 'react',
       ReactDOM: 'react-dom',
     }),
+    new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
   ],
   resolve: {
@@ -44,8 +48,8 @@ module.exports = {
     },
     watchOptions: {
       ignored: [
-        path.resolve(__dirname, 'public'),
-        // path.resolve(__dirname, 'src/client/Game'),
+        // path.resolve(__dirname, 'public'),
+        // path.resolve(__dirname, 'Game')
       ],
     },
   },

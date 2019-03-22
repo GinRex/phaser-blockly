@@ -27,6 +27,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage }).single('file');
 app.post('/api/uploadImage', (req, res) => {
+  console.log(req.body);
   upload(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       return res.status(500).json(err);
@@ -77,6 +78,13 @@ app.post('/api/uploadImage', (req, res) => {
           width: 100,
           height: 100,
         });`,
+      );
+
+      const updateIndex = data.indexOf('    // update here');
+      data.splice(
+        updateIndex,
+        0,
+        `this.${req.file.name}.update();`,
       );
       const text = data.join('\n');
       fs.writeFile(`${mainfile}`, text, (err) => {

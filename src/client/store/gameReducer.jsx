@@ -1,31 +1,19 @@
-export const TOGGLE_UI = "TOGGLE_UI";
-export const BUILD_GAME = "BUILD_GAME";
+export const SELECT_FILE = 'SELECT_FILE';
+export const BUILD_GAME = 'BUILD_GAME';
 
 const initState = {
-  showUi: false,
+  selectedFile: null,
   gameObjects: [],
   gameState: 'STOP',
 };
 
-export const toggleUi = () => ({
-  type: TOGGLE_UI,
-});
-
-export const buildGame = (gameObjects) => ({
-  type: BUILD_GAME,
-  gameObjects
-});
-
-export const gameReducer = (
-  state = initState,
-  action
-) => {
-  console.log("Action:", action);
+export const gameReducer = (state = initState, action) => {
+  console.log('Action:', action);
   switch (action.type) {
-    case TOGGLE_UI:
-      return { ...state, showUi: !state.showUi };
+    case SELECT_FILE:
+      return { ...state, selectedFile: action.selectedFile };
     case BUILD_GAME:
-      return { ...state, gameState: 'BUILD', gameObjects: action.gameObjects};
+      return { ...state, gameState: 'BUILD', gameObjects: action.gameObjects };
     default:
       return state;
   }

@@ -3,7 +3,9 @@ import Game from '../Game/zelda/Game';
 import Blockly from './dev-index';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from './store/configureStore';
+import configureStore from './store/configureStore';
+
+const { store, persistor } = configureStore();
 
 class App extends Component {
   render() {

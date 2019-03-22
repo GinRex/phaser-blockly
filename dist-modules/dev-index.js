@@ -41,8 +41,8 @@ class BlocklyPart extends React.Component {
     };
 
     this.componentDidMount = () => {
-      if (store.getState().gameObjects.length) {
-        this.setState({ gameObjects: store.getState().gameObjects });
+      if (store.default.getState().gameObjects.length) {
+        this.setState({ gameObjects: store.default.getState().gameObjects });
       } else {
         this.setState({
           gameObjects: [{
@@ -273,7 +273,7 @@ class BlocklyPart extends React.Component {
             snap: true
           }
         },
-        initialXml: store.getState().gameObjects.length ? store.getState().gameObjects[this.state.slectedGameobjectIndex].workspace : null,
+        initialXml: store.default.getState().gameObjects.length ? store.default.getState().gameObjects[this.state.slectedGameobjectIndex].workspace : null,
         wrapperDivClassName: 'fill-height',
         workspaceDidChange: this.workspaceDidChange
       }),

@@ -1,12 +1,12 @@
 import 'phaser';
 import Zelda from '../Zelda';
 import Ghost from '../Ghost';
-import { store } from '../../../client/store/configureStore';
+// import configureStore from '../../../client/store/configureStore';
 
 class MainScene extends Phaser.Scene {
   constructor(props) {
     super(props);
-    store.subscribe(this.restartGame);
+    // configureStore().store.subscribe(this.restartGame);
   }
 
   restartGame = () => {
@@ -44,6 +44,8 @@ this.Zelda = new Zelda({
   }
 
   update() {
+this.Ghost.update();
+this.Zelda.update();
     // update here
   }
 }
