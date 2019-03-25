@@ -1,3 +1,5 @@
+import { foward } from '../../client/HandleMotion';
+
 export default class Ghost extends Phaser.GameObjects.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, config.key);
@@ -9,9 +11,12 @@ export default class Ghost extends Phaser.GameObjects.Sprite {
     this.x = config.x;
     this.y = config.y;
     this.setDisplaySize(config.width, config.height);
+    window.alert('abc');
+
     // constructor here
   }
   update() {
+    foward(this, 10);
     // update here
   }
 }

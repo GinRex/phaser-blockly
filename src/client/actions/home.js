@@ -39,3 +39,10 @@ export const uploadImage = file => (dispatch) => {
     }));
   });
 };
+
+export const updateGame = gameObjects => (dispatch) => {
+  const data = gameObjects;
+  return axios.post('http://localhost:8080/api/updateCode', data, {}).then((res) => {
+    console.log(res);
+  });
+};

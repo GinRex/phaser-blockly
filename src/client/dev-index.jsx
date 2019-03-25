@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import ReactBlocklyComponent from './index';
 import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
-import { selectFile, buildGame, uploadImage, setSlectedGameobjectIndex, updateWorkspace } from './actions/home';
+import { selectFile, buildGame, uploadImage, setSlectedGameobjectIndex, updateWorkspace, updateGame } from './actions/home';
 
 const styles = theme => ({
   button: {
@@ -488,6 +488,7 @@ Blockly.JavaScript['sprites_is_colliding_with_target'] = function(block) {
             // this.createFile();
             // this.props.dispatch({ type: BUILD_GAME, gameObjects: this.state.gameObjects });
             // this.onClickBuildGame();
+            this.props.updateGame(this.props.gameObjects);
           }}
           variant="contained" color="primary" 
           className={classes.button}>Build and Run
@@ -555,6 +556,7 @@ const mapDispatchToProps = {
   uploadImage,
   setSlectedGameobjectIndex,
   updateWorkspace,
+  updateGame,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(BlocklyPart));
