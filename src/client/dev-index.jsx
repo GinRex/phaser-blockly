@@ -251,7 +251,180 @@ class BlocklyPart extends React.Component {
       }
     };
 
+    Blockly.Blocks['sprites_set_current_sprite'] = {
+      init: function() {
+        this.appendDummyInput()
+          .appendField("set the current sprite");
+        this.appendValueInput("SPRITE_OPTION_BOX")
+        .setCheck("String")
+            //.appendField(new Blockly.FieldDropdown(parent_), "sprite");
+        .appendField(new Blockly.FieldDropdown(dynamicOptions), "sprite");
+        //this.appendValueInput("ANGLE")
+        //    .setCheck("Number")
+        //    .setAlign(Blockly.ALIGN_RIGHT)
+        //    .appendField(new Blockly.FieldAngle(90), "A");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
 
+    
+
+    Blockly.Blocks['sprites_set_target_sprite'] = {
+      init: function() {
+        this.appendDummyInput()
+          .appendField("set the target sprite");
+        this.appendValueInput("SPRITE_OPTION_BOX")
+        .setCheck("String")
+            //.appendField(new Blockly.FieldDropdown(parent_), "sprite");
+        .appendField(new Blockly.FieldDropdown(dynamicOptions), "sprite");
+        //this.appendValueInput("ANGLE")
+        //    .setCheck("Number")
+        //    .setAlign(Blockly.ALIGN_RIGHT)
+        //    .appendField(new Blockly.FieldAngle(90), "A");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+   
+
+    Blockly.Blocks['sprites_value_of_x'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("value of x");
+        this.setOutput(true, "Number");
+        this.setColour(210);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+   
+    
+    Blockly.Blocks['sprites_value_of_y'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("value of y");
+        this.setOutput(true, "Number");
+        this.setColour(210);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      //oncgange Javascript generation
+      }
+    };
+   
+
+    Blockly.Blocks['sprites_nested_for_each_clone_of_current_target_sprite'] = {
+      init: function() {
+        this.appendStatementInput("STATEMENT_CODE")
+            .setCheck(null)
+            .appendField("nested for each clone of current target sprite");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(120);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+    
+
+
+    Blockly.Blocks['sprites_for_each_clone_of_current_sprite_new'] = {
+      init: function() {
+        this.appendStatementInput("STATEMENT_CODE")
+            .setCheck(null)
+            .appendField("do when clones collides");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(120);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+   
+
+    Blockly.Blocks['sprites_next_frame'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("next frame of current sprite");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    }
+    
+
+    Blockly.Blocks['sprites_current_sprite_send_to_back'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("current sprite send to back");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+    
+
+    Blockly.Blocks['sprites_current_sprite_bring_to_front'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("current sprite bring to front");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+   
+
+    Blockly.Blocks['sprites_set_current_sprite_to_target_sprite'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("set current sprite to target sprite");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
+    
+
+    Blockly.Blocks['sprites_current_frame_number'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField("get current frame number");
+        this.setOutput(true, "Number");
+        this.setColour(210);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      //oncgange Javascript generation
+      }
+    };
+    
+
+    Blockly.Blocks['sprites_set_frame_to_frame_number'] = {
+      init: function() {
+        this.appendValueInput("FRAME_NUMBER")
+            //.setCheck("Number")
+            .appendField("set frame to frame");
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setColour(260);
+        this.setTooltip('');
+        this.setHelpUrl('http://www.example.com/');
+      }
+    };
 
 
 
@@ -287,7 +460,19 @@ class BlocklyPart extends React.Component {
               { type: 'sprites_hide_current_sprite' },
               { type: 'sprites_show_current_sprite' },
               { type: 'sprites_for_each_clone_of_current_sprite' },
-              { type: 'sprites_is_colliding_with_target' }
+              { type: 'sprites_is_colliding_with_target' },
+             //{ type: 'sprites_set_current_sprite'},
+              // { type: 'sprites_set_target_sprite'},
+               { type: 'sprites_value_of_x'},
+               { type: 'sprites_value_of_y'},
+               { type: 'sprites_nested_for_each_clone_of_current_target_sprite'},
+               { type: 'sprites_for_each_clone_of_current_sprite_new'},
+              { type: 'sprites_next_frame'},
+              { type: 'sprites_current_sprite_send_to_back'},
+              { type: 'sprites_current_sprite_bring_to_front'},
+              { type: 'sprites_set_current_sprite_to_target_sprite'},
+              { type: 'sprites_current_frame_number'},
+              { type: 'sprites_set_frame_to_frame_number'},
             ],
           },
         ]),
@@ -393,13 +578,13 @@ Blockly.JavaScript['sprites_destroy_current_sprite'] = function(block) {
 
 Blockly.JavaScript['sprites_hide_current_sprite'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = 'hide_current_sprite();\n';
+  var code = 'hide_current_sprite(this);\n';
   return code;
 };
 
 Blockly.JavaScript['sprites_show_current_sprite'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = 'show_current_sprite();\n';
+  var code = 'show_current_sprite(this);\n';
   return code;
 };
 
@@ -424,6 +609,162 @@ Blockly.JavaScript['sprites_is_colliding_with_target'] = function(block) {
   //return [code, Blockly.JavaScript.ORDER_NONE];
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
+
+Blockly.JavaScript['sprites_set_current_sprite'] = function(block) {
+  var dropdown_sprite = block.getFieldValue('sprite');
+  var value_sprite_option_box = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+  //var angle_a = block.getFieldValue('A');
+  //var value_angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC);
+  var sprite_name = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+  
+  // TODO: Assemble JavaScript into code variable
+  //var argument0 = Blockly.JavaScript.valueToCode(block, 'ANGLE',Blockly.JavaScript.ORDER_NONE) || '\'\'';
+  //override fields if variables provided
+  var sprite_name_final=value_sprite_option_box==""?dropdown_sprite:value_sprite_option_box;
+  if(sprite_name_final=="OPT0") {
+    //alert("You have not selected a sprite in 'set current sprite' block, please select a sprite");
+    return "//error,failed to select sprite in 'set current sprite' block"
+  }
+
+  var code = 'set_current_sprite_name("'+sprite_name_final+'");\n';
+  return code;
+};
+
+ Blockly.JavaScript['sprites_set_target_sprite'] = function(block) {
+  var dropdown_sprite = block.getFieldValue('sprite');
+  var value_sprite_option_box = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+  //var angle_a = block.getFieldValue('A');
+  //var value_angle = Blockly.JavaScript.valueToCode(block, 'ANGLE', Blockly.JavaScript.ORDER_ATOMIC);
+  var sprite_name = Blockly.JavaScript.valueToCode(block, 'SPRITE_OPTION_BOX', Blockly.JavaScript.ORDER_ATOMIC);
+  
+  // TODO: Assemble JavaScript into code variable
+  //var argument0 = Blockly.JavaScript.valueToCode(block, 'ANGLE',Blockly.JavaScript.ORDER_NONE) || '\'\'';
+  //override fields if variables provided
+  var sprite_name_final=value_sprite_option_box==""?dropdown_sprite:value_sprite_option_box;
+  if(sprite_name_final=="OPT0") {
+    //alert("You have not selected a sprite in 'set current sprite' block, please select a sprite");
+    return "//error,failed to select sprite in 'set current sprite' block"
+  }
+
+  var code = 'set_target_sprite_name("'+sprite_name_final+'");\n';
+  return code;
+};
+
+ Blockly.JavaScript['sprites_value_of_x'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = "parseInt(get_x_value())";;
+  // TODO: Change ORDER_NONE to the correct strength.
+  //return [code, Blockly.JavaScript.ORDER_NONE];
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
+ Blockly.JavaScript['sprites_value_of_y'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = "parseInt(get_y_value())";
+  // TODO: Change ORDER_NONE to the correct strength.
+  //return [code, Blockly.JavaScript.ORDER_NONE];
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
+Blockly.JavaScript['sprites_nested_for_each_clone_of_current_target_sprite'] = function(block) {
+  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
+  // TODO: Assemble JavaScript into code variable.
+  code=	'var game_object_target;\n';
+  code+='game_object_target=find_target_sprite_with_clones_object_by_name(target_sprite_name);\n';
+  code+='for(var clone_target in game_object_target.clones){\n';
+  //code+='	debug_current_sprite_name=current_sprite_name;\n';
+  code+='	current_target_clone=clone_target;\n';
+  code+=statements_statement_code+'\n';
+  code+='}\n';
+  code+='current_target_clone=null;\n';
+  return code;
+};	
+
+ Blockly.JavaScript['sprites_for_each_clone_of_current_sprite_new'] = function(block) {
+  var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
+  
+  code=	'var game_object;\n';
+  code+='game_object=find_sprite_object_by_name_new(current_sprite_name);\n';
+  code+='for(var clone in game_object.clones) {\n';
+  code+='  current_clone=clone;\n';
+  code+='  var game_object_target;\n';
+  code+='  game_object_target=find_target_sprite_with_clones_object_by_name(target_sprite_name);\n';
+  code+='  for(var clone_target in game_object_target.clones) {\n';
+  code+='    current_target_clone=clone_target;\n';
+  code+='    if(current_sprite_clones_are_colliding_with_target_sprite_clones()) {\n';
+  code+='      //do when current sprite clone collides with target clone\n';
+  code+=statements_statement_code+'\n';
+  code+='      //end\n';
+  code+='    }\n';
+  code+='  }\n';
+  code+='  current_target_clone=null;\n';
+  code+='}\n';
+  code+='current_clone=null;\n';
+  return code;
+};
+
+Blockly.JavaScript['sprites_next_frame'] = function(block) {
+  //Assemble JavaScript into code variable.
+  var code = 'next_fame();\n';
+  return code;
+};
+
+Blockly.JavaScript['sprites_current_sprite_send_to_back'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  /*
+  set_current_sprite_name("frog");
+  game_object=find_sprite_object_by_name(current_sprite_name);
+
+  //but this did
+  game_object=find_sprite_object_by_name("frog");
+  game_object.sprite.bringToTop()
+  
+  I am able to do game_object.sprite.bringToTop() and it works, but when I try game_object.sprite.sendToBack() I get TypeError: game_object.sprite.sendToBack is not a function , I am using Phaser v2.0.2 - Canvas - WebAudio     , any idea what could be wrong?
+  
+  ada answer: game.world.sendToBack(sprite)
+  */
+  var code = 	'var go=find_sprite_object_by_name(current_sprite_name);\n';
+  code = code + 'go.sprite.sendToBack();\n';
+  return code;
+};
+
+ Blockly.JavaScript['sprites_current_sprite_bring_to_front'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  /*
+  set_current_sprite_name("frog");
+  game_object=find_sprite_object_by_name(current_sprite_name);
+
+  //but this did
+  game_object=find_sprite_object_by_name("frog");
+  game_object.sprite.bringToTop()
+  */
+  var code = 	'var go=find_sprite_object_by_name(current_sprite_name);\n';
+  code = code + 'go.sprite.bringToTop();\n';
+  return code;
+};
+
+Blockly.JavaScript['sprites_set_current_sprite_to_target_sprite'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = 'set_current_sprite_to_target_sprite();\n';
+  return code;
+};
+
+Blockly.JavaScript['sprites_current_frame_number'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = "parseInt(current_frame_number())";
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
+Blockly.JavaScript['sprites_set_frame_to_frame_number'] = function(block) {
+  var value_FRAME_NUMBER = Blockly.JavaScript.valueToCode(block, 'FRAME_NUMBER', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  var argument0 = Blockly.JavaScript.valueToCode(block, 'FRAME_NUMBER',
+    Blockly.JavaScript.ORDER_NONE) || '\'\'';
+  var code = 'set_frame_to_frame_number('+argument0+');\n';
+  return code;
+};
+
+
 
 
   console.log(this.state)
