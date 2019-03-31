@@ -483,7 +483,7 @@ class BlocklyPart extends React.Component {
         // TODO: Assemble JavaScript into code variable.
         var argument0 = Blockly.JavaScript.valueToCode(block, 'DISTANCE',
           Blockly.JavaScript.ORDER_NONE) || '\'\'';
-        var code = 'foward('+argument0+');\n';
+        var code = 'Motion.foward(this, '+argument0+');\n';
         return code;
       };
       Blockly.JavaScript['motion_turn_right'] = function(block) {
@@ -491,7 +491,7 @@ class BlocklyPart extends React.Component {
         // TODO: Assemble JavaScript into code variable.
         var argument0 = Blockly.JavaScript.valueToCode(block, 'DEGREES',
           Blockly.JavaScript.ORDER_NONE) || '\'\'';
-        var code = 'turn_right('+argument0+');\n';
+        var code = 'Motion.turn_right(this, '+argument0+');\n';
         return code;
       };
 
@@ -500,7 +500,7 @@ class BlocklyPart extends React.Component {
         // TODO: Assemble JavaScript into code variable.
         var argument0 = Blockly.JavaScript.valueToCode(block, 'DEGREES',
           Blockly.JavaScript.ORDER_NONE) || '\'\'';
-        var code = 'turn_left('+argument0+');\n';
+        var code = 'Motion.turn_left(this, '+argument0+');\n';
         return code;
       };
 
@@ -511,13 +511,13 @@ class BlocklyPart extends React.Component {
         var argument0 = Blockly.JavaScript.valueToCode(block, 'ANGLE',
           Blockly.JavaScript.ORDER_NONE) || '\'\'';
         var angle_final=argument0=="''"?angle_a:argument0;
-        var code = 'point_in_direction_degrees('+angle_final+');\n';
+        var code = 'Motion.point_in_direction_degrees(this, '+angle_final+');\n';
         return code;
       };
 
       Blockly.JavaScript['motion_point_in_direction_of_target'] = function(block) {
         // TODO: Assemble JavaScript into code variable.
-        var code = 'point_spriteA_in_direction_spriteB();\n';
+        var code = 'Motion.point_spriteA_in_direction_spriteB(this);\n';
         return code;
       };
 
@@ -525,25 +525,25 @@ class BlocklyPart extends React.Component {
         var value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
         var value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
         // TODO: Assemble JavaScript into code variable.
-        var code = 'point_sprite_in_direction_to_point('+value_x+','+value_y+');\n';
+        var code = 'Motion.point_sprite_in_direction_to_point(this, '+value_x+','+value_y+');\n';
         return code;
     };
 
-      Blockly.JavaScript['motion_set_x_to'] = function(block) {
+      Blockly.JavaScript['Motion.motion_set_x_to'] = function(block) {
         var value_distance = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);
         // TODO: Assemble JavaScript into code variable.
         var argument0 = Blockly.JavaScript.valueToCode(block, 'X',
           Blockly.JavaScript.ORDER_NONE) || '\'\'';
-        var code = 'set_x_to('+argument0+');\n';
+        var code = 'set_x_to(this, '+argument0+');\n';
         return code;
       };
 
-      Blockly.JavaScript['motion_set_y_to'] = function(block) {
+      Blockly.JavaScript['Motion.motion_set_y_to'] = function(block) {
         var value_distance = Blockly.JavaScript.valueToCode(block, 'Y', Blockly.JavaScript.ORDER_ATOMIC);
         // TODO: Assemble JavaScript into code variable.
         var argument0 = Blockly.JavaScript.valueToCode(block, 'Y',
           Blockly.JavaScript.ORDER_NONE) || '\'\'';
-        var code = 'set_y_to('+argument0+');\n';
+        var code = 'set_y_to(this, '+argument0+');\n';
         return code;
       };
 
@@ -566,30 +566,31 @@ Blockly.JavaScript['events_when_event_happens'] = function(block) {
 //SPRITES
 Blockly.JavaScript['sprites_create_clone_of_current_sprite'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = 'clone_sprite();\n';
+  var code = 'Sprite.clone_sprite(this);\n';
   return code;
 };
 
 Blockly.JavaScript['sprites_destroy_current_sprite'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = 'destroy_current_sprite();\n';
+  var code = 'Sprite.destroy_current_sprite(this);\n';
   return code;
 };
 
 Blockly.JavaScript['sprites_hide_current_sprite'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = 'hide_current_sprite(this);\n';
+  var code = 'Sprite.hide_current_sprite(this);\n';
   return code;
 };
 
 Blockly.JavaScript['sprites_show_current_sprite'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = 'show_current_sprite(this);\n';
+  var code = 'Sprite.show_current_sprite(this);\n';
   return code;
 };
 
 Blockly.JavaScript['sprites_for_each_clone_of_current_sprite'] = function(block) {
   var statements_statement_code = Blockly.JavaScript.statementToCode(block, 'STATEMENT_CODE');
+  var code ='';
   // TODO: Assemble JavaScript into code variable.
   code=	'var game_object;\n';
   code+=	'game_object=find_sprite_object_by_name(current_sprite_name);\n';
@@ -604,7 +605,7 @@ Blockly.JavaScript['sprites_for_each_clone_of_current_sprite'] = function(block)
 
 Blockly.JavaScript['sprites_is_colliding_with_target'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = "is_colliding_with_target()";
+  var code = "Sprite.is_colliding_with_target(this)";
   // TODO: Change ORDER_NONE to the correct strength.
   //return [code, Blockly.JavaScript.ORDER_NONE];
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
@@ -626,7 +627,7 @@ Blockly.JavaScript['sprites_set_current_sprite'] = function(block) {
     return "//error,failed to select sprite in 'set current sprite' block"
   }
 
-  var code = 'set_current_sprite_name("'+sprite_name_final+'");\n';
+  var code = 'Sprite.set_current_sprite_name("this, '+sprite_name_final+'");\n';
   return code;
 };
 
@@ -646,13 +647,13 @@ Blockly.JavaScript['sprites_set_current_sprite'] = function(block) {
     return "//error,failed to select sprite in 'set current sprite' block"
   }
 
-  var code = 'set_target_sprite_name("'+sprite_name_final+'");\n';
+  var code = 'Sprite.set_target_sprite_name("this, '+sprite_name_final+'");\n';
   return code;
 };
 
  Blockly.JavaScript['sprites_value_of_x'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = "parseInt(get_x_value())";;
+  var code = "Sprite.parseInt(this, get_x_value())";;
   // TODO: Change ORDER_NONE to the correct strength.
   //return [code, Blockly.JavaScript.ORDER_NONE];
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
@@ -660,7 +661,7 @@ Blockly.JavaScript['sprites_set_current_sprite'] = function(block) {
 
  Blockly.JavaScript['sprites_value_of_y'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = "parseInt(get_y_value())";
+  var code = "Sprite.parseInt(this, get_y_value())";
   // TODO: Change ORDER_NONE to the correct strength.
   //return [code, Blockly.JavaScript.ORDER_NONE];
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
@@ -693,7 +694,7 @@ Blockly.JavaScript['sprites_nested_for_each_clone_of_current_target_sprite'] = f
   code+='    current_target_clone=clone_target;\n';
   code+='    if(current_sprite_clones_are_colliding_with_target_sprite_clones()) {\n';
   code+='      //do when current sprite clone collides with target clone\n';
-  code+=statements_statement_code+'\n';
+  code+= statements_statement_code+'\n';
   code+='      //end\n';
   code+='    }\n';
   code+='  }\n';
@@ -705,7 +706,7 @@ Blockly.JavaScript['sprites_nested_for_each_clone_of_current_target_sprite'] = f
 
 Blockly.JavaScript['sprites_next_frame'] = function(block) {
   //Assemble JavaScript into code variable.
-  var code = 'next_fame();\n';
+  var code = 'Sprite.next_fame(this);\n';
   return code;
 };
 
@@ -745,13 +746,13 @@ Blockly.JavaScript['sprites_current_sprite_send_to_back'] = function(block) {
 
 Blockly.JavaScript['sprites_set_current_sprite_to_target_sprite'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = 'set_current_sprite_to_target_sprite();\n';
+  var code = 'Sprite.set_current_sprite_to_target_sprite(this);\n';
   return code;
 };
 
 Blockly.JavaScript['sprites_current_frame_number'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = "parseInt(current_frame_number())";
+  var code = "Sprite.parseInt(this, current_frame_number())";
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
@@ -760,7 +761,7 @@ Blockly.JavaScript['sprites_set_frame_to_frame_number'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
   var argument0 = Blockly.JavaScript.valueToCode(block, 'FRAME_NUMBER',
     Blockly.JavaScript.ORDER_NONE) || '\'\'';
-  var code = 'set_frame_to_frame_number('+argument0+');\n';
+  var code = 'Sprite.set_frame_to_frame_number(this, '+argument0+');\n';
   return code;
 };
 
