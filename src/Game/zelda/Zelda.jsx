@@ -1,6 +1,6 @@
 import * as Motion from '../../client/HandleMotion';
 
-export default class Ghost extends Phaser.GameObjects.Sprite {
+export default class Zelda extends Phaser.GameObjects.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, config.key);
     config.scene.physics.world.enable(this);
@@ -14,7 +14,7 @@ export default class Ghost extends Phaser.GameObjects.Sprite {
     // constructor here
   }
   update() {
-Motion.foward( this, 10);
+Motion.foward( this, 20);
 
     // update here
   }

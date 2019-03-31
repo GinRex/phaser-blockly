@@ -40,9 +40,19 @@ export const uploadImage = file => (dispatch) => {
   });
 };
 
+export const restartGame = () => ({
+  type: 'RESTART_GAME',
+});
+
 export const updateGame = gameObjects => (dispatch) => {
   const data = gameObjects;
   return axios.post('http://localhost:8080/api/updateCode', data, {}).then((res) => {
     console.log(res);
+    // dispatch(restartGame());
   });
 };
+
+export const setGame = game => ({
+  type: 'SET_GAME',
+  game,
+});

@@ -3,6 +3,7 @@ const initState = {
   gameObjects: [],
   gameState: 'STOP',
   slectedGameobjectIndex: '',
+  // game: null,
 };
 
 const gameReducer = (state = initState, action) => {
@@ -19,8 +20,16 @@ const gameReducer = (state = initState, action) => {
     case 'SET_INDEX': {
       return { ...state, slectedGameobjectIndex: action.index };
     }
-    case 'UPDATE_WORKSPACE':
-      return { ...state, gameObjects: action.gameObjects };
+    case 'UPDATE_WORKSPACE': {
+      const gameObjects = action.gameObjects;
+      console.log(gameObjects);
+      return { ...state, gameObjects };
+    }
+    case 'SET_GAME':
+      return { ...state, game: action.game };
+    case 'RESTART_GAME':
+      state.game.scene.scenes[0].restartGame();
+      return state;
     default:
       return state;
   }

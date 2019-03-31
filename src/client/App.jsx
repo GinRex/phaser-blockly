@@ -18,7 +18,7 @@ class App extends Component {
                 <Blockly />
               </div>
               <div className="col-sm-2">
-                <Game store={store} />
+                <Game />
                 <textarea id="code" style={{ height: 200, width: 400 }} value="" />
               </div>
             </div>

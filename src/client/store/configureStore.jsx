@@ -9,8 +9,8 @@ import rootReducer from '../reducers';
 
 const persistConfig = {
   key: 'root',
-  debug: true,
   storage,
+  blacklist: ['home'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
