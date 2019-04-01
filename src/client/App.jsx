@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Game from '../Game/zelda/Game';
+import Game from './GameContainer';
 import Blockly from './dev-index';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
