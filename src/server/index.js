@@ -81,11 +81,7 @@ app.post('/api/uploadImage', (req, res) => {
       );
 
       const updateIndex = data.indexOf('    // update here');
-      data.splice(
-        updateIndex,
-        0,
-        `this.${req.file.name}.update();`,
-      );
+      data.splice(updateIndex, 0, `this.${req.file.name}.update();`);
       const text = data.join('\n');
       fs.writeFile(`${mainfile}`, text, (err) => {
         console.log(err);
@@ -149,9 +145,11 @@ app.post('/api/updateCode', (req, res) => {
         .toString()
         .split('\n');
       console.log(data);
-      const updateIndex = data.indexOf('    // constructor here');
-      data.splice(updateIndex, 0, object.jsCode);
+      const updateEndIndex = data.indexOf('    // update here');
+      const updateStartIndex = data.indexOf('  update() {');
+      data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, object.jsCode);
       const text = data.join('\n');
+      console.log(updateStartIndex, updateEndIndex);
       fs.writeFile(`${objectName}`, text, (err) => {
         console.log(err);
       });
@@ -159,6 +157,7 @@ app.post('/api/updateCode', (req, res) => {
       console.error(err);
     }
   });
+  return res.status(200).send({});
   // const gameObjects = req.data.gameObjects
 });
 

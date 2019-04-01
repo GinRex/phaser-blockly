@@ -1,17 +1,17 @@
 import Phaser from 'phaser';
-import MainScene from './Scenes/Main';
+import { connect } from 'react-redux';
 import * as React from 'react';
 
-export default class Game extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  componentDidMount() {
-    const config = {
+import MainScene from './Scenes/Main';
+import { setGame } from '../../client/actions/home';
+
+class Game extends React.Component {
+  state = {
+    config: {
       type: Phaser.AUTO,
       pixelArt: true,
-width: 500,
-height: 400,
+      width: 500,
+      height: 400,
       parent: 'phaser-game',
       physics: {
         default: 'arcade',
@@ -23,11 +23,27 @@ height: 400,
         },
       },
       scene: [MainScene],
-    };
-    const game = new Phaser.Game(config);
+    },
+  };
+  componentDidMount() {
+    const game = new Phaser.Game(this.state.config);
+    // this.props.setGame(game);
   }
 
   render() {
     return <div id="phaser-game" />;
   }
 }
+
+const mapStateToProps = state => ({
+  game: state.home.game,
+});
+
+const mapDispatchToProps = {
+  setGame,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Game);
