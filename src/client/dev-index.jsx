@@ -39,6 +39,7 @@ class BlocklyPart extends React.Component {
   };
 
   workspaceDidChange = (workspace, gameObjects, slectedGameobjectIndex) => {
+    console.log(workspace)
     const newXml = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
     const code = Blockly.JavaScript.workspaceToCode(workspace);
     const currentGameobject =

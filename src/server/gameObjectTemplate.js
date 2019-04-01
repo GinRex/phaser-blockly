@@ -1,4 +1,5 @@
 import * as Motion from '../../client/HandleMotion';
+import * as Sprite from '../../client/HandleSprite';
 
 export default class Name extends Phaser.GameObjects.Sprite {
   constructor(config) {

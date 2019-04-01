@@ -1,10 +1,8 @@
 import 'phaser';
-import { store } from '../../../client/store/configureStore';
 
 class MainScene extends Phaser.Scene {
   constructor(props) {
     super(props);
-    store.subscribe(this.restartGame);
   }
 
   restartGame = () => {

@@ -8,6 +8,7 @@ const initState = {
 
 const gameReducer = (state = initState, action) => {
   console.log('Action:', action);
+  console.log('current state', state);
   switch (action.type) {
     case 'SELECT_FILE':
       return { ...state, selectedFile: action.selectedFile };
@@ -21,9 +22,7 @@ const gameReducer = (state = initState, action) => {
       return { ...state, slectedGameobjectIndex: action.index };
     }
     case 'UPDATE_WORKSPACE': {
-      const gameObjects = action.gameObjects;
-      console.log(gameObjects);
-      return { ...state, gameObjects };
+      return { ...state, gameObjects: action.gameObjects };
     }
     case 'SET_GAME':
       return { ...state, game: action.game };

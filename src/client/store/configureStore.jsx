@@ -10,7 +10,6 @@ import rootReducer from '../reducers';
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['home'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -28,10 +27,12 @@ export default (initialState = {}) => {
   });
 
   if (module.hot) {
-    module.hot.accept('../reducers', () => {
+    module.hot.accept(() => {
       // This fetch the new state of the above reducers.
-      const nextRootReducer = require('../reducers/index');
+      console.log('fetch new state');
+      const nextRootReducer = require('../reducers').default;
       store.replaceReducer(persistReducer(persistConfig, nextRootReducer));
+      store.persistor.persist();
     });
   }
 
