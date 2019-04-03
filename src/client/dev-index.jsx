@@ -70,11 +70,8 @@ class BlocklyPart extends React.Component {
     console.log(currentGameobject);
     return (
       <div style={{ height: 500 }}>
-        {/* <div>{this.props.selectedFile.name}</div> */}
         <Button
           onClick={() => {
-            // this.createFile();
-            // this.props.dispatch({ type: BUILD_GAME, gameObjects: this.state.gameObjects });
             this.props.updateGame(this.props.gameObjects);
           }}
           variant="contained"
@@ -82,6 +79,18 @@ class BlocklyPart extends React.Component {
           className={classes.button}
         >
           Build and Run
+        </Button>
+        <Button
+          onClick={() => {
+            const myWindow = window.open(`${window.location.href}game_iframe.html`, 'game');
+            myWindow.focus();
+            this.props.updateGame(this.props.gameObjects);
+          }}
+          variant="contained"
+          color="secondary"
+          className={classes.button}
+        >
+          Open in new tab
         </Button>
         <ReactBlocklyComponent.BlocklyEditor
           toolboxCategories={parseWorkspaceXml(ConfigFiles.INITIAL_TOOLBOX_XML).concat(toolboxCategories)}
@@ -124,7 +133,7 @@ class BlocklyPart extends React.Component {
             borderColor: 'black',
             width: 600,
             height: 150,
-            backgroundColor: 'red',
+            backgroundColor: 'grey',
             margin: 10,
           }}
         >
@@ -132,9 +141,6 @@ class BlocklyPart extends React.Component {
             <img
               onClick={() => {
                 this.props.setSlectedGameobjectIndex(gameObject.key);
-                // this.setState({ slectedGameobjectIndex: gameObject.key })
-                // console.log(this.state.slectedGameobjectIndex)
-
                 Blockly.mainWorkspace.clear();
                 if (gameObject.workspace !== '') {
                   const xml = Blockly.Xml.textToDom(gameObject.workspace);

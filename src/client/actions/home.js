@@ -47,8 +47,8 @@ export const restartGame = () => ({
 export const updateGame = gameObjects => (dispatch) => {
   const data = gameObjects;
   return axios.post('http://localhost:8080/api/updateCode', data, {}).then((res) => {
-    console.log(res);
-    // dispatch(restartGame());
+    const frame = document.getElementById('sandboxed');
+    frame.contentWindow.postMessage('reload', '*');
   });
 };
 

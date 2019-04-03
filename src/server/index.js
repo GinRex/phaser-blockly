@@ -124,8 +124,6 @@ app.post('/api/createGame', (req, res) => {
       .readFileSync(`${__dirname}/gameTemplate.js`)
       .toString()
       .split('\n');
-    data.splice(12, 1, `width: ${req.body.width},`);
-    data.splice(13, 1, `height: ${req.body.height},`);
     const text = data.join('\n');
     fs.writeFile(`${folderName}/Game.jsx`, text, (err) => {
       console.log(err);
