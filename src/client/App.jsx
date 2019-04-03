@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import Game from './GameContainer';
-import Blockly from './dev-index';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import Blockly from './dev-index';
 import configureStore from './store/configureStore';
 
 const { store, persistor } = configureStore();
 
 class App extends Component {
+  componentDidMount() {}
   render() {
     return (
       <Provider store={store}>
@@ -18,7 +18,12 @@ class App extends Component {
                 <Blockly />
               </div>
               <div className="col-sm-2">
-                <Game />
+                <iframe
+                  style={{ height: 600, width: 600 }}
+                  title="phaser-game"
+                  id="sandboxed"
+                  src="game_iframe.html"
+                />
                 <textarea id="code" style={{ height: 200, width: 400 }} value="" />
               </div>
             </div>

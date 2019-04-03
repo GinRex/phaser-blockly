@@ -1,20 +1,22 @@
-export class Game extends Phaser.Game {
-  //   constructor(conf: GameConfig) {
-  //     super(conf);
-  //     console.log('asd');
-  //   }
-}
+import Phaser from 'phaser';
+import MainScene from './Scenes/Main';
 
-let game: Game;
-export function createGame(config) {
-  if (game) {
-    game.destroy(true, false);
-  }
-  console.log(game);
-  game = new Game(config);
-  console.log(game);
-}
+const config = {
+  type: Phaser.AUTO,
+  pixelArt: true,
+  width: 500,
+  height: 400,
+  parent: 'phaser-game',
+  physics: {
+    default: 'arcade',
+    arcade: {
+      gravity: {
+        y: 800,
+      },
+      debug: false,
+    },
+  },
+  scene: [MainScene],
+};
 
-export function getGame(): Game {
-  return game;
-}
+const game = new Phaser.Game(config);

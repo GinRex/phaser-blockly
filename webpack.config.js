@@ -1,14 +1,15 @@
 const webpack = require('webpack');
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: [
-    // 'webpack/hot/dev-server/',
-    './src/client/app.jsx',
-  ],
+  entry: {
+    app: './src/client/app.jsx',
+    game: './src/game/zelda/Game.jsx',
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'react-blockly-component.js',
+    filename: '[name].js',
     libraryTarget: 'var',
     library: 'ReactBlocklyComponent',
   },
@@ -27,9 +28,23 @@ module.exports = {
     ],
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      filename: 'game_iframe.html',
+      template: './public/game_iframe.html',
+      chunks: ['game'],
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: './public/index.html',
+      chunks: ['app'],
+    }),
     new webpack.ProvidePlugin({
       React: 'react',
       ReactDOM: 'react-dom',
+    }),
+    new webpack.DefinePlugin({
+      'typeof CANVAS_RENDERER': JSON.stringify(true),
+      'typeof WEBGL_RENDERER': JSON.stringify(true),
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
@@ -40,7 +55,7 @@ module.exports = {
   devServer: {
     hot: true,
     contentBase: './public',
-    filename: 'react-blockly-component.js',
+    filename: 'phaser-blockly.js',
     port: 3000,
     open: true,
     proxy: {
