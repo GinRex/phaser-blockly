@@ -1,14 +1,14 @@
 const initState = {
   selectedFile: null,
   gameObjects: [],
+  scenes: [],
   gameState: 'STOP',
   slectedGameobjectIndex: '',
-  // game: null,
+  slectedSceneIndex: '',
 };
 
 const gameReducer = (state = initState, action) => {
   console.log('Action:', action);
-  console.log('current state', state);
   switch (action.type) {
     case 'SELECT_FILE':
       return { ...state, selectedFile: action.selectedFile };
@@ -18,11 +18,21 @@ const gameReducer = (state = initState, action) => {
       const gameObjects = [...state.gameObjects, action.gameObject];
       return { ...state, gameObjects };
     }
+    case 'ADD_SCENE': {
+      const scenes = [...state.scenes, action.scene];
+      return { ...state, scenes };
+    }
     case 'SET_INDEX': {
-      return { ...state, slectedGameobjectIndex: action.index };
+      return { ...state, slectedGameobjectIndex: action.index, slectedSceneIndex: '' };
+    }
+    case 'SET_SCENE_INDEX': {
+      return { ...state, slectedSceneIndex: action.index, slectedGameobjectIndex: '' };
     }
     case 'UPDATE_WORKSPACE': {
       return { ...state, gameObjects: action.gameObjects };
+    }
+    case 'UPDATE_SCENE_WORKSPACE': {
+      return { ...state, scenes: action.scenes };
     }
     case 'SET_GAME':
       return { ...state, game: action.game };

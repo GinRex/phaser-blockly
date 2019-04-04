@@ -15,14 +15,35 @@ export const addObject = gameObject => ({
   gameObject,
 });
 
+export const addScene = scene => dispatch =>
+  axios.post('http://localhost:8080/api/createScene', scene, {}).then((res) => {
+    dispatch({
+      type: 'ADD_SCENE',
+      scene,
+    });
+  });
+
 export const setSlectedGameobjectIndex = index => ({
   type: 'SET_INDEX',
   index,
 });
 
+export const setSlectedSceneIndex = index => dispatch =>
+  axios.post('http://localhost:8080/api/selectScene', { index }, {}).then((res) => {
+    dispatch({
+      type: 'SET_SCENE_INDEX',
+      index,
+    });
+  });
+
 export const updateWorkspace = gameObjects => ({
   type: 'UPDATE_WORKSPACE',
   gameObjects,
+});
+
+export const updateSceneWorkspace = scenes => ({
+  type: 'UPDATE_SCENE_WORKSPACE',
+  scenes,
 });
 
 export const uploadImage = file => (dispatch) => {

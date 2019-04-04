@@ -1,6 +1,6 @@
 import 'phaser';
 
-class MainScene extends Phaser.Scene {
+class SceneName extends Phaser.Scene {
   constructor(props) {
     super(props);
   }
@@ -10,7 +10,7 @@ class MainScene extends Phaser.Scene {
   };
 
   MainScene() {
-    Phaser.Scene.call(this, { key: 'main', active: false });
+    Phaser.Scene.call(this, { key: 'SceneName', active: false });
   }
 
   preload() {
@@ -26,4 +26,4 @@ class MainScene extends Phaser.Scene {
   }
 }
 
-export default MainScene;
+export default SceneName;
