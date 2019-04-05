@@ -10,13 +10,18 @@ export default [
       { type: 'motion_point_in_direction_of_target' },
       { type: 'motion_point_in_direction_of_point' },
       { type: 'motion_set_x_to' },
-      { type: 'motion_set_y_to' }
-    ]
+      { type: 'motion_set_y_to' },
+    ],
   },
   {
     name: 'Event',
     colour: 250,
-    blocks: [{ type: 'events_when_event_happens' }]
+    blocks: [{ type: 'events_when_event_happens' }],
+  },
+  {
+    name: 'Game',
+    colour: 50,
+    blocks: [{ type: 'game_state' }],
   },
   {
     name: 'Sprites',
@@ -39,7 +44,7 @@ export default [
       { type: 'sprites_current_sprite_bring_to_front' },
       { type: 'sprites_set_current_sprite_to_target_sprite' },
       { type: 'sprites_current_frame_number' },
-      { type: 'sprites_set_frame_to_frame_number' }
-    ]
-  }
-]
+      { type: 'sprites_set_frame_to_frame_number' },
+    ],
+  },
+];

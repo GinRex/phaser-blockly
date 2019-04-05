@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import Blockly from './dev-index';
 import configureStore from './store/configureStore';
+import SceneManager from './SceneManager';
 
 const { store, persistor } = configureStore();
 
@@ -19,11 +20,12 @@ class App extends Component {
               </div>
               <div className="col-sm-2">
                 <iframe
-                  style={{ height: 600, width: 600 }}
+                  style={{ height: 500, width: 550, marginTop: 50 }}
                   title="phaser-game"
                   id="sandboxed"
                   src="game_iframe.html"
                 />
+                <SceneManager />
                 <textarea id="code" style={{ height: 200, width: 400 }} value="" />
               </div>
             </div>

@@ -12,11 +12,12 @@ import ReactBlocklyComponent from './index';
 
 import {
   selectFile,
-  buildGame,
   uploadImage,
   setSlectedGameobjectIndex,
   updateWorkspace,
   updateGame,
+  updateScene,
+  updateSceneWorkspace,
 } from './actions/home';
 
 const styles = theme => ({
@@ -38,8 +39,13 @@ class BlocklyPart extends React.Component {
     this.props.selectFile(event.target.files[0]);
   };
 
-  workspaceDidChange = (workspace, gameObjects, slectedGameobjectIndex) => {
-    console.log(workspace);
+  workspaceDidChange = (
+    workspace,
+    gameObjects,
+    slectedGameobjectIndex,
+    scenes,
+    slectedSceneIndex,
+  ) => {
     const newXml = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
     const code = Blockly.JavaScript.workspaceToCode(workspace);
     const currentGameobject =
@@ -47,7 +53,6 @@ class BlocklyPart extends React.Component {
       slectedGameobjectIndex &&
       gameObjects.find(gameObject => gameObject.key === slectedGameobjectIndex);
     if (currentGameobject) {
-      console.log(currentGameobject);
       currentGameobject.workspace = newXml;
       currentGameobject.jsCode = code;
 
@@ -56,23 +61,38 @@ class BlocklyPart extends React.Component {
       newGameObjects[index] = currentGameobject;
 
       this.props.updateWorkspace(newGameObjects);
-      // this.setState({ gameObjects: gameObjects })
     }
-    // document.getElementById('generated-xml').innerText = newXml;
+    const currentScene =
+      scenes && slectedSceneIndex && scenes.find(scene => scene.key === slectedSceneIndex);
+    if (currentScene) {
+      currentScene.workspace = newXml;
+      currentScene.jsCode = code;
 
+      const newScenes = scenes;
+      const index = newScenes.findIndex(scene => scene.key === slectedSceneIndex);
+      console.log(index);
+      newScenes[index] = currentScene;
+
+      this.props.updateSceneWorkspace(newScenes);
+    }
     document.getElementById('code').value = code;
-    // this.props.buildGame(this.state.gameObjects);
   };
 
   render() {
     const { classes } = this.props;
     const currentGameobject = this.props.gameObjects.find(gameObject => gameObject.key === this.props.slectedGameobjectIndex);
+    const currentScene = this.props.scenes.find(scene => scene.key === this.props.slectedSceneIndex);
     console.log(currentGameobject);
     return (
       <div style={{ height: 500 }}>
         <Button
           onClick={() => {
-            this.props.updateGame(this.props.gameObjects);
+            if (this.props.slectedGameobjectIndex) {
+              this.props.updateGame(this.props.gameObjects);
+            }
+            if (this.props.slectedSceneIndex) {
+              this.props.updateScene(this.props.scenes);
+            }
           }}
           variant="contained"
           color="primary"
@@ -84,7 +104,12 @@ class BlocklyPart extends React.Component {
           onClick={() => {
             const myWindow = window.open(`${window.location.href}game_iframe.html`, 'game');
             myWindow.focus();
-            this.props.updateGame(this.props.gameObjects);
+            if (this.props.slectedGameobjectIndex) {
+              this.props.updateGame(this.props.gameObjects);
+            }
+            if (this.props.slectedSceneIndex) {
+              this.props.updateScene(this.props.scenes);
+            }
           }}
           variant="contained"
           color="secondary"
@@ -103,11 +128,10 @@ class BlocklyPart extends React.Component {
             },
           }}
           initialXml={
-            this.props.gameObjects.length !== 0 &&
-            currentGameobject &&
-            currentGameobject.workspace &&
-            this.props.slectedGameobjectIndex !== ''
+            this.props.gameObjects.length !== 0 && currentGameobject && currentGameobject.workspace
               ? currentGameobject.workspace
+              : this.props.scenes.length !== 0 && currentScene && currentScene.workspace
+              ? currentScene.workspace
               : null
           }
           wrapperDivClassName="fill-height"
@@ -116,6 +140,8 @@ class BlocklyPart extends React.Component {
               workspace,
               this.props.gameObjects,
               this.props.slectedGameobjectIndex,
+              this.props.scenes,
+              this.props.slectedSceneIndex,
             )
           }
         />
@@ -133,7 +159,8 @@ class BlocklyPart extends React.Component {
             borderColor: 'black',
             width: 600,
             height: 150,
-            backgroundColor: 'grey',
+            borderRadius: 20,
+            backgroundColor: 'gray',
             margin: 10,
           }}
         >
@@ -170,15 +197,18 @@ const mapStateToProps = state => ({
   gameObjects: state.home.gameObjects,
   selectedFile: state.home.selectedFile,
   slectedGameobjectIndex: state.home.slectedGameobjectIndex,
+  scenes: state.home.scenes,
+  slectedSceneIndex: state.home.slectedSceneIndex,
 });
 
 const mapDispatchToProps = {
   selectFile,
-  buildGame,
   uploadImage,
   setSlectedGameobjectIndex,
   updateWorkspace,
   updateGame,
+  updateScene,
+  updateSceneWorkspace,
 };
 
 export default connect(

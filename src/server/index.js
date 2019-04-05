@@ -48,48 +48,6 @@ app.post('/api/uploadImage', (req, res) => {
         if (err) return console.log(err);
       });
     });
-
-    // import to main
-    const mainfile = `${__dirname}/../Game/zelda/scenes/Main.jsx`;
-    try {
-      const data = fs
-        .readFileSync(mainfile)
-        .toString()
-        .split('\n');
-      console.log(data);
-      const importIndex = data.indexOf("import 'phaser';");
-      data.splice(importIndex + 1, 0, `import ${req.file.name} from '../${req.file.name}';`);
-      const preloadIndex = data.indexOf('    // preload image here');
-      data.splice(
-        preloadIndex,
-        0,
-        `this.load.image('${req.file.name}', 'assets/${req.file.filename}');`,
-      );
-
-      const createIndex = data.indexOf('    // create object here');
-      data.splice(
-        createIndex,
-        0,
-        `this.${req.file.name} = new ${req.file.name}({
-          scene: this,
-          key: '${req.file.name}',
-          x: 200,
-          y: 200,
-          width: 100,
-          height: 100,
-        });`,
-      );
-
-      const updateIndex = data.indexOf('    // update here');
-      data.splice(updateIndex, 0, `this.${req.file.name}.update();`);
-      const text = data.join('\n');
-      fs.writeFile(`${mainfile}`, text, (err) => {
-        console.log(err);
-      });
-    } catch (err) {
-      console.error(err);
-    }
-
     return res.status(200).send(req.file);
   });
 });
@@ -110,10 +68,6 @@ app.post('/api/createGame', (req, res) => {
     if (!fs.existsSync(scenesFolder)) {
       fs.mkdirSync(scenesFolder);
     }
-    const data = fs.readFileSync(`${__dirname}/mainTemplate.js`).toString();
-    fs.writeFile(`${scenesFolder}/Main.jsx`, data, (err) => {
-      console.log(err);
-    });
   } catch (err) {
     console.error(err);
   }
@@ -133,6 +87,112 @@ app.post('/api/createGame', (req, res) => {
   }
 });
 
+app.post('/api/createScene', (req, res) => {
+  const scene = req.body;
+  // create scenes folder and default scene
+  const scenesFolder = `${__dirname}/../Game/zelda/Scenes`;
+  try {
+    if (!fs.existsSync(scenesFolder)) {
+      fs.mkdirSync(scenesFolder);
+    }
+    const data = fs
+      .readFileSync(`${__dirname}/sceneTemplate.js`)
+      .toString()
+      .replace(/SceneName/g, scene.name);
+    fs.writeFile(`${scenesFolder}/${scene.name}.jsx`, data, (err) => {
+      console.log(err);
+    });
+
+    // import scene to game
+    try {
+      const gameFile = `${__dirname}/../Game/zelda/Game.jsx`;
+      const gameData = fs
+        .readFileSync(gameFile)
+        .toString()
+        .split('\n');
+      const importIndex = gameData.indexOf("import 'phaser';");
+      gameData.splice(importIndex + 1, 0, `import ${scene.name} from './Scenes/${scene.name}';`);
+      const text = gameData.join('\n');
+      fs.writeFile(gameFile, text, (err) => {
+        console.log(err);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+  return res.status(200).send(scene);
+});
+
+app.post('/api/selectScene', (req, res) => {
+  const sceneName = req.body.index;
+  console.log(req.body);
+  // import scene to config
+  try {
+    const gameFile = `${__dirname}/../Game/zelda/Game.jsx`;
+    const gameData = fs
+      .readFileSync(gameFile)
+      .toString()
+      .split('\n');
+    const selectedSceneStart = gameData.indexOf('  scene: [');
+    const selectedSceneEnd = gameData.indexOf('    // scenes go here');
+    gameData.splice(selectedSceneStart + 1, selectedSceneEnd - selectedSceneStart - 1, sceneName);
+    const text = gameData.join('\n');
+    fs.writeFile(gameFile, text, (err) => {
+      console.log(err);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+  return res.status(200).send(sceneName);
+});
+
+// need to reimplement this for when create object from class-block
+app.post('/api/importToScene', (req, res) => {
+  const { scene } = req.body;
+  // import to main
+  const mainfile = `${__dirname}/../Game/zelda/scenes/${scene.name}.jsx`;
+  try {
+    const data = fs
+      .readFileSync(mainfile)
+      .toString()
+      .split('\n');
+    console.log(data);
+    const importIndex = data.indexOf("import 'phaser';");
+    data.splice(importIndex + 1, 0, `import ${req.file.name} from '../${req.file.name}';`);
+    const preloadIndex = data.indexOf('    // preload image here');
+    data.splice(
+      preloadIndex,
+      0,
+      `this.load.image('${req.file.name}', 'assets/${req.file.filename}');`,
+    );
+
+    const createIndex = data.indexOf('    // create object here');
+    data.splice(
+      createIndex,
+      0,
+      `this.${req.file.name} = new ${req.file.name}({
+        scene: this,
+        key: '${req.file.name}',
+        x: 200,
+        y: 200,
+        width: 100,
+        height: 100,
+      });`,
+    );
+
+    const updateIndex = data.indexOf('    // update here');
+    data.splice(updateIndex, 0, `this.${req.file.name}.update();`);
+    const text = data.join('\n');
+    fs.writeFile(`${mainfile}`, text, (err) => {
+      console.log(err);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 app.post('/api/updateCode', (req, res) => {
   console.log(req.body);
   req.body.map((object) => {
@@ -142,13 +202,35 @@ app.post('/api/updateCode', (req, res) => {
         .readFileSync(objectName)
         .toString()
         .split('\n');
-      console.log(data);
       const updateEndIndex = data.indexOf('    // update here');
       const updateStartIndex = data.indexOf('  update() {');
       data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, object.jsCode);
       const text = data.join('\n');
-      console.log(updateStartIndex, updateEndIndex);
       fs.writeFile(`${objectName}`, text, (err) => {
+        console.log(err);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  });
+  return res.status(200).send({});
+  // const gameObjects = req.data.gameObjects
+});
+
+app.post('/api/updateSceneCode', (req, res) => {
+  console.log(req.body);
+  req.body.map((scene) => {
+    const sceneName = `${__dirname}/../Game/zelda/Scenes/${scene.name}.jsx`;
+    try {
+      const data = fs
+        .readFileSync(sceneName)
+        .toString()
+        .split('\n');
+      const updateEndIndex = data.indexOf('  // game state end');
+      const updateStartIndex = data.indexOf('  // game state start');
+      data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, scene.jsCode);
+      const text = data.join('\n');
+      fs.writeFile(`${sceneName}`, text, (err) => {
         console.log(err);
       });
     } catch (err) {
