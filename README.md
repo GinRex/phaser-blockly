@@ -1,4 +1,4 @@
-# react-blockly-phaser
+# phaser-blockly
 
 ## Building
 
@@ -6,6 +6,5 @@ Clone this repository, and then inside it, do:
 
 ```bash
 npm install
-npm start
+npm run dev
 ```
-open http://localhost:8080/
