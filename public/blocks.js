@@ -131,6 +131,30 @@ Blockly.Blocks.events_when_event_happens = {
   }
 }
 
+
+/// game state
+Blockly.Blocks.game_state = {
+  init () {
+    this.appendStatementInput('GAME_CODE')
+      .setCheck(null)
+      .appendField('when game state')
+    this.appendValueInput('STATE_NAME')
+      .setCheck(null)
+      .appendField(
+        new Blockly.FieldDropdown([
+          ['Select an event', 'NO_EVENT_SELECTED'],
+          ['On PreLoad', 'preload'],
+          ['On Create', 'create'],
+          ['On Update', 'update'],
+        ]),
+        'GAME_STATE'
+      )
+    this.setColour(65)
+    this.setTooltip('')
+    this.setHelpUrl('http://www.example.com/')
+  }
+}
+
 Blockly.Blocks.sprites_destroy_current_sprite = {
   init () {
     this.appendDummyInput().appendField('Destroy current sprite')
@@ -487,6 +511,26 @@ Blockly.JavaScript.events_when_event_happens = function (block) {
     return "//error, you did not select an event in the 'when event happens' block\n"
   }
   const code = `Event.function ${dropdown_event}(){\n${statements_event_code}\n}`
+  return code;
+}
+
+// /////GAME
+
+Blockly.JavaScript.game_state = function (block) {
+  const statements_event_code = Blockly.JavaScript.statementToCode(
+    block,
+    'GAME_CODE'
+  )
+  const dropdown_event = block.getFieldValue('GAME_STATE')
+  const value_event_name = Blockly.JavaScript.valueToCode(
+    block,
+    'STATE_NAME',
+    Blockly.JavaScript.ORDER_ATOMIC
+  )
+  if (dropdown_event == 'NO_EVENT_SELECTED') {
+    return "//error, you did not select an STATE in the 'when game state' block\n"
+  }
+  const code = `${dropdown_event}(){\n${statements_event_code}\n}`
   return code;
 }
 

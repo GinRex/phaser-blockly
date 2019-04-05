@@ -217,5 +217,29 @@ app.post('/api/updateCode', (req, res) => {
   // const gameObjects = req.data.gameObjects
 });
 
+app.post('/api/updateSceneCode', (req, res) => {
+  console.log(req.body);
+  req.body.map((scene) => {
+    const sceneName = `${__dirname}/../Game/zelda/Scenes/${scene.name}.jsx`;
+    try {
+      const data = fs
+        .readFileSync(sceneName)
+        .toString()
+        .split('\n');
+      const updateEndIndex = data.indexOf('  // game state end');
+      const updateStartIndex = data.indexOf('  // game state start');
+      data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, scene.jsCode);
+      const text = data.join('\n');
+      fs.writeFile(`${sceneName}`, text, (err) => {
+        console.log(err);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  });
+  return res.status(200).send({});
+  // const gameObjects = req.data.gameObjects
+});
+
 app.post('/api/createGameObject', (req, res) => {});
 app.listen(8080, () => console.log('Listening on port 8080!'));

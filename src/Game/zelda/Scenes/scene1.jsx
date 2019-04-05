@@ -9,21 +9,18 @@ class scene1 extends Phaser.Scene {
     this.scene.restart();
   };
 
-  MainScene() {
+  scene1() {
     Phaser.Scene.call(this, { key: 'scene1', active: false });
   }
+  // game state start
+create(){
+  window.alert('hello');
 
-  preload() {
-    // preload image here
-  }
+}
+update(){
 
-  create() {
-    // create object here
-  }
-
-  update() {
-    // update here
-  }
+}
+  // game state end
 }
 
 export default scene1;

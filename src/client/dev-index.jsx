@@ -16,6 +16,7 @@ import {
   setSlectedGameobjectIndex,
   updateWorkspace,
   updateGame,
+  updateScene,
   updateSceneWorkspace,
 } from './actions/home';
 
@@ -74,7 +75,7 @@ class BlocklyPart extends React.Component {
 
       this.props.updateSceneWorkspace(newScenes);
     }
-    // document.getElementById('code').value = code;
+    document.getElementById('code').value = code;
   };
 
   render() {
@@ -86,7 +87,12 @@ class BlocklyPart extends React.Component {
       <div style={{ height: 500 }}>
         <Button
           onClick={() => {
-            this.props.updateGame(this.props.gameObjects);
+            if (this.props.slectedGameobjectIndex) {
+              this.props.updateGame(this.props.gameObjects);
+            }
+            if (this.props.slectedSceneIndex) {
+              this.props.updateScene(this.props.scenes);
+            }
           }}
           variant="contained"
           color="primary"
@@ -98,7 +104,12 @@ class BlocklyPart extends React.Component {
           onClick={() => {
             const myWindow = window.open(`${window.location.href}game_iframe.html`, 'game');
             myWindow.focus();
-            this.props.updateGame(this.props.gameObjects);
+            if (this.props.slectedGameobjectIndex) {
+              this.props.updateGame(this.props.gameObjects);
+            }
+            if (this.props.slectedSceneIndex) {
+              this.props.updateScene(this.props.scenes);
+            }
           }}
           variant="contained"
           color="secondary"
@@ -196,6 +207,7 @@ const mapDispatchToProps = {
   setSlectedGameobjectIndex,
   updateWorkspace,
   updateGame,
+  updateScene,
   updateSceneWorkspace,
 };
 

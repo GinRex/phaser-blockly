@@ -26,7 +26,7 @@ class App extends Component {
                   src="game_iframe.html"
                 />
                 <SceneManager />
-                {/* <textarea id="code" style={{ height: 200, width: 400 }} value="" /> */}
+                <textarea id="code" style={{ height: 200, width: 400 }} value="" />
               </div>
             </div>
           </div>

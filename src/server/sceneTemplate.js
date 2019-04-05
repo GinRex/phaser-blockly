@@ -9,21 +9,16 @@ class SceneName extends Phaser.Scene {
     this.scene.restart();
   };
 
-  MainScene() {
+  SceneName() {
     Phaser.Scene.call(this, { key: 'SceneName', active: false });
   }
+  // game state start
+  preload() {}
 
-  preload() {
-    // preload image here
-  }
+  create() {}
 
-  create() {
-    // create object here
-  }
-
-  update() {
-    // update here
-  }
+  update() {}
+  // game state end
 }
 
 export default SceneName;
