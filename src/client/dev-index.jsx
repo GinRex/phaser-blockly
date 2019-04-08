@@ -4,10 +4,8 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
-import toolboxCategories from './toolBox';
 import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
-
 import ReactBlocklyComponent from './index';
 
 import {
@@ -18,6 +16,7 @@ import {
   updateGame,
   updateScene,
   updateSceneWorkspace,
+  updateToolbox,
 } from './actions/home';
 
 const styles = theme => ({
@@ -32,11 +31,66 @@ const styles = theme => ({
 class BlocklyPart extends React.Component {
   constructor(props) {
     super(props);
+    this.updateBlocks(this.props.gameObjects);
+  }
+
+  componentDidMount() {
+    this.updateToolBox(this.props.gameObjects);
   }
 
   // upload image
   onChangeHandler = (event) => {
     this.props.selectFile(event.target.files[0]);
+  };
+
+  updateBlocks = (gameObjects) => {
+    gameObjects.map(gameObject => {
+      Blockly.Blocks[`instance_${gameObject.name}`] = {
+        init: function() {
+          this.appendDummyInput()
+              .appendField(new Blockly.FieldImage(`assets/${gameObject.filename}`, 30, 30, "*"));
+          this.appendDummyInput()
+              .appendField("Name")
+              .appendField(new Blockly.FieldTextInput("default"), "object_name");
+          this.appendValueInput("x")
+              .setCheck("Number")
+              .setAlign(Blockly.ALIGN_RIGHT)
+              .appendField("x");
+          this.appendValueInput("y")
+              .setCheck("Number")
+              .setAlign(Blockly.ALIGN_RIGHT)
+              .appendField("y");
+          this.setInputsInline(false);
+          this.setOutput(true, "game_object");
+          this.setColour(240);
+       this.setTooltip("game object");
+       this.setHelpUrl("");
+        }
+      };
+      // code
+      Blockly.JavaScript[`instance_${gameObject.name}`] = function(block) {
+        var text_object_name = block.getFieldValue('object_name');
+        var value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
+        var value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
+        // TODO: Assemble JavaScript into code variable.
+        var code = '...';
+        // TODO: Change ORDER_NONE to the correct strength.
+        return [code, Blockly.JavaScript.ORDER_NONE];
+      };
+    });
+  }
+
+  updateToolBox = (gameObjects) => {
+    console.log('abc');
+    this.props.updateToolbox(
+      gameObjects.map(gameObject => ({
+        name: gameObject.name,
+        blocks: [
+          { type: `instance_${gameObject.name}` },
+        ],
+      })),
+    );
+    this.updateBlocks(gameObjects);
   };
 
   workspaceDidChange = (
@@ -82,7 +136,6 @@ class BlocklyPart extends React.Component {
     const { classes } = this.props;
     const currentGameobject = this.props.gameObjects.find(gameObject => gameObject.key === this.props.slectedGameobjectIndex);
     const currentScene = this.props.scenes.find(scene => scene.key === this.props.slectedSceneIndex);
-    console.log(currentGameobject);
     return (
       <div style={{ height: 500 }}>
         <Button
@@ -118,7 +171,7 @@ class BlocklyPart extends React.Component {
           Open in new tab
         </Button>
         <ReactBlocklyComponent.BlocklyEditor
-          toolboxCategories={parseWorkspaceXml(ConfigFiles.INITIAL_TOOLBOX_XML).concat(toolboxCategories)}
+          toolboxCategories={parseWorkspaceXml(ConfigFiles.INITIAL_TOOLBOX_XML).concat(this.props.toolboxCategories)}
           workspaceConfiguration={{
             grid: {
               spacing: 20,
@@ -149,7 +202,15 @@ class BlocklyPart extends React.Component {
         <button
           type="button"
           className="btn btn-success btn-block"
-          onClick={() => this.props.uploadImage(this.props.selectedFile)}
+          onClick={() => {
+            const promise = new Promise((resolve, reject) => {
+              resolve(this.props.uploadImage(this.props.selectedFile));
+            });
+            promise.then((res) => {
+              console.log('bbc')
+              this.updateToolBox(this.props.gameObjects);
+            });
+          }}
         >
           Upload
         </button>
@@ -199,6 +260,7 @@ const mapStateToProps = state => ({
   slectedGameobjectIndex: state.home.slectedGameobjectIndex,
   scenes: state.home.scenes,
   slectedSceneIndex: state.home.slectedSceneIndex,
+  toolboxCategories: state.home.toolboxCategories,
 });
 
 const mapDispatchToProps = {
@@ -209,6 +271,7 @@ const mapDispatchToProps = {
   updateGame,
   updateScene,
   updateSceneWorkspace,
+  updateToolbox,
 };
 
 export default connect(
