@@ -47,4 +47,8 @@ export default [
       { type: 'sprites_set_frame_to_frame_number' },
     ],
   },
+  {
+    name: 'Classes',
+    categories: [],
+  },
 ];

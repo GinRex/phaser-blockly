@@ -85,3 +85,8 @@ export const setGame = game => ({
   type: 'SET_GAME',
   game,
 });
+
+export const updateToolbox = category => ({
+  type: 'UPDATE_TOOL_BOX',
+  category,
+});

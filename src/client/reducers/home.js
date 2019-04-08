@@ -1,3 +1,5 @@
+import toolboxCategories from '../toolBox';
+
 const initState = {
   selectedFile: null,
   gameObjects: [],
@@ -5,6 +7,7 @@ const initState = {
   gameState: 'STOP',
   slectedGameobjectIndex: '',
   slectedSceneIndex: '',
+  toolboxCategories,
 };
 
 const gameReducer = (state = initState, action) => {
@@ -33,6 +36,11 @@ const gameReducer = (state = initState, action) => {
     }
     case 'UPDATE_SCENE_WORKSPACE': {
       return { ...state, scenes: action.scenes };
+    }
+    case 'UPDATE_TOOL_BOX': {
+      const toolboxCategories = state.toolboxCategories.map(category =>
+        (category.name === 'Classes' ? { ...category, categories: action.category } : category));
+      return { ...state, toolboxCategories };
     }
     case 'SET_GAME':
       return { ...state, game: action.game };
