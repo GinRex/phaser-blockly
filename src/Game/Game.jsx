@@ -1,4 +1,3 @@
-import scene1 from './Scenes/scene1';
 import Phaser from 'phaser';
 
 const config = {
@@ -17,7 +16,6 @@ const config = {
     },
   },
   scene: [
-scene1
     // scenes go here
   ],
 };

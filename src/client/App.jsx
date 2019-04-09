@@ -4,6 +4,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import Blockly from './dev-index';
 import configureStore from './store/configureStore';
 import SceneManager from './SceneManager';
+import SubMenu from './SubMenu';
 
 const { store, persistor } = configureStore();
 
@@ -19,8 +20,9 @@ class App extends Component {
                 <Blockly />
               </div>
               <div className="col-sm-2">
+                <SubMenu />
                 <iframe
-                  style={{ height: 500, width: 550, marginTop: 50 }}
+                  style={{ height: 500, width: 550 }}
                   title="phaser-game"
                   id="sandboxed"
                   src="game_iframe.html"

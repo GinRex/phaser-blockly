@@ -2,11 +2,15 @@
 
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import red from '@material-ui/core/colors/red';
+
 import { connect } from 'react-redux';
 import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
 import ReactBlocklyComponent from './index';
+
 
 import {
   selectFile,
@@ -22,9 +26,6 @@ import {
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
-  },
-  input: {
-    display: 'none',
   },
 });
 
@@ -48,19 +49,11 @@ class BlocklyPart extends React.Component {
       Blockly.Blocks[`instance_${gameObject.name}`] = {
         init: function() {
           this.appendDummyInput()
-              .appendField(new Blockly.FieldImage(`assets/${gameObject.filename}`, 30, 30, "*"));
+          .appendField(new Blockly.FieldImage(`assets/${gameObject.filename}`, 30, 30, "*"));
           this.appendDummyInput()
               .appendField("Name")
               .appendField(new Blockly.FieldTextInput("default"), "object_name");
-          this.appendValueInput("x")
-              .setCheck("Number")
-              .setAlign(Blockly.ALIGN_RIGHT)
-              .appendField("x");
-          this.appendValueInput("y")
-              .setCheck("Number")
-              .setAlign(Blockly.ALIGN_RIGHT)
-              .appendField("y");
-          this.setInputsInline(false);
+          this.setInputsInline(true);
           this.setOutput(true, "game_object");
           this.setColour(240);
        this.setTooltip("game object");
@@ -70,8 +63,6 @@ class BlocklyPart extends React.Component {
       // code
       Blockly.JavaScript[`instance_${gameObject.name}`] = function(block) {
         var text_object_name = block.getFieldValue('object_name');
-        var value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
-        var value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
         // TODO: Assemble JavaScript into code variable.
         var code = '...';
         // TODO: Change ORDER_NONE to the correct strength.

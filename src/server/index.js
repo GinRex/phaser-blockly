@@ -1,6 +1,7 @@
 const express = require('express');
 const os = require('os');
 const fs = require('fs');
+const fse = require('fs-extra');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
@@ -26,6 +27,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage }).single('file');
+
 app.post('/api/uploadImage', (req, res) => {
   console.log(req.body);
   upload(req, res, (err) => {
@@ -38,7 +40,7 @@ app.post('/api/uploadImage', (req, res) => {
     req.file.name = capitalize(path.parse(req.file.filename).name);
 
     // create object file
-    const objectName = `${__dirname}/../Game/zelda/${req.file.name}`;
+    const objectName = `${__dirname}/../Game/Classes/${req.file.name}`;
     fs.readFile(`${__dirname}/gameObjectTemplate.js`, 'utf8', (err, data) => {
       if (err) {
         return console.log(err);
@@ -53,21 +55,32 @@ app.post('/api/uploadImage', (req, res) => {
 });
 
 app.post('/api/createGame', (req, res) => {
-  // create game foler
-  const folderName = `${__dirname}/../Game/${req.body.game_name}`;
-  try {
-    if (!fs.existsSync(folderName)) {
-      fs.mkdirSync(folderName);
-    }
-  } catch (err) {
-    console.error(err);
-  }
+  GAME_NAME = req.body.game_name;
+  console.log(GAME_NAME);
+  // // create game foler
+  // const folderName = `${__dirname}/../Game/${GAME_NAME}`;
+  // try {
+  //   if (!fs.existsSync(folderName)) {
+  //     fs.mkdirSync(folderName);
+  //   }
+  // } catch (err) {
+  //   console.error(err);
+  // }
   // create scenes folder and default scene
-  const scenesFolder = `${__dirname}/../Game/${req.body.game_name}/Scenes`;
+  const scenesFolder = `${__dirname}/../Game/Scenes`;
+  const classesFolder = `${__dirname}/../Game/Classes`;
+  // const scenesFolder = `${__dirname}/../Game/${GAME_NAME}/Scenes`;
   try {
-    if (!fs.existsSync(scenesFolder)) {
-      fs.mkdirSync(scenesFolder);
-    }
+    if (fs.existsSync(scenesFolder)) {
+      fse.remove(scenesFolder, (err) => {
+        fs.mkdirSync(scenesFolder);
+      });
+    } else fs.mkdirSync(scenesFolder);
+    if (fs.existsSync(classesFolder)) {
+      fse.remove(classesFolder, (err) => {
+        fs.mkdirSync(classesFolder);
+      });
+    } else fs.mkdirSync(classesFolder);
   } catch (err) {
     console.error(err);
   }
@@ -79,18 +92,19 @@ app.post('/api/createGame', (req, res) => {
       .toString()
       .split('\n');
     const text = data.join('\n');
-    fs.writeFile(`${folderName}/Game.jsx`, text, (err) => {
+    fs.writeFile(`${__dirname}/../Game/Game.jsx`, text, (err) => {
       console.log(err);
     });
   } catch (err) {
     console.error(err);
   }
+  return res.status(200).send(GAME_NAME);
 });
 
 app.post('/api/createScene', (req, res) => {
   const scene = req.body;
   // create scenes folder and default scene
-  const scenesFolder = `${__dirname}/../Game/zelda/Scenes`;
+  const scenesFolder = `${__dirname}/../Game/Scenes`;
   try {
     if (!fs.existsSync(scenesFolder)) {
       fs.mkdirSync(scenesFolder);
@@ -105,7 +119,7 @@ app.post('/api/createScene', (req, res) => {
 
     // import scene to game
     try {
-      const gameFile = `${__dirname}/../Game/zelda/Game.jsx`;
+      const gameFile = `${__dirname}/../Game/Game.jsx`;
       const gameData = fs
         .readFileSync(gameFile)
         .toString()
@@ -130,7 +144,7 @@ app.post('/api/selectScene', (req, res) => {
   console.log(req.body);
   // import scene to config
   try {
-    const gameFile = `${__dirname}/../Game/zelda/Game.jsx`;
+    const gameFile = `${__dirname}/../Game/Game.jsx`;
     const gameData = fs
       .readFileSync(gameFile)
       .toString()
@@ -152,7 +166,7 @@ app.post('/api/selectScene', (req, res) => {
 app.post('/api/importToScene', (req, res) => {
   const { scene } = req.body;
   // import to main
-  const mainfile = `${__dirname}/../Game/zelda/scenes/${scene.name}.jsx`;
+  const mainfile = `${__dirname}/../Game/scenes/${scene.name}.jsx`;
   try {
     const data = fs
       .readFileSync(mainfile)
@@ -196,7 +210,7 @@ app.post('/api/importToScene', (req, res) => {
 app.post('/api/updateCode', (req, res) => {
   console.log(req.body);
   req.body.map((object) => {
-    const objectName = `${__dirname}/../Game/zelda/${object.name}.jsx`;
+    const objectName = `${__dirname}/../Game/Classes/${object.name}.jsx`;
     try {
       const data = fs
         .readFileSync(objectName)
@@ -220,7 +234,7 @@ app.post('/api/updateCode', (req, res) => {
 app.post('/api/updateSceneCode', (req, res) => {
   console.log(req.body);
   req.body.map((scene) => {
-    const sceneName = `${__dirname}/../Game/zelda/Scenes/${scene.name}.jsx`;
+    const sceneName = `${__dirname}/../Game/Scenes/${scene.name}.jsx`;
     try {
       const data = fs
         .readFileSync(sceneName)
