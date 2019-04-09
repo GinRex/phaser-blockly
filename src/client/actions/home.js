@@ -81,6 +81,14 @@ export const updateScene = scenes => (dispatch) => {
   });
 };
 
+export const createNewGame = game => (dispatch) => {
+  localStorage.removeItem('persist:root');
+  const data = game;
+  return axios.post('http://localhost:8080/api/createGame', data, {}).then((res) => {
+    window.location.reload();
+  });
+};
+
 export const setGame = game => ({
   type: 'SET_GAME',
   game,

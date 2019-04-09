@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: {
     app: './src/client/app.jsx',
-    game: './src/game/zelda/Game.jsx',
+    game: './src/game/Game.jsx',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
