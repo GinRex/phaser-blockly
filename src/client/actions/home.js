@@ -76,8 +76,9 @@ export const updateGame = gameObjects => (dispatch) => {
 export const updateScene = scenes => (dispatch) => {
   const data = scenes;
   return axios.post('http://localhost:8080/api/updateSceneCode', data, {}).then((res) => {
-    const frame = document.getElementById('sandboxed');
-    frame.contentWindow.postMessage('reload', '*');
+    console.log('xxx');
+    // const frame = document.getElementById('sandboxed');
+    // frame.contentWindow.postMessage('reload', '*');
   });
 };
 

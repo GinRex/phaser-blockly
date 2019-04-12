@@ -47,6 +47,7 @@
           mainWindow.postMessage(_isAlive, event.origin);
         } else if (event.data === "reload") {
           //  Otherwise it fires a shutdown event when the page reloads
+          console.log("reload");
           window.onbeforeunload = function() {};
           window.location.reload();
           //   console.clear();

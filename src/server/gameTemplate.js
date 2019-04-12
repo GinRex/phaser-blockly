@@ -1,3 +1,4 @@
+import boot from './Scenes/boot';
 import Phaser from 'phaser';
 
 const config = {
@@ -16,6 +17,7 @@ const config = {
     },
   },
   scene: [
+    boot,
     // scenes go here
   ],
 };

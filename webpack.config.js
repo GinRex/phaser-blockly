@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: {
     app: './src/client/app.jsx',
-    game: './src/game/Game.jsx',
+    game: './src/Game/Game.jsx',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -28,6 +28,10 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      CANVAS_RENDERER: JSON.stringify(true),
+      WEBGL_RENDERER: JSON.stringify(true),
+    }),
     new HtmlWebpackPlugin({
       filename: 'game_iframe.html',
       template: './public/game_iframe.html',
@@ -41,10 +45,6 @@ module.exports = {
     new webpack.ProvidePlugin({
       React: 'react',
       ReactDOM: 'react-dom',
-    }),
-    new webpack.DefinePlugin({
-      'typeof CANVAS_RENDERER': JSON.stringify(true),
-      'typeof WEBGL_RENDERER': JSON.stringify(true),
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
@@ -60,12 +60,6 @@ module.exports = {
     open: true,
     proxy: {
       '/api': 'http://localhost:8080',
-    },
-    watchOptions: {
-      ignored: [
-        // path.resolve(__dirname, 'public'),
-        // path.resolve(__dirname, 'Game')
-      ],
     },
   },
 };
