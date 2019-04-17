@@ -207,7 +207,15 @@ app.post('/api/selectScene', (req, res) => {
     gameData.splice(
       selectedSceneStart + 1,
       selectedSceneEnd - selectedSceneStart - 1,
-      `this.load.on('complete', () => {
+      `this.load.on('progress', (value) => {
+        progressBar.clear();
+        progressBar.fillStyle(0xffffff, 1);
+        progressBar.fillRect(width / 4, height / 2, (width / 2) * value, height / 12);
+      });
+      this.load.on('fileprogress', (file) => {
+        console.log(file.src);
+      });
+      this.load.on('complete', () => {
         this.scene.start('${sceneName}');
       });`,
     );
