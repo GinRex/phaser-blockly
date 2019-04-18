@@ -29,6 +29,7 @@
     "file-loader": "^3.0.1",
     "file-saver": "^2.0.1",
     "fs-extra": "^7.0.1",
+    "fsevents": "^1.2.7",
     "immutable": "^3.8.2",
     "multer": "^1.4.1",
     "nodemon": "^1.18.10",

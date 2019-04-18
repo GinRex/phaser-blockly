@@ -29,7 +29,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage }).single('file');
 
 app.post('/api/uploadImage', (req, res) => {
-  console.log(req.body);
   upload(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       return res.status(500).json(err);
@@ -38,6 +37,28 @@ app.post('/api/uploadImage', (req, res) => {
     }
 
     req.file.name = capitalize(path.parse(req.file.filename).name);
+
+    // load image to loader
+    try {
+      const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
+      const gameData = fs
+        .readFileSync(gameFile)
+        .toString()
+        .split('\n');
+      const selectedSceneEnd = gameData.indexOf('    // launch scene start');
+      gameData.splice(
+        selectedSceneEnd,
+        0,
+        `this.load.image('${req.file.name}', 'assets/${req.file.filename}');`,
+      );
+
+      const text = gameData.join('\n');
+      fs.writeFile(gameFile, text, (err) => {
+        console.log(err);
+      });
+    } catch (err) {
+      console.error(err);
+    }
 
     // create object file
     const objectName = `${__dirname}/../Game/Classes/${req.file.name}`;
@@ -49,6 +70,11 @@ app.post('/api/uploadImage', (req, res) => {
       fs.writeFile(`${objectName}.jsx`, result, 'utf8', (err) => {
         if (err) return console.log(err);
       });
+    });
+    // export all objects file to index
+    const result = `export ${req.file.name} from './${req.file.name}';\n`;
+    fs.appendFile(`${__dirname}/../Game/Classes/index.js`, result, 'utf8', (err) => {
+      if (err) return console.log(err);
     });
     return res.status(200).send(req.file);
   });
@@ -71,14 +97,25 @@ app.post('/api/createGame', (req, res) => {
   const classesFolder = `${__dirname}/../Game/Classes`;
   // const scenesFolder = `${__dirname}/../Game/${GAME_NAME}/Scenes`;
   try {
-    if (fs.existsSync(scenesFolder)) {
-      fse.remove(scenesFolder, (err) => {
-        fs.mkdirSync(scenesFolder);
+    fse.remove(scenesFolder, (err) => {
+      fs.mkdir(scenesFolder, () => {
+        // create boot scene
+        try {
+          const data = fs.readFileSync(`${__dirname}/bootTemplate.js`).toString();
+          fs.writeFile(`${__dirname}/../Game/Scenes/boot.jsx`, data, (err) => {
+            console.log(err);
+          });
+        } catch (err) {
+          console.error(err);
+        }
       });
-    } else fs.mkdirSync(scenesFolder);
+    });
     if (fs.existsSync(classesFolder)) {
       fse.remove(classesFolder, (err) => {
         fs.mkdirSync(classesFolder);
+        fs.writeFile(`${classesFolder}/index.js`, '', (err) => {
+          console.log(err);
+        });
       });
     } else fs.mkdirSync(classesFolder);
   } catch (err) {
@@ -87,12 +124,8 @@ app.post('/api/createGame', (req, res) => {
 
   // create game file
   try {
-    const data = fs
-      .readFileSync(`${__dirname}/gameTemplate.js`)
-      .toString()
-      .split('\n');
-    const text = data.join('\n');
-    fs.writeFile(`${__dirname}/../Game/Game.jsx`, text, (err) => {
+    const data = fs.readFileSync(`${__dirname}/gameTemplate.js`).toString();
+    fs.writeFile(`${__dirname}/../Game/Game.jsx`, data, (err) => {
       console.log(err);
     });
   } catch (err) {
@@ -126,6 +159,34 @@ app.post('/api/createScene', (req, res) => {
         .split('\n');
       const importIndex = gameData.indexOf("import 'phaser';");
       gameData.splice(importIndex + 1, 0, `import ${scene.name} from './Scenes/${scene.name}';`);
+      const selectedSceneEnd = gameData.indexOf('    // scenes go here');
+      gameData.splice(selectedSceneEnd, 0, `${scene.name},`);
+
+      const text = gameData.join('\n');
+      fs.writeFile(gameFile, text, (err) => {
+        console.log(err);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
+    // import scene to bootscene
+    try {
+      const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
+      const gameData = fs
+        .readFileSync(gameFile)
+        .toString()
+        .split('\n');
+
+      const selectedSceneStart = gameData.indexOf('    // launch scene start');
+      const selectedSceneEnd = gameData.indexOf('    // launch scene end');
+      gameData.splice(
+        selectedSceneStart + 1,
+        selectedSceneEnd - selectedSceneStart - 1,
+        `this.scene.start('${scene.name}');
+        `,
+      );
+
       const text = gameData.join('\n');
       fs.writeFile(gameFile, text, (err) => {
         console.log(err);
@@ -141,17 +202,32 @@ app.post('/api/createScene', (req, res) => {
 
 app.post('/api/selectScene', (req, res) => {
   const sceneName = req.body.index;
-  console.log(req.body);
   // import scene to config
   try {
-    const gameFile = `${__dirname}/../Game/Game.jsx`;
+    const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
     const gameData = fs
       .readFileSync(gameFile)
       .toString()
       .split('\n');
-    const selectedSceneStart = gameData.indexOf('  scene: [');
-    const selectedSceneEnd = gameData.indexOf('    // scenes go here');
-    gameData.splice(selectedSceneStart + 1, selectedSceneEnd - selectedSceneStart - 1, sceneName);
+
+    const selectedSceneStart = gameData.indexOf('    // launch scene start');
+    const selectedSceneEnd = gameData.indexOf('    // launch scene end');
+    gameData.splice(
+      selectedSceneStart + 1,
+      selectedSceneEnd - selectedSceneStart - 1,
+      `this.load.on('progress', (value) => {
+        progressBar.clear();
+        progressBar.fillStyle(0xffffff, 1);
+        progressBar.fillRect(width / 4, height / 2, (width / 2) * value, height / 12);
+      });
+      this.load.on('fileprogress', (file) => {
+        console.log(file.src);
+      });
+      this.load.on('complete', () => {
+        this.scene.start('${sceneName}');
+      });`,
+    );
+
     const text = gameData.join('\n');
     fs.writeFile(gameFile, text, (err) => {
       console.log(err);
@@ -172,7 +248,6 @@ app.post('/api/importToScene', (req, res) => {
       .readFileSync(mainfile)
       .toString()
       .split('\n');
-    console.log(data);
     const importIndex = data.indexOf("import 'phaser';");
     data.splice(importIndex + 1, 0, `import ${req.file.name} from '../${req.file.name}';`);
     const preloadIndex = data.indexOf('    // preload image here');
@@ -208,7 +283,6 @@ app.post('/api/importToScene', (req, res) => {
 });
 
 app.post('/api/updateCode', (req, res) => {
-  console.log(req.body);
   req.body.map((object) => {
     const objectName = `${__dirname}/../Game/Classes/${object.name}.jsx`;
     try {
@@ -232,7 +306,6 @@ app.post('/api/updateCode', (req, res) => {
 });
 
 app.post('/api/updateSceneCode', (req, res) => {
-  console.log(req.body);
   req.body.map((scene) => {
     const sceneName = `${__dirname}/../Game/Scenes/${scene.name}.jsx`;
     try {

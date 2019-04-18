@@ -1,14 +1,12 @@
 import 'phaser';
+import * as Class from '../Classes';
 
 class SceneName extends Phaser.Scene {
   constructor(props) {
-    super(props);
+    super({
+      key: 'SceneName',
+    });
   }
-
-  restartGame = () => {
-    this.scene.restart();
-  };
-
   SceneName() {
     Phaser.Scene.call(this, { key: 'SceneName', active: false });
   }
