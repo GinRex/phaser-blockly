@@ -15,7 +15,6 @@ export default class Ghost extends Phaser.GameObjects.Sprite {
     // constructor here
   }
   update() {
-
     // update here
   }
 }

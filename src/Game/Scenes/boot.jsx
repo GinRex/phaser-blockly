@@ -24,24 +24,20 @@ class boot extends Phaser.Scene {
     progressBox.fillStyle(0x222222, 0.8);
     progressBox.fillRect(width / 4, height / 2, width / 2, height / 12);
 
-    this.load.image('Ghost', 'assets/ghost.png');
-    for (let i = 0; i < 10; i++) {
-      this.load.image(`Ghost${i}`, 'assets/ghost.png');
-    }
-    this.load.image('Zelda', 'assets/zelda.jpg');
+this.load.image('Ghost', 'assets/ghost.png');
+this.load.image('Zelda', 'assets/zelda.jpg');
     // launch scene start
-    this.load.on('progress', (value) => {
-      console.log(value);
-      progressBar.clear();
-      progressBar.fillStyle(0xffffff, 1);
-      progressBar.fillRect(width / 4, height / 2, (width / 2) * value, height / 12);
-    });
-    this.load.on('fileprogress', (file) => {
-      console.log(file.src);
-    });
-    this.load.on('complete', () => {
-      this.scene.start('scene1');
-    });
+this.load.on('progress', (value) => {
+        progressBar.clear();
+        progressBar.fillStyle(0xffffff, 1);
+        progressBar.fillRect(width / 4, height / 2, (width / 2) * value, height / 12);
+      });
+      this.load.on('fileprogress', (file) => {
+        console.log(file.src);
+      });
+      this.load.on('complete', () => {
+        this.scene.start('scene1');
+      });
     // launch scene end
   }
   create() {

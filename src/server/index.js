@@ -71,6 +71,11 @@ app.post('/api/uploadImage', (req, res) => {
         if (err) return console.log(err);
       });
     });
+    // export all objects file to index
+    const result = `export ${req.file.name} from './${req.file.name}';\n`;
+    fs.appendFile(`${__dirname}/../Game/Classes/index.js`, result, 'utf8', (err) => {
+      if (err) return console.log(err);
+    });
     return res.status(200).send(req.file);
   });
 });
@@ -108,6 +113,9 @@ app.post('/api/createGame', (req, res) => {
     if (fs.existsSync(classesFolder)) {
       fse.remove(classesFolder, (err) => {
         fs.mkdirSync(classesFolder);
+        fs.writeFile(`${classesFolder}/index.js`, '', (err) => {
+          console.log(err);
+        });
       });
     } else fs.mkdirSync(classesFolder);
   } catch (err) {

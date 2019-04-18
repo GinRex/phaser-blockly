@@ -78,7 +78,7 @@ class BlocklyPart extends React.Component {
       Blockly.JavaScript[`init_${gameObject.name}`] = function (block) {
         const text_object_name = block.getFieldValue('object_name');
         // TODO: Assemble JavaScript into code variable.
-        const code = `this.${text_object_name} = new ${gameObject.name}({
+        const code = `this.${text_object_name} = new Class.${gameObject.name}({
           scene: this,
           key: '${gameObject.name}',
           x: 0,

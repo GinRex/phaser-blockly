@@ -1,4 +1,5 @@
 import 'phaser';
+import * as Class from '../Classes';
 
 class SceneName extends Phaser.Scene {
   constructor(props) {

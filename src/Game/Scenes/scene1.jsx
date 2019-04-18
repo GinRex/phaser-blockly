@@ -1,4 +1,5 @@
 import 'phaser';
+import * as Class from '../Classes';
 
 class scene1 extends Phaser.Scene {
   constructor(props) {
@@ -11,7 +12,22 @@ class scene1 extends Phaser.Scene {
   }
   // game state start
 create(){
-  window.alert('abc');
+  this.object = new Class.Ghost({
+            scene: this,
+            key: 'Ghost',
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 100,
+          });
+  this.object = new Class.Zelda({
+            scene: this,
+            key: 'Zelda',
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 100,
+          });
 
 }
   // game state end
