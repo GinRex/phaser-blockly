@@ -116,8 +116,6 @@ Blockly.Blocks.events_when_event_happens = {
       .appendField(
         new Blockly.FieldDropdown([
           ['Select an event', 'NO_EVENT_SELECTED'],
-          ['On statup', 'ON_STARTUP'],
-          ['Each frame', 'EACH_FRAME'],
           ['Left key pressed', 'LEFT_KEY_PRESSED'],
           ['Right key pressed', 'RIGHT_KEY_PRESSED'],
           ['Up key pressed', 'UP_KEY_PRESSED'],
@@ -510,8 +508,23 @@ Blockly.JavaScript.events_when_event_happens = function (block) {
   if (dropdown_event == 'NO_EVENT_SELECTED') {
     return "//error, you did not select an event in the 'when event happens' block\n"
   }
-  const code = `Event.function ${dropdown_event}(){\n${statements_event_code}\n}`
-  return code;
+
+  if (dropdown_event == 'LEFT_KEY_PRESSED') {
+    return `if (cursors.left.isDown) {\n${statements_event_code}\n}`
+  }
+
+  if (dropdown_event == 'RIGHT_KEY_PRESSED') {
+    return `if (cursors.right.isDown) {\n${statements_event_code}\n}`
+  }
+
+  if (dropdown_event == 'UP_KEY_PRESSED') {
+    return `if (cursors.up.isDown) {\n${statements_event_code}\n}`
+  }
+
+  if (dropdown_event == 'DOWN_KEY_PRESSED') {
+    return `if (cursors.down.isDown) {\n${statements_event_code}\n}`
+  }
+  return '';
 }
 
 // /////GAME
