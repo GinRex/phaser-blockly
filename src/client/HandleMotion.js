@@ -16,11 +16,11 @@ function foward(game_object, distance) {
 }
 
 function turn_right(game_object, degrees) {
-  game_object.angle += degrees;
+  foward(game_object, degrees);
 }
 
 function turn_left(game_object, degrees) {
-  game_object.angle -= degrees;
+  foward(game_object, -degrees);
 }
 
 function point_in_direction_degrees(game_object, angle_degrees) {

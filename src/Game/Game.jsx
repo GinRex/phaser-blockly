@@ -1,3 +1,4 @@
+import scene2 from './Scenes/scene2';
 import scene1 from './Scenes/scene1';
 import boot from './Scenes/boot';
 import Phaser from 'phaser';
@@ -12,14 +13,15 @@ const config = {
     default: 'arcade',
     arcade: {
       gravity: {
-        y: 800,
+        y: 0,
       },
       debug: false,
     },
   },
   scene: [
     boot,
-scene1,
+    scene1,
+scene2,
     // scenes go here
   ],
 };

@@ -1,2 +1,4 @@
 export Ghost from './Ghost';
-export Zelda from './Zelda';
+export Square from './Square';
+export Enemy from './Enemy';
+export Ball from './Ball';

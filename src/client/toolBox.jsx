@@ -21,7 +21,7 @@ export default [
   {
     name: 'Game',
     colour: 50,
-    blocks: [{ type: 'game_state' }],
+    blocks: [{ type: 'game_state' }, { type: 'screen_width' }, { type: 'screen_height' }],
   },
   {
     name: 'Sprites',
@@ -48,7 +48,23 @@ export default [
     ],
   },
   {
+    name: 'Object',
+    colour: 250,
+    blocks: [{ type: 'set_pos' }, { type: 'set_size' }],
+  },
+  {
+    name: 'Physic',
+    colour: 50,
+    blocks: [
+      { type: 'world_bounce' },
+      { type: 'set_bounce' },
+      { type: 'set_velocity' },
+      { type: 'add_collider' },
+    ],
+  },
+  {
     name: 'Classes',
+    colour: 50,
     categories: [],
   },
 ];
