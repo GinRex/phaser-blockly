@@ -291,7 +291,7 @@ app.post('/api/updateCode', (req, res) => {
         .toString()
         .split('\n');
       const updateEndIndex = data.indexOf('    // update here');
-      const updateStartIndex = data.indexOf('  update() {');
+      const updateStartIndex = data.indexOf('  update(cursors) {');
       data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, object.jsCode);
       const text = data.join('\n');
       fs.writeFile(`${objectName}`, text, (err) => {

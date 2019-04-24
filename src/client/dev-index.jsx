@@ -67,6 +67,20 @@ class BlocklyPart extends React.Component {
           this.setHelpUrl('');
         },
       };
+      Blockly.Blocks[`update_${gameObject.name}`] = {
+        init() {
+          this.appendDummyInput()
+            .appendField(new Blockly.FieldImage(`assets/${gameObject.filename}`, 30, 30, '*'))
+            .appendField('update ')
+            .appendField(new Blockly.FieldTextInput('object'), 'object_name');
+          this.setInputsInline(true);
+          this.setPreviousStatement(true, null);
+          this.setNextStatement(true, null);
+          this.setColour(230);
+          this.setTooltip('update object');
+          this.setHelpUrl('');
+        },
+      };
       // code
       Blockly.JavaScript[`instance_${gameObject.name}`] = function (block) {
         const text_object_name = block.getFieldValue('object_name');
@@ -88,14 +102,23 @@ class BlocklyPart extends React.Component {
         });\n`;
         return code;
       };
+      Blockly.JavaScript[`update_${gameObject.name}`] = function (block) {
+        const text_object_name = block.getFieldValue('object_name');
+        // TODO: Assemble JavaScript into code variable.
+        const code = `this.${text_object_name}.update(this.cursors);\n`;
+        return code;
+      };
     });
   };
 
   updateToolBox = (gameObjects) => {
-    console.log('abc def');
     this.props.updateToolbox(gameObjects.map(gameObject => ({
       name: gameObject.name,
-      blocks: [{ type: `instance_${gameObject.name}` }, { type: `init_${gameObject.name}` }],
+      blocks: [
+        { type: `instance_${gameObject.name}` },
+        { type: `init_${gameObject.name}` },
+        { type: `update_${gameObject.name}` },
+      ],
     })));
     this.updateBlocks(gameObjects);
   };
