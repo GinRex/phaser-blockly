@@ -3,7 +3,7 @@ import 'phaser';
 class boot extends Phaser.Scene {
   constructor(props) {
     super({
-      key: 'boot',
+      key: 'boot'
     });
   }
   preload() {
@@ -15,8 +15,8 @@ class boot extends Phaser.Scene {
       text: 'Loading...',
       style: {
         font: '20px monospace',
-        fill: '#ffffff',
-      },
+        fill: '#ffffff'
+      }
     });
     loadingText.setOrigin(0.5, 0.5);
     const progressBar = this.add.graphics();

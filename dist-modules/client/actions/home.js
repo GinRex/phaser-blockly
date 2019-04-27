@@ -2,115 +2,103 @@ import axios from 'axios';
 
 export const selectFile = selectedFile => ({
   type: 'SELECT_FILE',
-  selectedFile,
+  selectedFile
 });
 
 export const buildGame = gameObjects => ({
   type: 'BUILD_GAME',
-  gameObjects,
+  gameObjects
 });
 
 export const addObject = gameObject => ({
   type: 'ADD_OBJECT',
-  gameObject,
+  gameObject
 });
 
-export const addScene = scene => dispatch =>
-  axios.post('http://localhost:8080/api/createScene', scene, {}).then((res) => {
-    dispatch({
-      type: 'ADD_SCENE',
-      scene,
-    });
+export const addScene = scene => dispatch => axios.post('http://localhost:8080/api/createScene', scene, {}).then(res => {
+  dispatch({
+    type: 'ADD_SCENE',
+    scene
   });
+});
 
 export const setSlectedGameobjectIndex = index => ({
   type: 'SET_INDEX',
-  index,
+  index
 });
 
-export const setSlectedSceneIndex = index => dispatch =>
-  axios.post('http://localhost:8080/api/selectScene', { index }, {}).then((res) => {
-    dispatch({
-      type: 'SET_SCENE_INDEX',
-      index,
-    });
+export const setSlectedSceneIndex = index => dispatch => axios.post('http://localhost:8080/api/selectScene', { index }, {}).then(res => {
+  dispatch({
+    type: 'SET_SCENE_INDEX',
+    index
   });
+});
 
 export const updateWorkspace = gameObjects => ({
   type: 'UPDATE_WORKSPACE',
-  gameObjects,
+  gameObjects
 });
 
 export const updateSceneWorkspace = scenes => ({
   type: 'UPDATE_SCENE_WORKSPACE',
-  scenes,
+  scenes
 });
 
-export const uploadImage = file => (dispatch) => {
+export const uploadImage = file => dispatch => {
   console.log(file);
   const data = new FormData();
   data.append('file', file);
-  return axios.post('http://localhost:8080/api/uploadImage', data, {}).then((res) => {
+  return axios.post('http://localhost:8080/api/uploadImage', data, {}).then(res => {
     dispatch(addObject({
       name: res.data.name,
       filename: res.data.filename,
       workspace: '',
       jsCode: '',
-      key: res.data.name,
+      key: res.data.name
     }));
   });
 };
 
 export const restartGame = () => ({
-  type: 'RESTART_GAME',
+  type: 'RESTART_GAME'
 });
 
-export const updateGame = gameObjects => (dispatch) => {
+export const updateGame = gameObjects => dispatch => {
   const data = gameObjects;
-  return axios.post('http://localhost:8080/api/updateCode', data, {}).then((res) => {
+  return axios.post('http://localhost:8080/api/updateCode', data, {}).then(res => {
     const frame = document.getElementById('sandboxed');
     frame.contentWindow.postMessage('reload', '*');
   });
 };
 
-export const updateScene = scenes => (dispatch) => {
+export const updateScene = scenes => dispatch => {
   const data = scenes;
-  return axios.post('http://localhost:8080/api/updateSceneCode', data, {}).then((res) => {
+  return axios.post('http://localhost:8080/api/updateSceneCode', data, {}).then(res => {
     console.log('xxx');
     // const frame = document.getElementById('sandboxed');
     // frame.contentWindow.postMessage('reload', '*');
   });
 };
 
-export const createNewGame = game => (dispatch) => {
+export const createNewGame = game => dispatch => {
   localStorage.removeItem('persist:root');
   const data = game;
-  return axios.post('http://localhost:8080/api/createGame', data, {}).then((res) => {
+  return axios.post('http://localhost:8080/api/createGame', data, {}).then(res => {
     window.location.reload();
   });
 };
 
 export const setGame = game => ({
   type: 'SET_GAME',
-  game,
+  game
 });
 
 export const updateToolbox = category => ({
   type: 'UPDATE_TOOL_BOX',
-  category,
+  category
 });
 
 export const setSpriteEditorState = open => ({
   type: 'SET_SPRITE_EDIT_STATE',
-  open,
-});
-
-export const updateAnimations = animations => ({
-  type: 'UPDATE_ANIMATIONS',
-  animations,
-});
-
-export const updateSpriteInfo = info => ({
-  type: 'UPDATE_SPRITE_INFO',
-  info,
+  open
 });

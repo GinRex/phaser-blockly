@@ -4,7 +4,7 @@ import * as Class from '../Classes';
 class scene2 extends Phaser.Scene {
   constructor(props) {
     super({
-      key: 'scene2',
+      key: 'scene2'
     });
   }
   scene2() {

@@ -1,3 +1,5 @@
+import scene2 from './Scenes/scene2';
+import scene1 from './Scenes/scene1';
 import boot from './Scenes/boot';
 import Phaser from 'phaser';
 
@@ -11,15 +13,12 @@ const config = {
     default: 'arcade',
     arcade: {
       gravity: {
-        y: 0,
+        y: 0
       },
-      debug: false,
-    },
+      debug: false
+    }
   },
-  scene: [
-    boot,
-    // scenes go here
-  ],
+  scene: [boot, scene1, scene2]
 };
 
 // const game = new Phaser.Game(config);

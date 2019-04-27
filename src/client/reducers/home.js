@@ -8,6 +8,16 @@ const initState = {
   slectedGameobjectIndex: '',
   slectedSceneIndex: '',
   toolboxCategories,
+  spriteEditOpen: false,
+  animations: { example: [0, 0, 0, 0] },
+  animInfo: {
+    name: 'name',
+    x: 0,
+    y: 0,
+    w: 0,
+    h: 0,
+    n: 1,
+  },
 };
 
 const gameReducer = (state = initState, action) => {
@@ -47,6 +57,12 @@ const gameReducer = (state = initState, action) => {
     case 'RESTART_GAME':
       state.game.scene.scenes[0].restartGame();
       return state;
+    case 'SET_SPRITE_EDIT_STATE':
+      return { ...state, spriteEditOpen: action.open };
+    case 'UPDATE_ANIMATIONS':
+      return { ...state, animations: action.animations };
+    case 'UPDATE_SPRITE_INFO':
+      return { ...state, animInfo: action.info };
     default:
       return state;
   }

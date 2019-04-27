@@ -3,10 +3,13 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Modal from '@material-ui/core/Modal';
+import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
 import ReactBlocklyComponent from './index';
+import SpriteEditor from './SpirteEditor';
 
 import {
   selectFile,
@@ -17,6 +20,7 @@ import {
   updateScene,
   updateSceneWorkspace,
   updateToolbox,
+  setSpriteEditorState,
 } from './actions/home';
 
 const styles = theme => ({
@@ -30,14 +34,21 @@ class BlocklyPart extends React.Component {
     super(props);
     this.updateBlocks(this.props.gameObjects);
   }
-
   componentDidMount() {
     this.updateToolBox(this.props.gameObjects);
   }
 
   // upload image
   onChangeHandler = (event) => {
-    this.props.selectFile(event.target.files[0]);
+    if (FileReader && event.target.files[0]) {
+      const fr = new FileReader();
+      const file = event.target.files[0];
+      fr.onloadend = () => {
+        file.src = fr.result;
+        this.props.selectFile(file);
+      };
+      fr.readAsDataURL(file);
+    }
   };
 
   updateBlocks = (gameObjects) => {
@@ -154,7 +165,6 @@ class BlocklyPart extends React.Component {
 
       const newScenes = scenes;
       const index = newScenes.findIndex(scene => scene.key === slectedSceneIndex);
-      console.log(index);
       newScenes[index] = currentScene;
 
       this.props.updateSceneWorkspace(newScenes);
@@ -168,6 +178,7 @@ class BlocklyPart extends React.Component {
     const currentScene = this.props.scenes.find(scene => scene.key === this.props.slectedSceneIndex);
     return (
       <div style={{ height: 500 }}>
+        <SpriteEditor />
         <Button
           onClick={() => {
             if (this.props.slectedGameobjectIndex) {
@@ -233,16 +244,17 @@ class BlocklyPart extends React.Component {
           type="button"
           className="btn btn-success btn-block"
           onClick={() => {
-            const promise = new Promise((resolve, reject) => {
-              resolve(this.props.uploadImage(this.props.selectedFile));
-            });
-            promise.then((res) => {
-              console.log('bbc');
-              this.updateToolBox(this.props.gameObjects);
-            });
+            // const promise = new Promise((resolve, reject) => {
+            //   resolve(this.props.uploadImage(this.props.selectedFile));
+            // });
+            // promise.then((res) => {
+            //   console.log('bbc');
+            //   this.updateToolBox(this.props.gameObjects);
+            // });
+            this.props.setSpriteEditorState(true);
           }}
         >
-          Upload
+          Create Class
         </button>
         <div
           style={{
@@ -302,6 +314,7 @@ const mapDispatchToProps = {
   updateScene,
   updateSceneWorkspace,
   updateToolbox,
+  setSpriteEditorState,
 };
 
 export default connect(
