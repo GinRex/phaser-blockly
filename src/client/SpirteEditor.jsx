@@ -43,49 +43,48 @@ const SquareList = (ani) => {
   const info = ani.info;
   const squares = [];
   for (let i = 0; i < info.n; i++) {
-    console.log(i);
     squares.push(<Rect
-      x={Number(info.x) + Number(info.w) * i}
-      y={Number(info.y)}
-      width={Number(info.w)}
-      height={Number(info.h)}
+      x={info.x + info.w * i}
+      y={info.y}
+      width={info.w}
+      height={info.h}
       stroke="red"
+        // fill="red"
       strokeWidth={1}
     />);
   }
-  console.log(squares);
   return squares;
 };
 
 class SpriteEditor extends React.Component {
   constructor(props) {
     super(props);
-    const animations = {};
   }
   componentDidUpdate() {
+    console.log('update');
     this.image = new window.Image();
     this.image.src =
       this.props.selectedFile && this.props.selectedFile.src ? this.props.selectedFile.src : '';
+    // this.getPreviewAnimations(this.props.animInfo);
   }
 
   getPreviewAnimations = (info) => {
+    // const info = this.props.animInfo;
     console.log(info);
     const animations = [];
     for (let i = 0; i < info.n; i++) {
-      console.log(i);
-      animations.push(Number(info.x) + Number(info.width * i));
-      animations.push(Number(info.y));
-      animations.push(Number(info.width));
-      animations.push(Number(info.height));
+      // console.log(i, info);
+      animations.push(info.x + info.w * i);
+      animations.push(info.y);
+      animations.push(info.w);
+      animations.push(info.h);
     }
     this.props.updateAnimations({ example: animations });
   };
 
   render() {
     const { classes } = this.props;
-    const animations = {
-      idle: [0, 0, 95, 170, 95, 0, 95, 170, 95 * 2, 0, 95, 170],
-    };
+    console.log('xx', this.props.animations);
     return (
       <div>
         <Dialog
@@ -123,11 +122,27 @@ class SpriteEditor extends React.Component {
               <div
                 style={{
                   display: 'flex',
-                  justifyContent: 'space-between',
+                  justifyContent: 'space-around',
                   alignItems: 'center',
                   flexDirection: 'column',
                 }}
               >
+                <Stage width={200} height={200}>
+                  <Layer>
+                    <Sprite
+                      x={0}
+                      y={0}
+                      image={this.image}
+                      animation="example"
+                      animations={this.props.animations}
+                      frameRate={10}
+                      frameIndex={0}
+                      ref={(node) => {
+                        if (node && !node.isRunning()) node.start();
+                      }}
+                    />
+                  </Layer>
+                </Stage>
                 <TextField
                   id="standard-name"
                   label="Animation name"
@@ -145,13 +160,15 @@ class SpriteEditor extends React.Component {
                   id="standard-name"
                   label="x"
                   className={classes.textField}
+                  type="number"
                   value={this.props.animInfo.x}
                   onChange={(event) => {
-                    this.props.updateSpriteInfo({
+                    const newAniInfo = {
                       ...this.props.animInfo,
-                      x: Number(event.target.value),
-                    });
-                    this.getPreviewAnimations(this.props.animInfo);
+                      x: parseFloat(event.target.value),
+                    };
+                    this.props.updateSpriteInfo(newAniInfo);
+                    this.getPreviewAnimations(newAniInfo);
                   }}
                   margin="normal"
                 />
@@ -159,13 +176,15 @@ class SpriteEditor extends React.Component {
                   id="standard-name"
                   label="y"
                   className={classes.textField}
+                  type="number"
                   value={this.props.animInfo.y}
                   onChange={(event) => {
-                    this.props.updateSpriteInfo({
+                    const newAniInfo = {
                       ...this.props.animInfo,
-                      y: Number(event.target.value),
-                    });
-                    this.getPreviewAnimations(this.props.animInfo);
+                      y: parseFloat(event.target.value),
+                    };
+                    this.props.updateSpriteInfo(newAniInfo);
+                    this.getPreviewAnimations(newAniInfo);
                   }}
                   margin="normal"
                 />
@@ -173,13 +192,15 @@ class SpriteEditor extends React.Component {
                   id="standard-name"
                   label="width"
                   className={classes.textField}
+                  type="number"
                   value={this.props.animInfo.w}
                   onChange={(event) => {
-                    this.props.updateSpriteInfo({
+                    const newAniInfo = {
                       ...this.props.animInfo,
-                      w: Number(event.target.value),
-                    });
-                    this.getPreviewAnimations(this.props.animInfo);
+                      w: parseFloat(event.target.value),
+                    };
+                    this.props.updateSpriteInfo(newAniInfo);
+                    this.getPreviewAnimations(newAniInfo);
                   }}
                   margin="normal"
                 />
@@ -187,13 +208,15 @@ class SpriteEditor extends React.Component {
                   id="standard-name"
                   label="height"
                   className={classes.textField}
+                  type="number"
                   value={this.props.animInfo.h}
                   onChange={(event) => {
-                    this.props.updateSpriteInfo({
+                    const newAniInfo = {
                       ...this.props.animInfo,
-                      h: Number(event.target.value),
-                    });
-                    this.getPreviewAnimations(this.props.animInfo);
+                      h: parseFloat(event.target.value),
+                    };
+                    this.props.updateSpriteInfo(newAniInfo);
+                    this.getPreviewAnimations(newAniInfo);
                   }}
                   margin="normal"
                 />
@@ -201,13 +224,15 @@ class SpriteEditor extends React.Component {
                   id="standard-name"
                   label="number of frame"
                   className={classes.textField}
+                  type="number"
                   value={this.props.animInfo.n}
                   onChange={(event) => {
-                    this.props.updateSpriteInfo({
+                    const newAniInfo = {
                       ...this.props.animInfo,
-                      n: Number(event.target.value),
-                    });
-                    this.getPreviewAnimations(this.props.animInfo);
+                      n: parseFloat(event.target.value),
+                    };
+                    this.props.updateSpriteInfo(newAniInfo);
+                    this.getPreviewAnimations(newAniInfo);
                   }}
                   margin="normal"
                 />
@@ -228,22 +253,6 @@ class SpriteEditor extends React.Component {
                 >
                   Create Animation
                 </Button>
-                <Stage width={200} height={200}>
-                  <Layer>
-                    <Sprite
-                      x={50}
-                      y={50}
-                      image={this.image}
-                      animations={this.props.animations}
-                      animation="example"
-                      frameRate={10}
-                      frameIndex={0}
-                      ref={(node) => {
-                        if (node && !node.isRunning()) node.start();
-                      }}
-                    />
-                  </Layer>
-                </Stage>
               </div>
             </div>
           </DialogContent>
