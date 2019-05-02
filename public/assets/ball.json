@@ -1,0 +1,104 @@
+{
+	"textures": [
+		{
+			"image": "ball.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1036,
+				"h": 259
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "ball-0.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 259,
+						"h": 259
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 259,
+						"h": 259
+					},
+					"frame": {
+						"x": 0,
+						"y": 0,
+						"w": 259,
+						"h": 259
+					}
+				},
+				{
+					"filename": "ball-1.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 259,
+						"h": 259
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 259,
+						"h": 259
+					},
+					"frame": {
+						"x": 259,
+						"y": 0,
+						"w": 259,
+						"h": 259
+					}
+				},
+				{
+					"filename": "ball-2.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 259,
+						"h": 259
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 259,
+						"h": 259
+					},
+					"frame": {
+						"x": 518,
+						"y": 0,
+						"w": 259,
+						"h": 259
+					}
+				},
+				{
+					"filename": "ball-3.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 259,
+						"h": 259
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 259,
+						"h": 259
+					},
+					"frame": {
+						"x": 777,
+						"y": 0,
+						"w": 259,
+						"h": 259
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:7cc258b1f8b4f0526a5b6cf56fe53386:58b3ca6865c971d16461d5a31e05f51c:50a67b72e1915f3e08c6f05b684244d0$"
+	}
+}

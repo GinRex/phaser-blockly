@@ -95,27 +95,29 @@ app.post('/api/uploadJson', (req, res) => {
     // console.log(req.file);
     req.file.name = capitalize(path.parse(req.file.filename).name);
 
-    //   // load image to loader
-    //   try {
-    //     const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
-    //     const gameData = fs
-    //       .readFileSync(gameFile)
-    //       .toString()
-    //       .split('\n');
-    //     const selectedSceneEnd = gameData.indexOf('    // launch scene start');
-    //     gameData.splice(
-    //       selectedSceneEnd,
-    //       0,
-    //       `this.load.image('${req.file.name}', 'assets/${req.file.filename}');`,
-    //     );
+    // load image to loader
+    try {
+      const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
+      const gameData = fs
+        .readFileSync(gameFile)
+        .toString()
+        .split('\n');
+      const selectedSceneEnd = gameData.indexOf('    // launch scene start');
+      gameData.splice(
+        selectedSceneEnd,
+        0,
+        `this.load.atlas('${req.file.name}-sprites', 'assets/${req.file.name}.png', 'assets/${
+          req.file.filename
+        }');`,
+      );
 
-    //     const text = gameData.join('\n');
-    //     fs.writeFile(gameFile, text, (err) => {
-    //       console.log(err);
-    //     });
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
+      const text = gameData.join('\n');
+      fs.writeFile(gameFile, text, (err) => {
+        console.log(err);
+      });
+    } catch (err) {
+      console.error(err);
+    }
 
     //   // create object file
     //   const objectName = `${__dirname}/../Game/Classes/${req.file.name}`;

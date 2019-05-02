@@ -325,10 +325,10 @@ class BlocklyPart extends React.Component {
                 <div onClick={() => this.props.setSpriteEditorState(true)}>Create Animation</div>
                 <div onClick={() => this.props.setSpriteEditorState(true)}>Import JSON sprite</div>
               </Popover>
-              <SpriteEditor gameObject={gameObject} />
             </div>
           ))}
         </div>
+        <SpriteEditor />
       </div>
     );
   }

@@ -96,8 +96,8 @@ class SpriteEditor extends React.Component {
   };
 
   render() {
-    const { classes, gameObject } = this.props;
-    console.log(gameObject);
+    const { classes } = this.props;
+    console.log(this.props);
     return (
       <div>
         <Dialog
@@ -124,7 +124,9 @@ class SpriteEditor extends React.Component {
                   overflow: 'auto',
                 }}
               >
-                {gameObject.jsonSprite ? (
+                {this.props.selectedFile &&
+                this.props.gameObjects.find(gameObject => gameObject.key === this.props.selectedFile.alt) &&
+                this.props.gameObjects.find(gameObject => gameObject.key === this.props.selectedFile.alt).jsonSprite ? (
                   <Stage width={2000} height={3000}>
                     <Layer>
                       <Image image={this.image} />
