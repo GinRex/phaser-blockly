@@ -3,8 +3,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
-import Typography from '@material-ui/core/Typography';
+import Popover from '@material-ui/core/Popover';
 import { connect } from 'react-redux';
 import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
@@ -21,6 +20,7 @@ import {
   updateSceneWorkspace,
   updateToolbox,
   setSpriteEditorState,
+  setObjectMenuState,
 } from './actions/home';
 
 const styles = theme => ({
@@ -244,14 +244,14 @@ class BlocklyPart extends React.Component {
           type="button"
           className="btn btn-success btn-block"
           onClick={() => {
-            // const promise = new Promise((resolve, reject) => {
-            //   resolve(this.props.uploadImage(this.props.selectedFile));
-            // });
-            // promise.then((res) => {
-            //   console.log('bbc');
-            //   this.updateToolBox(this.props.gameObjects);
-            // });
-            this.props.setSpriteEditorState(true);
+            if (this.props.selectFile) {
+              const promise = new Promise((resolve, reject) => {
+                resolve(this.props.uploadImage(this.props.selectedFile));
+              });
+              promise.then((res) => {
+                this.updateToolBox(this.props.gameObjects);
+              });
+            }
           }}
         >
           Create Class
@@ -260,24 +260,20 @@ class BlocklyPart extends React.Component {
           style={{
             borderWidth: 3,
             borderColor: 'black',
-            width: 600,
-            height: 150,
             borderRadius: 20,
-            backgroundColor: 'gray',
-            margin: 10,
+            width: 550,
+            maxHeight: 300,
+            backgroundColor: 'grey',
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            overflow: 'auto',
+            minHeight: 150,
           }}
         >
           {this.props.gameObjects.map(gameObject => (
-            <img
-              onClick={() => {
-                this.props.setSlectedGameobjectIndex(gameObject.key);
-                Blockly.mainWorkspace.clear();
-                if (gameObject.workspace !== '') {
-                  const xml = Blockly.Xml.textToDom(gameObject.workspace);
-                  Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
-                }
-              }}
-              src={`assets/${gameObject.filename}`}
+            <div
               style={{
                 width: 100,
                 height: 100,
@@ -287,8 +283,45 @@ class BlocklyPart extends React.Component {
                 borderWidth: 3,
                 borderRadius: 20,
               }}
-              alt={gameObject.name}
-            />
+            >
+              <img
+                src={`assets/${gameObject.filename}`}
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 20,
+                }}
+                onClick={(event) => {
+                  // console.log(event.target, event.currentTarget);
+                  this.props.selectFile(event.currentTarget);
+                  this.props.setObjectMenuState(null);
+                  this.props.setObjectMenuState(event.currentTarget);
+                  this.props.setSlectedGameobjectIndex(gameObject.key);
+                  Blockly.mainWorkspace.clear();
+                  if (gameObject.workspace !== '') {
+                    const xml = Blockly.Xml.textToDom(gameObject.workspace);
+                    Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
+                  }
+                }}
+                alt={gameObject.name}
+              />
+              <Popover
+                id="simple-popper"
+                open={Boolean(this.props.objectMenuOpen)}
+                anchorEl={this.props.objectMenuOpen}
+                onClose={() => this.props.setObjectMenuState(null)}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+              >
+                <div onClick={() => this.props.setSpriteEditorState(true)}>Create Animation</div>
+              </Popover>
+            </div>
           ))}
         </div>
       </div>
@@ -303,6 +336,7 @@ const mapStateToProps = state => ({
   scenes: state.home.scenes,
   slectedSceneIndex: state.home.slectedSceneIndex,
   toolboxCategories: state.home.toolboxCategories,
+  objectMenuOpen: state.home.objectMenuOpen,
 });
 
 const mapDispatchToProps = {
@@ -315,6 +349,7 @@ const mapDispatchToProps = {
   updateSceneWorkspace,
   updateToolbox,
   setSpriteEditorState,
+  setObjectMenuState,
 };
 
 export default connect(

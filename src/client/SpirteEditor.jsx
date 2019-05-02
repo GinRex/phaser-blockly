@@ -39,7 +39,6 @@ function Transition(props) {
 }
 
 const SquareList = (ani) => {
-  console.log(ani);
   const info = ani.info;
   const squares = [];
   for (let i = 0; i < info.n; i++) {
@@ -61,19 +60,14 @@ class SpriteEditor extends React.Component {
     super(props);
   }
   componentDidUpdate() {
-    console.log('update');
     this.image = new window.Image();
     this.image.src =
       this.props.selectedFile && this.props.selectedFile.src ? this.props.selectedFile.src : '';
-    // this.getPreviewAnimations(this.props.animInfo);
   }
 
   getPreviewAnimations = (info) => {
-    // const info = this.props.animInfo;
-    console.log(info);
     const animations = [];
     for (let i = 0; i < info.n; i++) {
-      // console.log(i, info);
       animations.push(info.x + info.w * i);
       animations.push(info.y);
       animations.push(info.w);
@@ -84,7 +78,6 @@ class SpriteEditor extends React.Component {
 
   render() {
     const { classes } = this.props;
-    console.log('xx', this.props.animations);
     return (
       <div>
         <Dialog

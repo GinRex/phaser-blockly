@@ -24,6 +24,8 @@ class boot extends Phaser.Scene {
     progressBox.fillStyle(0x222222, 0.8);
     progressBox.fillRect(width / 4, height / 2, width / 2, height / 12);
 
+this.load.image('Blanc', 'assets/blanc.jpg');
+this.load.image('Trump', 'assets/trump.png');
     // launch scene start
 this.load.on('progress', (value) => {
         progressBar.clear();

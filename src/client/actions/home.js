@@ -105,6 +105,11 @@ export const setSpriteEditorState = open => ({
   open,
 });
 
+export const setObjectMenuState = open => ({
+  type: 'SET_OBJECT_MENU_STATE',
+  open,
+});
+
 export const updateAnimations = animations => ({
   type: 'UPDATE_ANIMATIONS',
   animations,

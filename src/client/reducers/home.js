@@ -9,6 +9,7 @@ const initState = {
   slectedSceneIndex: '',
   toolboxCategories,
   spriteEditOpen: false,
+  objectMenuOpen: false,
   animations: { example: [0, 0, 0, 0] },
   animInfo: {
     name: 'name',
@@ -59,6 +60,8 @@ const gameReducer = (state = initState, action) => {
       return state;
     case 'SET_SPRITE_EDIT_STATE':
       return { ...state, spriteEditOpen: action.open };
+    case 'SET_OBJECT_MENU_STATE':
+      return { ...state, objectMenuOpen: action.open };
     case 'UPDATE_ANIMATIONS':
       return { ...state, animations: action.animations };
     case 'UPDATE_SPRITE_INFO':

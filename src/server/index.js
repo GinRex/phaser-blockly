@@ -29,6 +29,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage }).single('file');
 
 app.post('/api/uploadImage', (req, res) => {
+  if (!req.file) {
+    return res.status(404).send('file not found');
+  }
   upload(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       return res.status(500).json(err);

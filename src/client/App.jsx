@@ -22,7 +22,9 @@ class App extends Component {
               <div className="col-sm-2">
                 <SubMenu />
                 <iframe
-                  style={{ height: 500, width: 550 }}
+                  width="550"
+                  height="500"
+                  // style={{ WebkitTransform: 'scale(0.5)', MozTransform: 'scale(0.5)' }}
                   title="phaser-game"
                   id="sandboxed"
                   src="game_iframe.html"

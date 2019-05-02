@@ -19,9 +19,9 @@ const config = {
   },
   scene: [
     boot,
-scene1,
+    scene1,
     // scenes go here
   ],
 };
 
-// const game = new Phaser.Game(config);
+const game = new Phaser.Game(config);
