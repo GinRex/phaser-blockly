@@ -29,9 +29,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage }).single('file');
 
 app.post('/api/uploadImage', (req, res) => {
-  if (!req.file) {
-    return res.status(404).send('file not found');
-  }
+  // console.log(req);
+  // if (!req.file) {
+  //   return res.status(404).send('file not found');
+  // }
   upload(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       return res.status(500).json(err);
@@ -79,6 +80,59 @@ app.post('/api/uploadImage', (req, res) => {
     fs.appendFile(`${__dirname}/../Game/Classes/index.js`, result, 'utf8', (err) => {
       if (err) return console.log(err);
     });
+    return res.status(200).send(req.file);
+  });
+});
+
+app.post('/api/uploadJson', (req, res) => {
+  upload(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json(err);
+    } else if (err) {
+      return res.status(500).json(err);
+    }
+
+    // console.log(req.file);
+    req.file.name = capitalize(path.parse(req.file.filename).name);
+
+    //   // load image to loader
+    //   try {
+    //     const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
+    //     const gameData = fs
+    //       .readFileSync(gameFile)
+    //       .toString()
+    //       .split('\n');
+    //     const selectedSceneEnd = gameData.indexOf('    // launch scene start');
+    //     gameData.splice(
+    //       selectedSceneEnd,
+    //       0,
+    //       `this.load.image('${req.file.name}', 'assets/${req.file.filename}');`,
+    //     );
+
+    //     const text = gameData.join('\n');
+    //     fs.writeFile(gameFile, text, (err) => {
+    //       console.log(err);
+    //     });
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+
+    //   // create object file
+    //   const objectName = `${__dirname}/../Game/Classes/${req.file.name}`;
+    //   fs.readFile(`${__dirname}/gameObjectTemplate.js`, 'utf8', (err, data) => {
+    //     if (err) {
+    //       return console.log(err);
+    //     }
+    //     const result = data.replace(/Name/g, req.file.name);
+    //     fs.writeFile(`${objectName}.jsx`, result, 'utf8', (err) => {
+    //       if (err) return console.log(err);
+    //     });
+    //   });
+    //   // export all objects file to index
+    //   const result = `export ${req.file.name} from './${req.file.name}';\n`;
+    //   fs.appendFile(`${__dirname}/../Game/Classes/index.js`, result, 'utf8', (err) => {
+    //     if (err) return console.log(err);
+    //   });
     return res.status(200).send(req.file);
   });
 });

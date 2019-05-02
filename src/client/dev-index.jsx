@@ -178,7 +178,6 @@ class BlocklyPart extends React.Component {
     const currentScene = this.props.scenes.find(scene => scene.key === this.props.slectedSceneIndex);
     return (
       <div style={{ height: 500 }}>
-        <SpriteEditor />
         <Button
           onClick={() => {
             if (this.props.slectedGameobjectIndex) {
@@ -239,7 +238,12 @@ class BlocklyPart extends React.Component {
             )
           }
         />
-        <input type="file" name="file" onChange={this.onChangeHandler} />
+        <input
+          type="file"
+          name="file"
+          onClick={() => this.props.selectFile(null)}
+          onChange={this.onChangeHandler}
+        />
         <button
           type="button"
           className="btn btn-success btn-block"
@@ -292,7 +296,6 @@ class BlocklyPart extends React.Component {
                   borderRadius: 20,
                 }}
                 onClick={(event) => {
-                  // console.log(event.target, event.currentTarget);
                   this.props.selectFile(event.currentTarget);
                   this.props.setObjectMenuState(null);
                   this.props.setObjectMenuState(event.currentTarget);
@@ -320,7 +323,9 @@ class BlocklyPart extends React.Component {
                 }}
               >
                 <div onClick={() => this.props.setSpriteEditorState(true)}>Create Animation</div>
+                <div onClick={() => this.props.setSpriteEditorState(true)}>Import JSON sprite</div>
               </Popover>
+              <SpriteEditor gameObject={gameObject} />
             </div>
           ))}
         </div>

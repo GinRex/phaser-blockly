@@ -1,7 +1,7 @@
 import * as Motion from '../../client/HandleMotion';
 import * as Sprite from '../../client/HandleSprite';
 
-export default class Trump extends Phaser.GameObjects.Sprite {
+export default class Gems extends Phaser.GameObjects.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, config.key);
     config.scene.physics.world.enable(this);

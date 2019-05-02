@@ -66,6 +66,8 @@ const gameReducer = (state = initState, action) => {
       return { ...state, animations: action.animations };
     case 'UPDATE_SPRITE_INFO':
       return { ...state, animInfo: action.info };
+    case 'UPDATE_JSON_SPRITE':
+      return { ...state, gameObjects: action.gameObjects };
     default:
       return state;
   }

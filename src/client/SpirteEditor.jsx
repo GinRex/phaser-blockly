@@ -14,7 +14,12 @@ import { connect } from 'react-redux';
 import { Stage, Layer, Rect, Text, Image, Sprite } from 'react-konva';
 import Konva from 'konva';
 
-import { setSpriteEditorState, updateAnimations, updateSpriteInfo } from './actions/home';
+import {
+  setSpriteEditorState,
+  updateAnimations,
+  updateSpriteInfo,
+  uploadJson,
+} from './actions/home';
 
 const styles = theme => ({
   button: {
@@ -62,8 +67,22 @@ class SpriteEditor extends React.Component {
   componentDidUpdate() {
     this.image = new window.Image();
     this.image.src =
+      // `assets/${this.props.gameObject.filename}`;
       this.props.selectedFile && this.props.selectedFile.src ? this.props.selectedFile.src : '';
   }
+
+  onChangeHandler = (event) => {
+    if (FileReader && event.target.files[0]) {
+      const fr = new FileReader();
+      const file = event.target.files[0];
+      fr.onloadend = () => {
+        file.src = fr.result;
+        // this.props.selectFile(file);
+        this.props.uploadJson(file, this.props.gameObjects);
+      };
+      fr.readAsDataURL(file);
+    }
+  };
 
   getPreviewAnimations = (info) => {
     const animations = [];
@@ -77,7 +96,8 @@ class SpriteEditor extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, gameObject } = this.props;
+    console.log(gameObject);
     return (
       <div>
         <Dialog
@@ -89,7 +109,6 @@ class SpriteEditor extends React.Component {
           TransitionComponent={Transition}
           fullWidth
           maxWidth="xl"
-          keepMounted
         >
           <DialogTitle id="scroll-dialog-title">Animation</DialogTitle>
           <DialogContent>
@@ -105,12 +124,17 @@ class SpriteEditor extends React.Component {
                   overflow: 'auto',
                 }}
               >
-                <Stage width={2000} height={3000}>
-                  <Layer>
-                    <Image image={this.image} />
-                    <SquareList info={this.props.animInfo} />
-                  </Layer>
-                </Stage>
+                {gameObject.jsonSprite ? (
+                  <Stage width={2000} height={3000}>
+                    <Layer>
+                      <Image image={this.image} />
+                      <SquareList info={this.props.animInfo} />
+                    </Layer>
+                  </Stage>
+                ) : (
+                  'Please import JSON file for the sprite'
+                )}
+                <input type="file" name="file" onChange={this.onChangeHandler} />
               </div>
               <div
                 style={{
@@ -260,12 +284,14 @@ const mapStateToProps = state => ({
   selectedFile: state.home.selectedFile,
   animations: state.home.animations,
   animInfo: state.home.animInfo,
+  gameObjects: state.home.gameObjects,
 });
 
 const mapDispatchToProps = {
   setSpriteEditorState,
   updateAnimations,
   updateSpriteInfo,
+  uploadJson,
 };
 
 export default connect(

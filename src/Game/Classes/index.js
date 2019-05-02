@@ -1,2 +1,2 @@
-export Blanc from './Blanc';
-export Trump from './Trump';
+export Gems from './Gems';
+export Why from './Why';

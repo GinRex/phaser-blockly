@@ -61,6 +61,25 @@ export const uploadImage = file => (dispatch) => {
   });
 };
 
+export const uploadJson = (file, gameObjects) => (dispatch) => {
+  console.log(file);
+  const data = new FormData();
+  data.append('file', file);
+  return axios.post('http://localhost:8080/api/uploadJson', data, {}).then((res) => {
+    console.log(res.data);
+    const currentGameobject = gameObjects.find(gameObject => gameObject.key === res.data.name);
+    currentGameobject.jsonSprite = res.data.filename;
+    const newGameObjects = gameObjects;
+    const index = newGameObjects.findIndex(gameObject => gameObject.key === res.data.name);
+    newGameObjects[index] = currentGameobject;
+    console.log(newGameObjects);
+    dispatch({
+      type: 'UPDATE_JSON_SPRITE',
+      gameObjects: newGameObjects,
+    });
+  });
+};
+
 export const restartGame = () => ({
   type: 'RESTART_GAME',
 });
@@ -118,4 +137,9 @@ export const updateAnimations = animations => ({
 export const updateSpriteInfo = info => ({
   type: 'UPDATE_SPRITE_INFO',
   info,
+});
+
+export const addJsonSprite = gameObjects => ({
+  type: 'UPDATE_SPRITE_INFO',
+  gameObjects,
 });
