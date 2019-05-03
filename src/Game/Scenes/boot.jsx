@@ -25,22 +25,9 @@ class boot extends Phaser.Scene {
     progressBox.fillRect(width / 4, height / 2, width / 2, height / 12);
 
 this.load.image('Gems', 'assets/gems.png');
-this.load.image('Why', 'assets/why.jpg');
-this.load.image('Ball', 'assets/ball.png');
-this.load.atlas('Ball-sprites', 'assets/Ball.png', 'assets/ball.json');
-this.load.atlas('Ball-sprites', 'assets/Ball.png', 'assets/ball.json');
+this.load.atlas('Gems-sprites', 'assets/Gems.png', 'assets/gems.json');
+this.load.atlas('Gems-sprites', 'assets/Gems.png', 'assets/gems.json');
     // launch scene start
-this.load.on('progress', (value) => {
-        progressBar.clear();
-        progressBar.fillStyle(0xffffff, 1);
-        progressBar.fillRect(width / 4, height / 2, (width / 2) * value, height / 12);
-      });
-      this.load.on('fileprogress', (file) => {
-        console.log(file.src);
-      });
-      this.load.on('complete', () => {
-        this.scene.start('scene1');
-      });
     // launch scene end
   }
   create() {

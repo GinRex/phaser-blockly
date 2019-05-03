@@ -13,11 +13,11 @@ const initState = {
   animations: { example: [0, 0, 0, 0] },
   animInfo: {
     name: 'name',
-    x: 0,
-    y: 0,
-    w: 0,
-    h: 0,
-    n: 1,
+    prefix: 'sprite_',
+    start: 0,
+    end: 0,
+    zeroPad: 4,
+    repeat: -1,
   },
 };
 

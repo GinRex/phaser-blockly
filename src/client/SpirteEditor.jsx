@@ -13,6 +13,7 @@ import Slide from '@material-ui/core/Slide';
 import { connect } from 'react-redux';
 import { Stage, Layer, Rect, Text, Image, Sprite } from 'react-konva';
 import Konva from 'konva';
+import Phaser from 'phaser';
 
 import {
   setSpriteEditorState,
@@ -60,6 +61,34 @@ const SquareList = (ani) => {
   return squares;
 };
 
+function preload(file) {
+  console.log(this.load);
+  this.load.atlas(
+    'atlas',
+    `assets/animations/${file.alt}.png`,
+    `assets/animations/${file.alt}.json`,
+  );
+}
+
+function create() {
+  console.log('create');
+  this.anims.create({
+    key: 'diamond',
+    frames: this.anims.generateFrameNames('atlas', {
+      prefix: 'diamond_',
+      end: 15,
+      zeroPad: 4,
+    }),
+    repeat: -1,
+  });
+
+  console.log(this.anims);
+  const gem = this.add
+    .sprite(10, 10, 'atlas')
+    .play('diamond')
+    .setScale(2);
+}
+
 class SpriteEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -70,6 +99,18 @@ class SpriteEditor extends React.Component {
       // `assets/${this.props.gameObject.filename}`;
       this.props.selectedFile && this.props.selectedFile.src ? this.props.selectedFile.src : '';
   }
+
+  config = {
+    type: Phaser.AUTO,
+    parent: 'animation-pv',
+    pixelArt: true,
+    width: 300,
+    height: 300,
+    scene: {
+      // preload: () => preload(this.props.selectedFile),
+      // create,
+    },
+  };
 
   onChangeHandler = (event) => {
     if (FileReader && event.target.files[0]) {
@@ -146,7 +187,13 @@ class SpriteEditor extends React.Component {
                   flexDirection: 'column',
                 }}
               >
-                <Stage width={200} height={200}>
+                <div
+                  id="animation-pv"
+                  ref={(node) => {
+                    if (node && !this.game) this.game = new Phaser.Game(this.config);
+                  }}
+                />
+                {/* <Stage width={200} height={200}>
                   <Layer>
                     <Sprite
                       x={0}
@@ -161,7 +208,7 @@ class SpriteEditor extends React.Component {
                       }}
                     />
                   </Layer>
-                </Stage>
+                </Stage> */}
                 <TextField
                   id="standard-name"
                   label="Animation name"
@@ -177,81 +224,80 @@ class SpriteEditor extends React.Component {
                 />
                 <TextField
                   id="standard-name"
-                  label="x"
+                  label="prefix"
                   className={classes.textField}
-                  type="number"
-                  value={this.props.animInfo.x}
+                  value={this.props.animInfo.prefix}
                   onChange={(event) => {
                     const newAniInfo = {
                       ...this.props.animInfo,
-                      x: parseFloat(event.target.value),
+                      prefix: event.target.value,
                     };
                     this.props.updateSpriteInfo(newAniInfo);
-                    this.getPreviewAnimations(newAniInfo);
+                    // this.getPreviewAnimations(newAniInfo);
                   }}
                   margin="normal"
                 />
                 <TextField
                   id="standard-name"
-                  label="y"
+                  label="start"
                   className={classes.textField}
                   type="number"
-                  value={this.props.animInfo.y}
+                  value={this.props.animInfo.start}
                   onChange={(event) => {
                     const newAniInfo = {
                       ...this.props.animInfo,
-                      y: parseFloat(event.target.value),
+                      start: parseFloat(event.target.value),
                     };
                     this.props.updateSpriteInfo(newAniInfo);
-                    this.getPreviewAnimations(newAniInfo);
+                    // this.getPreviewAnimations(newAniInfo);
                   }}
                   margin="normal"
                 />
                 <TextField
                   id="standard-name"
-                  label="width"
+                  label="end"
                   className={classes.textField}
                   type="number"
-                  value={this.props.animInfo.w}
+                  value={this.props.animInfo.end}
                   onChange={(event) => {
                     const newAniInfo = {
                       ...this.props.animInfo,
-                      w: parseFloat(event.target.value),
+                      end: parseFloat(event.target.value),
                     };
                     this.props.updateSpriteInfo(newAniInfo);
-                    this.getPreviewAnimations(newAniInfo);
+                    // this.getPreviewAnimations(newAniInfo);
                   }}
                   margin="normal"
                 />
                 <TextField
                   id="standard-name"
-                  label="height"
+                  label="zero-pad"
                   className={classes.textField}
                   type="number"
-                  value={this.props.animInfo.h}
+                  value={this.props.animInfo.zeroPad}
                   onChange={(event) => {
                     const newAniInfo = {
                       ...this.props.animInfo,
-                      h: parseFloat(event.target.value),
+                      zeroPad: parseFloat(event.target.value),
                     };
                     this.props.updateSpriteInfo(newAniInfo);
-                    this.getPreviewAnimations(newAniInfo);
+                    // this.getPreviewAnimations(newAniInfo);
                   }}
                   margin="normal"
                 />
                 <TextField
                   id="standard-name"
-                  label="number of frame"
+                  label="repeat"
                   className={classes.textField}
                   type="number"
-                  value={this.props.animInfo.n}
+                  value={this.props.animInfo.repeat}
                   onChange={(event) => {
                     const newAniInfo = {
                       ...this.props.animInfo,
-                      n: parseFloat(event.target.value),
+                      repeat: parseFloat(event.target.value),
                     };
                     this.props.updateSpriteInfo(newAniInfo);
-                    this.getPreviewAnimations(newAniInfo);
+                    // this.getPreviewAnimations(newAniInfo);
                   }}
                   margin="normal"
                 />
