@@ -1,7 +1,7 @@
 import toolboxCategories from '../toolBox';
 
 const initState = {
-  selectedFile: null,
+  selectedFile: {},
   gameObjects: [],
   scenes: [],
   gameState: 'STOP',
@@ -9,7 +9,7 @@ const initState = {
   slectedSceneIndex: '',
   toolboxCategories,
   spriteEditOpen: false,
-  objectMenuOpen: false,
+  objectMenuOpen: { target: null },
   animations: { example: [0, 0, 0, 0] },
   animInfo: {
     name: 'name',
@@ -25,7 +25,7 @@ const gameReducer = (state = initState, action) => {
   console.log('Action:', action);
   switch (action.type) {
     case 'SELECT_FILE':
-      return { ...state, selectedFile: action.selectedFile };
+      return { ...state, selectedFile: { file: action.selectedFile } };
     case 'BUILD_GAME':
       return { ...state, gameState: 'BUILD', gameObjects: action.gameObjects };
     case 'ADD_OBJECT': {
@@ -61,13 +61,18 @@ const gameReducer = (state = initState, action) => {
     case 'SET_SPRITE_EDIT_STATE':
       return { ...state, spriteEditOpen: action.open };
     case 'SET_OBJECT_MENU_STATE':
-      return { ...state, objectMenuOpen: action.open };
+      return { ...state, objectMenuOpen: { target: action.open } };
     case 'UPDATE_ANIMATIONS':
       return { ...state, animations: action.animations };
     case 'UPDATE_SPRITE_INFO':
       return { ...state, animInfo: action.info };
-    case 'UPDATE_JSON_SPRITE':
-      return { ...state, gameObjects: action.gameObjects };
+    case 'UPDATE_JSON_SPRITE': {
+      const newGameObjects = state.gameObjects.map(gameObject =>
+        (gameObject.key === action.data.name
+          ? { ...gameObject, jsonSprite: action.data.filename }
+          : gameObject));
+      return { ...state, gameObjects: newGameObjects };
+    }
     default:
       return state;
   }

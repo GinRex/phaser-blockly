@@ -26,7 +26,6 @@ class boot extends Phaser.Scene {
 
 this.load.image('Gems', 'assets/gems.png');
 this.load.atlas('Gems-sprites', 'assets/Gems.png', 'assets/gems.json');
-this.load.atlas('Gems-sprites', 'assets/Gems.png', 'assets/gems.json');
     // launch scene start
     // launch scene end
   }

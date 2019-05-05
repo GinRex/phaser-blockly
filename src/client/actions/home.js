@@ -47,9 +47,9 @@ export const updateSceneWorkspace = scenes => ({
 });
 
 export const uploadImage = file => (dispatch) => {
-  console.log(file);
+  console.log(file.file);
   const data = new FormData();
-  data.append('file', file);
+  data.append('file', file.file);
   return axios.post('http://localhost:8080/api/uploadImage', data, {}).then((res) => {
     dispatch(addObject({
       name: res.data.name,
@@ -61,21 +61,14 @@ export const uploadImage = file => (dispatch) => {
   });
 };
 
-export const uploadJson = (file, gameObjects) => (dispatch) => {
+export const uploadJson = file => (dispatch) => {
   console.log(file);
   const data = new FormData();
   data.append('file', file);
   return axios.post('http://localhost:8080/api/uploadJson', data, {}).then((res) => {
-    console.log(res.data);
-    const currentGameobject = gameObjects.find(gameObject => gameObject.key === res.data.name);
-    currentGameobject.jsonSprite = res.data.filename;
-    const newGameObjects = gameObjects;
-    const index = newGameObjects.findIndex(gameObject => gameObject.key === res.data.name);
-    newGameObjects[index] = currentGameobject;
-    console.log(newGameObjects);
     dispatch({
       type: 'UPDATE_JSON_SPRITE',
-      gameObjects: newGameObjects,
+      data: res.data,
     });
   });
 };

@@ -119,7 +119,7 @@ class SpriteEditor extends React.Component {
       fr.onloadend = () => {
         file.src = fr.result;
         // this.props.selectFile(file);
-        this.props.uploadJson(file, this.props.gameObjects);
+        this.props.uploadJson(file);
       };
       fr.readAsDataURL(file);
     }
@@ -329,7 +329,7 @@ class SpriteEditor extends React.Component {
 
 const mapStateToProps = state => ({
   spriteEditOpen: state.home.spriteEditOpen,
-  selectedFile: state.home.selectedFile,
+  selectedFile: state.home.selectedFile.file,
   animations: state.home.animations,
   animInfo: state.home.animInfo,
   gameObjects: state.home.gameObjects,

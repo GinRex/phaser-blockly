@@ -241,14 +241,14 @@ class BlocklyPart extends React.Component {
         <input
           type="file"
           name="file"
-          onClick={() => this.props.selectFile(null)}
+          // onClick={() => this.props.selectFile({})}
           onChange={this.onChangeHandler}
         />
         <button
           type="button"
           className="btn btn-success btn-block"
           onClick={() => {
-            if (this.props.selectFile) {
+            if (this.props.selectedFile) {
               const promise = new Promise((resolve, reject) => {
                 resolve(this.props.uploadImage(this.props.selectedFile));
               });
@@ -341,7 +341,7 @@ const mapStateToProps = state => ({
   scenes: state.home.scenes,
   slectedSceneIndex: state.home.slectedSceneIndex,
   toolboxCategories: state.home.toolboxCategories,
-  objectMenuOpen: state.home.objectMenuOpen,
+  objectMenuOpen: state.home.objectMenuOpen.target,
 });
 
 const mapDispatchToProps = {

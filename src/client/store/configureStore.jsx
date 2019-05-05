@@ -1,15 +1,24 @@
 import { createStore, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
+import { createFilter, createBlacklistFilter } from 'redux-persist-transform-filter';
 import thunk from 'redux-thunk';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web and AsyncStorage for react-native
-
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import rootReducer from '../reducers';
 
 // export const store = createStore(gameReducer);
 
+const blacklistFilter = createBlacklistFilter('home', [
+  'selectedFile',
+  'spriteEditOpen',
+  'objectMenuOpen',
+]);
+
 const persistConfig = {
   key: 'root',
   storage,
+  transforms: [blacklistFilter],
+  stateReconciler: autoMergeLevel2,
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
