@@ -27,7 +27,8 @@ class boot extends Phaser.Scene {
 // load asset for Gems
 this.load.atlas('Gems', 'assets/Gems.png', 'assets/gems.json');
     // launch scene start
-this.load.on('progress', (value) => {
+
+        this.load.on('progress', (value) => {
         progressBar.clear();
         progressBar.fillStyle(0xffffff, 1);
         progressBar.fillRect(width / 4, height / 2, (width / 2) * value, height / 12);
@@ -45,9 +46,10 @@ this.load.on('progress', (value) => {
         repeat: -1,
       });
 // end create animation for idle
+        // create 
         this.scene.start('scene1');
       });
-    // launch scene end
+// launch scene end
   }
   create() {
     // game create

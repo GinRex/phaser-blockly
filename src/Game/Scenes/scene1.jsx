@@ -11,11 +11,19 @@ class scene1 extends Phaser.Scene {
     Phaser.Scene.call(this, { key: 'scene1', active: false });
   }
   // game state start
-  preload() {}
+create(){
+this.cursors = this.input.keyboard.createCursorKeys();
+  this.object = new Class.Gems({
+            scene: this,
+            key: 'Gems',
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 100,
+          });
+  (this.object).play('idle');
 
-  create() {}
-
-  update() {}
+}
   // game state end
 }
 
