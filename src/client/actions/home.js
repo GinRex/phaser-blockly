@@ -57,14 +57,17 @@ export const uploadImage = file => (dispatch) => {
       workspace: '',
       jsCode: '',
       key: res.data.name,
+      animations: [],
     }));
   });
 };
 
-export const uploadJson = file => (dispatch) => {
+export const uploadJson = (file, name) => (dispatch) => {
   console.log(file);
   const data = new FormData();
   data.append('file', file);
+  data.append('className', name);
+  console.log(data);
   return axios.post('http://localhost:8080/api/uploadJson', data, {}).then((res) => {
     dispatch({
       type: 'UPDATE_JSON_SPRITE',
@@ -126,6 +129,21 @@ export const updateAnimations = animations => ({
   type: 'UPDATE_ANIMATIONS',
   animations,
 });
+
+// export const addAnimations = className => ({
+//   type: 'ADD_ANIMATION',
+//   className,
+// });
+
+export const addAnimations = (className, animation) => dispatch =>
+  axios
+    .post('http://localhost:8080/api/createAnimation', { className, animation }, {})
+    .then((res) => {
+      dispatch({
+        type: 'ADD_ANIMATION',
+        className,
+      });
+    });
 
 export const updateSpriteInfo = info => ({
   type: 'UPDATE_SPRITE_INFO',

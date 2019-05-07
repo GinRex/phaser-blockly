@@ -20,6 +20,7 @@ import {
   updateAnimations,
   updateSpriteInfo,
   uploadJson,
+  addAnimations,
 } from './actions/home';
 
 const styles = theme => ({
@@ -112,14 +113,14 @@ class SpriteEditor extends React.Component {
     },
   };
 
-  onChangeHandler = (event) => {
+  onChangeHandler = (event, name) => {
     if (FileReader && event.target.files[0]) {
       const fr = new FileReader();
       const file = event.target.files[0];
       fr.onloadend = () => {
         file.src = fr.result;
         // this.props.selectFile(file);
-        this.props.uploadJson(file);
+        this.props.uploadJson(file, name);
       };
       fr.readAsDataURL(file);
     }
@@ -177,7 +178,11 @@ class SpriteEditor extends React.Component {
                 ) : (
                   'Please import JSON file for the sprite'
                 )}
-                <input type="file" name="file" onChange={this.onChangeHandler} />
+                <input
+                  type="file"
+                  name="file"
+                  onChange={event => this.onChangeHandler(event, this.props.selectedFile.alt)}
+                />
               </div>
               <div
                 style={{
@@ -303,14 +308,8 @@ class SpriteEditor extends React.Component {
                 />
                 <Button
                   onClick={() => {
-                    const animations = [];
-                    const info = this.props.animInfo;
-                    for (let i = 0; i < info.n; i++) {
-                      animations.push(info.x + info.width * i);
-                      animations.push(info.y);
-                      animations.push(info.width);
-                      animations.push(info.height);
-                    }
+                    this.props.addAnimations(this.props.selectedFile.alt, this.props.animInfo);
+                    this.props.updateToolBoxAnimations();
                   }}
                   variant="contained"
                   color="primary"
@@ -340,6 +339,7 @@ const mapDispatchToProps = {
   updateAnimations,
   updateSpriteInfo,
   uploadJson,
+  addAnimations,
 };
 
 export default connect(

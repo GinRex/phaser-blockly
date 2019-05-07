@@ -73,6 +73,19 @@ const gameReducer = (state = initState, action) => {
           : gameObject));
       return { ...state, gameObjects: newGameObjects };
     }
+    case 'ADD_ANIMATION': {
+      const newGameObjects = state.gameObjects.map(gameObject =>
+        (gameObject.key === action.className
+          ? {
+            ...gameObject,
+            animations: gameObject.animations.filter(animation => animation.name === state.animInfo.name).length
+              ? gameObject.animations.map(animation =>
+                (animation.name === state.animInfo.name ? state.animInfo : animation))
+              : [...gameObject.animations, state.animInfo],
+          }
+          : gameObject));
+      return { ...state, gameObjects: newGameObjects };
+    }
     default:
       return state;
   }

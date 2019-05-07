@@ -23,6 +23,7 @@ const storage = multer.diskStorage({
     cb(null, 'public/assets');
   },
   filename(req, file, cb) {
+    console.log(req, file);
     cb(null, `${file.originalname}`);
   },
 });
@@ -53,7 +54,9 @@ app.post('/api/uploadImage', (req, res) => {
       gameData.splice(
         selectedSceneEnd,
         0,
-        `this.load.image('${req.file.name}', 'assets/${req.file.filename}');`,
+        `// load asset for ${req.file.name}\nthis.load.image('${req.file.name}', 'assets/${
+          req.file.filename
+        }');`,
       );
 
       const text = gameData.join('\n');
@@ -102,11 +105,11 @@ app.post('/api/uploadJson', (req, res) => {
         .readFileSync(gameFile)
         .toString()
         .split('\n');
-      const selectedSceneEnd = gameData.indexOf('    // launch scene start');
+      const selectedSceneEnd = gameData.indexOf(`// load asset for ${req.file.name}`);
       gameData.splice(
-        selectedSceneEnd,
-        0,
-        `this.load.atlas('${req.file.name}-sprites', 'assets/${req.file.name}.png', 'assets/${
+        selectedSceneEnd + 1,
+        1,
+        `this.load.atlas('${req.file.name}', 'assets/${req.file.name}.png', 'assets/${
           req.file.filename
         }');`,
       );
@@ -118,25 +121,61 @@ app.post('/api/uploadJson', (req, res) => {
     } catch (err) {
       console.error(err);
     }
-
-    //   // create object file
-    //   const objectName = `${__dirname}/../Game/Classes/${req.file.name}`;
-    //   fs.readFile(`${__dirname}/gameObjectTemplate.js`, 'utf8', (err, data) => {
-    //     if (err) {
-    //       return console.log(err);
-    //     }
-    //     const result = data.replace(/Name/g, req.file.name);
-    //     fs.writeFile(`${objectName}.jsx`, result, 'utf8', (err) => {
-    //       if (err) return console.log(err);
-    //     });
-    //   });
-    //   // export all objects file to index
-    //   const result = `export ${req.file.name} from './${req.file.name}';\n`;
-    //   fs.appendFile(`${__dirname}/../Game/Classes/index.js`, result, 'utf8', (err) => {
-    //     if (err) return console.log(err);
-    //   });
     return res.status(200).send(req.file);
   });
+});
+
+app.post('/api/createAnimation', (req, res) => {
+  const {
+    name, prefix, start, end, zeroPad, repeat,
+  } = req.body.animation;
+  try {
+    const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
+    const gameData = fs
+      .readFileSync(gameFile)
+      .toString()
+      .split('\n');
+    const animationStart = gameData.indexOf('        // create animations');
+    const replaceAnimationStart = gameData.indexOf(`// create animation for ${name}`);
+    const replaceAnimationEnd = gameData.indexOf(`// end create animation for ${name}`);
+    if (replaceAnimationStart !== -1) {
+      gameData.splice(
+        replaceAnimationStart + 1,
+        replaceAnimationStart - replaceAnimationEnd - 1,
+        `// create animation for ${name}
+        this.anims.create({
+        key: '${name}',
+        frames: this.anims.generateFrameNames('${
+  req.body.className
+}', { prefix: '${prefix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
+        frameRate: 50,
+        repeat: ${repeat},
+      });\n// end create animation for ${name}`,
+      );
+    } else {
+      gameData.splice(
+        animationStart + 1,
+        0,
+        `// create animation for ${name}
+        this.anims.create({
+        key: '${name}',
+        frames: this.anims.generateFrameNames('${
+  req.body.className
+}', { prefix: '${prefix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
+        frameRate: 50,
+        repeat: ${repeat},
+      });\n// end create animation for ${name}`,
+      );
+    }
+
+    const text = gameData.join('\n');
+    fs.writeFile(gameFile, text, (err) => {
+      console.log(err);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+  return res.status(200).send(req.body.className);
 });
 
 app.post('/api/createGame', (req, res) => {
@@ -237,14 +276,15 @@ app.post('/api/createScene', (req, res) => {
         .toString()
         .split('\n');
 
-      const selectedSceneStart = gameData.indexOf('    // launch scene start');
-      const selectedSceneEnd = gameData.indexOf('    // launch scene end');
-      gameData.splice(
-        selectedSceneStart + 1,
-        selectedSceneEnd - selectedSceneStart - 1,
-        `this.scene.start('${scene.name}');
-        `,
-      );
+      // fix this for first time init scene no scene is loaded
+      // const selectedSceneStart = gameData.indexOf('    // launch scene start');
+      // const selectedSceneEnd = gameData.indexOf('    // launch scene end');
+      // gameData.splice(
+      //   selectedSceneStart + 1,
+      //   selectedSceneEnd - selectedSceneStart - 1,
+      //   `this.scene.start('${scene.name}');
+      //   `,
+      // );
 
       const text = gameData.join('\n');
       fs.writeFile(gameFile, text, (err) => {
@@ -269,12 +309,15 @@ app.post('/api/selectScene', (req, res) => {
       .toString()
       .split('\n');
 
-    const selectedSceneStart = gameData.indexOf('    // launch scene start');
-    const selectedSceneEnd = gameData.indexOf('    // launch scene end');
-    gameData.splice(
-      selectedSceneStart + 1,
-      selectedSceneEnd - selectedSceneStart - 1,
-      `this.load.on('progress', (value) => {
+    const selectedSceneStart = gameData.indexOf('// launch scene start');
+    const selectedSceneEnd = gameData.indexOf('// launch scene end');
+    if (selectedSceneEnd !== -1) {
+    } else {
+      gameData.splice(
+        selectedSceneStart + 1,
+        selectedSceneEnd - selectedSceneStart - 1,
+        `
+        this.load.on('progress', (value) => {
         progressBar.clear();
         progressBar.fillStyle(0xffffff, 1);
         progressBar.fillRect(width / 4, height / 2, (width / 2) * value, height / 12);
@@ -283,10 +326,12 @@ app.post('/api/selectScene', (req, res) => {
         console.log(file.src);
       });
       this.load.on('complete', () => {
+        // create animations
+        // 
         this.scene.start('${sceneName}');
-      });`,
-    );
-
+      });\n// launch scene end`,
+      );
+    }
     const text = gameData.join('\n');
     fs.writeFile(gameFile, text, (err) => {
       console.log(err);

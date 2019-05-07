@@ -25,7 +25,6 @@ class boot extends Phaser.Scene {
     progressBox.fillRect(width / 4, height / 2, width / 2, height / 12);
 
     // launch scene start
-    // launch scene end
   }
   create() {
     // game create

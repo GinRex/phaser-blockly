@@ -92,6 +92,36 @@ class BlocklyPart extends React.Component {
           this.setHelpUrl('');
         },
       };
+      if (gameObject.animations.length) {
+        Blockly.Blocks[`play_animation_${gameObject.name}`] = {
+          init() {
+            this.appendValueInput('object_name').setCheck(null);
+            this.appendDummyInput()
+              .appendField('play')
+              .appendField(
+                new Blockly.FieldDropdown(gameObject.animations.map(animation => [animation.name, animation.name])),
+                'animation',
+              );
+            this.setInputsInline(true);
+            this.setPreviousStatement(true, null);
+            this.setNextStatement(true, null);
+            this.setColour(230);
+            this.setTooltip('');
+            this.setHelpUrl('');
+          },
+        };
+        Blockly.JavaScript[`play_animation_${gameObject.name}`] = function (block) {
+          const value_object_name = Blockly.JavaScript.valueToCode(
+            block,
+            'object_name',
+            Blockly.JavaScript.ORDER_ATOMIC,
+          );
+          const dropdown_animation = block.getFieldValue('animation');
+          // TODO: Assemble JavaScript into code variable.
+          const code = `${value_object_name}.play('${dropdown_animation}');\n`;
+          return code;
+        };
+      }
       // code
       Blockly.JavaScript[`instance_${gameObject.name}`] = function (block) {
         const text_object_name = block.getFieldValue('object_name');
@@ -123,14 +153,20 @@ class BlocklyPart extends React.Component {
   };
 
   updateToolBox = (gameObjects) => {
-    this.props.updateToolbox(gameObjects.map(gameObject => ({
-      name: gameObject.name,
-      blocks: [
-        { type: `instance_${gameObject.name}` },
-        { type: `init_${gameObject.name}` },
-        { type: `update_${gameObject.name}` },
-      ],
-    })));
+    this.props.updateToolbox(gameObjects.map((gameObject) => {
+      const object = {
+        name: gameObject.name,
+        blocks: [
+          { type: `instance_${gameObject.name}` },
+          { type: `init_${gameObject.name}` },
+          { type: `update_${gameObject.name}` },
+        ],
+      };
+      if (gameObject.animations.length) {
+        object.blocks.push({ type: `play_animation_${gameObject.name}` });
+      }
+      return object;
+    }));
     this.updateBlocks(gameObjects);
   };
 
@@ -328,7 +364,7 @@ class BlocklyPart extends React.Component {
             </div>
           ))}
         </div>
-        <SpriteEditor />
+        <SpriteEditor updateToolBoxAnimations={() => this.updateToolBox(this.props.gameObjects)} />
       </div>
     );
   }
