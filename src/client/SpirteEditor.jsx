@@ -244,6 +244,21 @@ class SpriteEditor extends React.Component {
                 />
                 <TextField
                   id="standard-name"
+                  label="subffix"
+                  className={classes.textField}
+                  value={this.props.animInfo.suffix}
+                  onChange={(event) => {
+                    const newAniInfo = {
+                      ...this.props.animInfo,
+                      suffix: event.target.value,
+                    };
+                    this.props.updateSpriteInfo(newAniInfo);
+                    // this.getPreviewAnimations(newAniInfo);
+                  }}
+                  margin="normal"
+                />
+                <TextField
+                  id="standard-name"
                   label="start"
                   className={classes.textField}
                   type="number"

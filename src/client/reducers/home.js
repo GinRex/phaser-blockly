@@ -14,6 +14,7 @@ const initState = {
   animInfo: {
     name: 'name',
     prefix: 'sprite_',
+    suffix: '.png',
     start: 0,
     end: 0,
     zeroPad: 4,

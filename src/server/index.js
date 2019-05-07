@@ -127,7 +127,7 @@ app.post('/api/uploadJson', (req, res) => {
 
 app.post('/api/createAnimation', (req, res) => {
   const {
-    name, prefix, start, end, zeroPad, repeat,
+    name, prefix, suffix, start, end, zeroPad, repeat,
   } = req.body.animation;
   try {
     const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
@@ -147,7 +147,7 @@ app.post('/api/createAnimation', (req, res) => {
         key: '${name}',
         frames: this.anims.generateFrameNames('${
   req.body.className
-}', { prefix: '${prefix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
+}', { prefix: '${prefix}', suffix: '${suffix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
         frameRate: 50,
         repeat: ${repeat},
       });\n// end create animation for ${name}`,
@@ -161,7 +161,7 @@ app.post('/api/createAnimation', (req, res) => {
         key: '${name}',
         frames: this.anims.generateFrameNames('${
   req.body.className
-}', { prefix: '${prefix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
+}', { prefix: '${prefix}', suffix: '${suffix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
         frameRate: 50,
         repeat: ${repeat},
       });\n// end create animation for ${name}`,
