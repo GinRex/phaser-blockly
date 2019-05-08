@@ -72,6 +72,11 @@ export default [
     blocks: [{ type: 'add_label' }, { type: 'label' }, { type: 'set_font_size' }],
   },
   {
+    name: 'Group Object',
+    colour: '100',
+    blocks: [{ type: 'create_group' }, { type: 'add_child' }],
+  },
+  {
     name: 'Object',
     colour: 250,
     blocks: [{ type: 'set_pos' }, { type: 'set_size' }],

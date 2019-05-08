@@ -341,6 +341,65 @@ Blockly.Blocks.set_font_size = {
   },
 };
 
+// group game objects
+Blockly.Blocks.create_group = {
+  init() {
+    this.appendDummyInput()
+      .appendField('create group name')
+      .appendField(new Blockly.FieldTextInput('group name'), 'group_name');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.create_group = function (block) {
+  const text_group_name = block.getFieldValue('group_name');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `this.${text_group_name} = this.add.group();\n`;
+  return code;
+};
+
+Blockly.Blocks.add_child = {
+  init() {
+    this.appendValueInput('group_name')
+      .setCheck(null)
+      .appendField('add child to group');
+    this.appendValueInput('x')
+      .setCheck(null)
+      .appendField('with x =');
+    this.appendValueInput('y')
+      .setCheck(null)
+      .appendField('y =');
+    this.appendDummyInput()
+      .appendField('image =')
+      .appendField(new Blockly.FieldTextInput('Class name'), 'key');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.add_child = function (block) {
+  const value_group_name = Blockly.JavaScript.valueToCode(
+    block,
+    'group_name',
+    Blockly.JavaScript.ORDER_ATOMIC,
+  );
+  const value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
+  const text_key = block.getFieldValue('key');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_group_name}.create(${value_x}, ${value_y}, '${text_key}');\n`;
+  return code;
+};
+
 Blockly.JavaScript.set_font_size = function (block) {
   const text_font_size = block.getFieldValue('font_size');
   const value_label_name = Blockly.JavaScript.valueToCode(
@@ -541,73 +600,67 @@ Blockly.Blocks.sprites_destroy_current_sprite = {
   },
 };
 
-///////////
+// /////////
 
-
-Blockly.Blocks['world_bounce_this'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("set world bounce");
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldCheckbox("TRUE"), "NAME");
+Blockly.Blocks.world_bounce_this = {
+  init() {
+    this.appendDummyInput().appendField('set world bounce');
+    this.appendDummyInput().appendField(new Blockly.FieldCheckbox('TRUE'), 'NAME');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
 };
 
-Blockly.Blocks['set_bounce_this'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("set bounce speed");
-    this.appendValueInput("bounce_speed")
-        .setCheck(null)
-        .appendField("=");
+Blockly.Blocks.set_bounce_this = {
+  init() {
+    this.appendDummyInput().appendField('set bounce speed');
+    this.appendValueInput('bounce_speed')
+      .setCheck(null)
+      .appendField('=');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
 };
 
-Blockly.Blocks['set_velocity_this'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("set velocity");
-    this.appendValueInput("vx")
-        .setCheck(null)
-        .appendField("x =");
-    this.appendValueInput("vy")
-        .setCheck(null)
-        .appendField("y =");
+Blockly.Blocks.set_velocity_this = {
+  init() {
+    this.appendDummyInput().appendField('set velocity');
+    this.appendValueInput('vx')
+      .setCheck(null)
+      .appendField('x =');
+    this.appendValueInput('vy')
+      .setCheck(null)
+      .appendField('y =');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
 };
 
-Blockly.Blocks['add_collider_this'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("add collider");
-    this.appendValueInput("obj_2")
-        .setCheck(null)
-        .appendField("with");
+Blockly.Blocks.add_collider_this = {
+  init() {
+    this.appendDummyInput().appendField('add collider');
+    this.appendValueInput('obj_2')
+      .setCheck(null)
+      .appendField('with');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
 };
 
 // ///SPRITES
@@ -1211,35 +1264,40 @@ Blockly.JavaScript.add_collider = function (block) {
   return code;
 };
 
-/////
+// ///
 
-Blockly.JavaScript['world_bounce_this'] = function(block) {
-  var checkbox_name = block.getFieldValue('NAME') == 'TRUE';
+Blockly.JavaScript.world_bounce_this = function (block) {
+  const checkbox_name = block.getFieldValue('NAME') == 'TRUE';
   // TODO: Assemble JavaScript into code variable.
   const code = `this.body.setCollideWorldBounds(${checkbox_name});\n`;
   return code;
 };
 
-
-Blockly.JavaScript['set_bounce_this'] = function(block) {
-  var value_bounce_speed = Blockly.JavaScript.valueToCode(block, 'bounce_speed', Blockly.JavaScript.ORDER_ATOMIC);
+Blockly.JavaScript.set_bounce_this = function (block) {
+  const value_bounce_speed = Blockly.JavaScript.valueToCode(
+    block,
+    'bounce_speed',
+    Blockly.JavaScript.ORDER_ATOMIC,
+  );
   // TODO: Assemble JavaScript into code variable.
   const code = `this.body.setBounce(${value_bounce_speed});\n`;
   return code;
 };
 
-
-Blockly.JavaScript['set_velocity_this'] = function(block) {
-  var value_vx = Blockly.JavaScript.valueToCode(block, 'vx', Blockly.JavaScript.ORDER_ATOMIC);
-  var value_vy = Blockly.JavaScript.valueToCode(block, 'vy', Blockly.JavaScript.ORDER_ATOMIC);
+Blockly.JavaScript.set_velocity_this = function (block) {
+  const value_vx = Blockly.JavaScript.valueToCode(block, 'vx', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_vy = Blockly.JavaScript.valueToCode(block, 'vy', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
   const code = `this.body.setVelocity(${value_vx}, ${value_vy});\n`;
   return code;
 };
 
-
-Blockly.JavaScript['add_collider_this'] = function(block) {
-  var value_obj_2 = Blockly.JavaScript.valueToCode(block, 'obj_2', Blockly.JavaScript.ORDER_ATOMIC);
+Blockly.JavaScript.add_collider_this = function (block) {
+  const value_obj_2 = Blockly.JavaScript.valueToCode(
+    block,
+    'obj_2',
+    Blockly.JavaScript.ORDER_ATOMIC,
+  );
   // TODO: Assemble JavaScript into code variable.
   const code = `this.physics.add.collider(this, ${value_obj_2});\n`;
   return code;
