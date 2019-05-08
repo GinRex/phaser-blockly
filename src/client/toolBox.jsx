@@ -84,6 +84,10 @@ export default [
       { type: 'set_bounce' },
       { type: 'set_velocity' },
       { type: 'add_collider' },
+      { type: 'world_bounce_this' },
+      { type: 'set_bounce_this' },
+      { type: 'set_velocity_this' },
+      { type: 'add_collider_this' },
     ],
   },
   {
