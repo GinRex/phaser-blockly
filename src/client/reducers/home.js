@@ -17,7 +17,8 @@ const initState = {
     suffix: '.png',
     start: 0,
     end: 0,
-    zeroPad: 4,
+    zeroPad: 0,
+    frameRate: 30,
     repeat: -1,
   },
 };

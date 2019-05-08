@@ -146,7 +146,7 @@ class BlocklyPart extends React.Component {
       Blockly.JavaScript[`update_${gameObject.name}`] = function (block) {
         const text_object_name = block.getFieldValue('object_name');
         // TODO: Assemble JavaScript into code variable.
-        const code = `this.${text_object_name}.update(this.cursors);\n`;
+        const code = `this.${text_object_name}.update(this);\n`;
         return code;
       };
     });

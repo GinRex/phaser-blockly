@@ -105,6 +105,254 @@ Blockly.Blocks.motion_set_y_to = {
     this.setHelpUrl('http://www.example.com/');
   },
 };
+
+// variable
+Blockly.Blocks.variables = {
+  init() {
+    this.appendDummyInput()
+      .appendField('name')
+      .appendField(new Blockly.FieldTextInput('variable_name'), 'var_name');
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.variables = function (block) {
+  const text_var_name = block.getFieldValue('var_name');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `this.${text_var_name}`;
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.Blocks.set_var = {
+  init() {
+    this.appendDummyInput()
+      .appendField('set')
+      .appendField(new Blockly.FieldTextInput('variable_name'), 'var_name')
+      .appendField('=')
+      .appendField(new Blockly.FieldTextInput('value'), 'var_value');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.set_var = function (block) {
+  const text_var_name = block.getFieldValue('var_name');
+  const text_var_value = block.getFieldValue('var_value');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `this.${text_var_name} = ${text_var_value};\n`;
+  return code;
+};
+
+Blockly.JavaScript.value_from_scene = function (block) {
+  const text_variable_name = block.getFieldValue('variable_name');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `scene.${text_variable_name}`;
+  return code;
+};
+
+Blockly.Blocks.value_from_class = {
+  init() {
+    this.appendDummyInput()
+      .appendField(new Blockly.FieldTextInput('variable_name'), 'NAME')
+      .appendField('from object');
+    this.appendValueInput('NAME').setCheck(null);
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.value_from_class = function (block) {
+  const text_name = block.getFieldValue('NAME');
+  const value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_name}.${text_name}`;
+  return code;
+};
+
+Blockly.Blocks.value_from_scene = {
+  init() {
+    this.appendDummyInput()
+      .appendField(new Blockly.FieldTextInput('variable_name'), 'variable_name')
+      .appendField('from scene');
+    this.setOutput(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+// Function
+
+Blockly.Blocks.add_function = {
+  init() {
+    this.appendDummyInput()
+      .appendField('function')
+      .appendField(new Blockly.FieldTextInput('function name'), 'function_name');
+    this.appendStatementInput('func_code').setCheck(null);
+    this.setInputsInline(false);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.add_function = function (block) {
+  const text_function_name = block.getFieldValue('function_name');
+  const statements_func_code = Blockly.JavaScript.statementToCode(block, 'func_code');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `this.${text_function_name} = () => {\n${statements_func_code}\n};\n`;
+  return code;
+};
+
+Blockly.Blocks.call_function_from_class = {
+  init() {
+    this.appendValueInput('object_name')
+      .setCheck(null)
+      .appendField('Call ')
+      .appendField(new Blockly.FieldTextInput('function'), 'func_name')
+      .appendField('from');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.call_function_from_class = function (block) {
+  const text_func_name = block.getFieldValue('func_name');
+  const value_object_name = Blockly.JavaScript.valueToCode(
+    block,
+    'object_name',
+    Blockly.JavaScript.ORDER_ATOMIC,
+  );
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_object_name}.${text_func_name}();\n`;
+  return code;
+};
+
+Blockly.Blocks.call_function_from_scene = {
+  init() {
+    this.appendDummyInput()
+      .appendField('call')
+      .appendField(new Blockly.FieldTextInput('function name'), 'func_name')
+      .appendField('from scene');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.call_function_from_scene = function (block) {
+  const text_func_name = block.getFieldValue('func_name');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `scene.${text_func_name}();\n`;
+  return code;
+};
+
+// Text
+Blockly.Blocks.add_label = {
+  init() {
+    this.appendValueInput('NAME')
+      .setCheck(null)
+      .appendField('add');
+    this.appendDummyInput()
+      .appendField('=')
+      .appendField(new Blockly.FieldTextInput('label value'), 'label_value')
+      .appendField('at  x =')
+      .appendField(new Blockly.FieldTextInput('100'), 'x')
+      .appendField('y =')
+      .appendField(new Blockly.FieldTextInput('100'), 'y');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.add_label = function (block) {
+  const value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+  const text_label_value = block.getFieldValue('label_value');
+  const text_x = block.getFieldValue('x');
+  const text_y = block.getFieldValue('y');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_name} = this.add.text(${text_x}, ${text_y}, '${text_label_value}');\n`;
+  return code;
+};
+
+Blockly.Blocks.label = {
+  init() {
+    this.appendValueInput('object').setCheck(null);
+    this.appendDummyInput().appendField('set text to');
+    this.appendValueInput('text').setCheck(null);
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.label = function (block) {
+  const value_object = Blockly.JavaScript.valueToCode(
+    block,
+    'object',
+    Blockly.JavaScript.ORDER_ATOMIC,
+  );
+  const value_text = Blockly.JavaScript.valueToCode(block, 'text', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_object}.setText(${value_text});\n`;
+  return code;
+};
+
+Blockly.Blocks.set_font_size = {
+  init() {
+    this.appendValueInput('label_name')
+      .setCheck(null)
+      .appendField('set font size')
+      .appendField(new Blockly.FieldTextInput('40'), 'font_size')
+      .appendField('for');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.set_font_size = function (block) {
+  const text_font_size = block.getFieldValue('font_size');
+  const value_label_name = Blockly.JavaScript.valueToCode(
+    block,
+    'label_name',
+    Blockly.JavaScript.ORDER_ATOMIC,
+  );
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_label_name}.setFontSize({${text_font_size}});\n`;
+  return code;
+};
+
 // ////////EVENT
 Blockly.Blocks.events_when_event_happens = {
   init() {

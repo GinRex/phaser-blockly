@@ -307,6 +307,22 @@ class SpriteEditor extends React.Component {
                 />
                 <TextField
                   id="standard-name"
+                  label="Frame rate"
+                  className={classes.textField}
+                  type="number"
+                  value={this.props.animInfo.frameRate}
+                  onChange={(event) => {
+                    const newAniInfo = {
+                      ...this.props.animInfo,
+                      frameRate: parseFloat(event.target.value),
+                    };
+                    this.props.updateSpriteInfo(newAniInfo);
+                    // this.getPreviewAnimations(newAniInfo);
+                  }}
+                  margin="normal"
+                />
+                <TextField
+                  id="standard-name"
                   label="repeat"
                   className={classes.textField}
                   type="number"
