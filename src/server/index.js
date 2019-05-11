@@ -392,7 +392,7 @@ app.post('/api/importToScene', (req, res) => {
     );
 
     const updateIndex = data.indexOf('    // update here');
-    data.splice(updateIndex, 0, `this.${req.file.name}.update();`);
+    data.splice(updateIndex, 0, `this.${req.file.name}.update(scene);`);
     const text = data.join('\n');
     fs.writeFile(`${mainfile}`, text, (err) => {
       console.log(err);
@@ -411,7 +411,7 @@ app.post('/api/updateCode', (req, res) => {
         .toString()
         .split('\n');
       const updateEndIndex = data.indexOf('    // update here');
-      const updateStartIndex = data.indexOf('  update(cursors) {');
+      const updateStartIndex = data.indexOf('  update(scene) {');
       data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, object.jsCode);
       const text = data.join('\n');
       fs.writeFile(`${objectName}`, text, (err) => {

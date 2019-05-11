@@ -255,13 +255,22 @@ class BlocklyPart extends React.Component {
               colour: '#ccc',
               snap: true,
             },
+            zoom:
+            {
+              controls: true,
+              wheel: true,
+              startScale: 1.0,
+              maxScale: 3,
+              minScale: 0.3,
+              scaleSpeed: 1.2,
+            },
           }}
           initialXml={
             this.props.gameObjects.length !== 0 && currentGameobject && currentGameobject.workspace
               ? currentGameobject.workspace
               : this.props.scenes.length !== 0 && currentScene && currentScene.workspace
-              ? currentScene.workspace
-              : null
+                ? currentScene.workspace
+                : null
           }
           wrapperDivClassName="fill-height"
           workspaceDidChange={workspace =>
