@@ -12,6 +12,9 @@ const blacklistFilter = createBlacklistFilter('home', [
   'selectedFile',
   'spriteEditOpen',
   'objectMenuOpen',
+  'toolboxCategories',
+  'spriteEditOpen',
+  'variableDialogOpen',
 ]);
 
 const persistConfig = {

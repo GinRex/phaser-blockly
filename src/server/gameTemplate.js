@@ -1,5 +1,6 @@
 import boot from './Scenes/boot';
 import Phaser from 'phaser';
+import scene1 from './Scenes/scene1';
 
 const config = {
   type: Phaser.AUTO,
@@ -18,6 +19,7 @@ const config = {
   },
   scene: [
     boot,
+    scene1,
     // scenes go here
   ],
 };

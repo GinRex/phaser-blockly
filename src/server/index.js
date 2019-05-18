@@ -206,6 +206,13 @@ app.post('/api/createGame', (req, res) => {
         } catch (err) {
           console.error(err);
         }
+        const data = fs
+          .readFileSync(`${__dirname}/sceneTemplate.js`)
+          .toString()
+          .replace(/SceneName/g, 'scene1');
+        fs.writeFile(`${scenesFolder}/scene1.jsx`, data, (err) => {
+          console.log(err);
+        });
       });
     });
     if (fs.existsSync(classesFolder)) {
@@ -309,45 +316,12 @@ app.post('/api/selectScene', (req, res) => {
       .toString()
       .split('\n');
 
-    const selectedSceneStart = gameData.indexOf('    // launch scene start');
-    const selectedSceneEnd = gameData.indexOf('// launch scene end');
-    if (selectedSceneEnd !== -1) {
-      // gameData.splice(
-      //   selectedSceneStart + 1,
-      //   selectedSceneEnd - selectedSceneStart - 1,
-      //   `
-      //   this.load.on('progress', (value) => {
-      //   progressBar.clear();
-      //   progressBar.fillStyle(0xffffff, 1);
-      //   progressBar.fillRect(width / 4, height / 2, (width / 2) * value, height / 12);
-      // });
-      // this.load.on('fileprogress', (file) => {
-      //   console.log(file.src);
-      // });
-      // this.load.on('complete', () => {
-      //   // create animations
-      //   //
-      //   this.scene.start('${sceneName}');
-      // });\n// launch scene end`,
-      // );
-    } else {
+    const selectedSceneStart = gameData.indexOf('      // select scene');
+    if (selectedSceneStart !== -1) {
       gameData.splice(
         selectedSceneStart + 1,
-        0,
-        `
-        this.load.on('progress', (value) => {
-        progressBar.clear();
-        progressBar.fillStyle(0xffffff, 1);
-        progressBar.fillRect(width / 4, height / 2, (width / 2) * value, height / 12);
-      });
-      this.load.on('fileprogress', (file) => {
-        console.log(file.src);
-      });
-      this.load.on('complete', () => {
-        // create animations
-        // create 
-        this.scene.start('${sceneName}');
-      });\n// launch scene end`,
+        1,
+        `      this.scene.start('${sceneName}');`,
       );
     }
     const text = gameData.join('\n');
@@ -448,5 +422,5 @@ app.post('/api/updateSceneCode', (req, res) => {
   // const gameObjects = req.data.gameObjects
 });
 
-app.post('/api/createGameObject', (req, res) => {});
+app.post('/api/createGameObject', (req, res) => { });
 app.listen(8080, () => console.log('Listening on port 8080!'));

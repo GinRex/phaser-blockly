@@ -3,12 +3,15 @@ import toolboxCategories from '../toolBox';
 const initState = {
   selectedFile: {},
   gameObjects: [],
-  scenes: [],
+  scenes: [{
+    name: 'scene1', key: 'scene1', workspace: '', jsCode: '', variables: [],
+  }],
   gameState: 'STOP',
   slectedGameobjectIndex: '',
-  slectedSceneIndex: '',
+  slectedSceneIndex: 'scene1',
   toolboxCategories,
   spriteEditOpen: false,
+  variableDialogOpen: false,
   objectMenuOpen: { target: null },
   animations: { example: [0, 0, 0, 0] },
   animInfo: {
@@ -62,6 +65,8 @@ const gameReducer = (state = initState, action) => {
       return state;
     case 'SET_SPRITE_EDIT_STATE':
       return { ...state, spriteEditOpen: action.open };
+    case 'SET_VARIABLE_DIALOG_STATE':
+      return { ...state, variableDialogOpen: action.open };
     case 'SET_OBJECT_MENU_STATE':
       return { ...state, objectMenuOpen: { target: action.open } };
     case 'UPDATE_ANIMATIONS':
@@ -87,6 +92,13 @@ const gameReducer = (state = initState, action) => {
           }
           : gameObject));
       return { ...state, gameObjects: newGameObjects };
+    }
+    case 'ADD_VARIABLE': {
+      const newScenes = state.scenes.map(scene =>
+        (scene.key === action.data.name
+          ? { ...scene, variables: [...scene.variables, action.data.variable] }
+          : scene));
+      return { ...state, scenes: newScenes };
     }
     default:
       return state;
