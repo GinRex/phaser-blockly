@@ -30,6 +30,7 @@ class SceneManager extends React.Component {
       workspace: '',
       jsCode: '',
       key: name,
+      variables: [],
     });
   };
   render() {
@@ -58,10 +59,8 @@ class SceneManager extends React.Component {
               onClick={() => {
                 const promise = new Promise((resolve, reject) => {
                   resolve(this.props.setSlectedSceneIndex(scene.key));
-                  console.log('a');
                 });
                 promise.then((res) => {
-                  console.log('b');
                   Blockly.mainWorkspace.clear();
                   if (scene.workspace !== '') {
                     const xml = Blockly.Xml.textToDom(scene.workspace);

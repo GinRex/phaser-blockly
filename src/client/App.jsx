@@ -31,6 +31,7 @@ class App extends Component {
                 />
                 <SceneManager />
                 <textarea id="code" style={{ height: 200, width: 400 }} value="" />
+                <textarea id="xml" style={{ height: 200, width: 400 }} value="" />
               </div>
             </div>
           </div>

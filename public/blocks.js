@@ -107,23 +107,21 @@ Blockly.Blocks.motion_set_y_to = {
 };
 
 // variable
-Blockly.Blocks.variables = {
-  init() {
-    this.appendDummyInput()
-      .appendField('name')
-      .appendField(new Blockly.FieldTextInput('variable_name'), 'var_name');
-    this.setInputsInline(true);
-    this.setOutput(true, null);
-    this.setColour(230);
-    this.setTooltip('');
-    this.setHelpUrl('');
-  },
-};
+// Blockly.Blocks.variables = {
+//   init() {
+//     this.appendDummyInput()
+//       .appendField(new Blockly.FieldDropdown([['1', '2']]), 'variable_list');
+//     this.setInputsInline(true);
+//     this.setOutput(true, null);
+//     this.setColour(230);
+//     this.setTooltip('');
+//     this.setHelpUrl('');
+//   },
+// };
 
 Blockly.JavaScript.variables = function (block) {
-  const text_var_name = block.getFieldValue('var_name');
-  // TODO: Assemble JavaScript into code variable.
-  const code = `this.${text_var_name}`;
+  const dropdown_variable_list = block.getFieldValue('variable_list');
+  const code = `this.${dropdown_variable_list}`;
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.JavaScript.ORDER_NONE];
 };

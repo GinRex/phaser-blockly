@@ -9,6 +9,7 @@ import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
 import ReactBlocklyComponent from './index';
 import SpriteEditor from './SpirteEditor';
+import VariableDialog from './VariableDialog';
 
 import {
   selectFile,
@@ -21,6 +22,7 @@ import {
   updateToolbox,
   setSpriteEditorState,
   setObjectMenuState,
+  setVariableDialogState,
 } from './actions/home';
 
 const styles = theme => ({
@@ -32,7 +34,7 @@ const styles = theme => ({
 class BlocklyPart extends React.Component {
   constructor(props) {
     super(props);
-    this.updateBlocks(this.props.gameObjects);
+    this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex);
   }
   componentDidMount() {
     this.updateToolBox(this.props.gameObjects);
@@ -51,7 +53,11 @@ class BlocklyPart extends React.Component {
     }
   };
 
-  updateBlocks = (gameObjects) => {
+  updateBlocks = (gameObjects, scenes, slectedSceneIndex) => {
+    const currentScene = scenes && scenes.find(scene => scene.key === slectedSceneIndex);
+    if (currentScene) {
+      this.variableListBlockUpdate(currentScene.variables);
+    }
     gameObjects.map((gameObject) => {
       Blockly.Blocks[`instance_${gameObject.name}`] = {
         init() {
@@ -152,10 +158,37 @@ class BlocklyPart extends React.Component {
     });
   };
 
-  updateToolBox = (gameObjects) => {
+  variableListBlockUpdate = (variables) => {
+    console.log(variables);
+    Blockly.Blocks.variables = {
+      init() {
+        this.appendDummyInput()
+          .appendField(new Blockly.FieldDropdown(variables.map(variable => [variable, variable])), 'variable_list');
+        this.setInputsInline(true);
+        this.setOutput(true, null);
+        this.setColour(230);
+        this.setTooltip('');
+        this.setHelpUrl('');
+      },
+    };
+    // Blockly.Blocks.objectsInstance = {
+    //   init() {
+    //     this.appendDummyInput()
+    //       .appendField(new Blockly.FieldDropdown(variables.map(variable => [variable, variable])), 'instance_list');
+    //     this.setInputsInline(true);
+    //     this.setOutput(true, null);
+    //     this.setColour(230);
+    //     this.setTooltip('');
+    //     this.setHelpUrl('');
+    //   },
+    // };
+  }
+
+  updateToolBox = (gameObjects, scenes, slectedSceneIndex) => {
     this.props.updateToolbox(gameObjects.map((gameObject) => {
       const object = {
         name: gameObject.name,
+        custom: 'INSTANCE_CALLBACK',
         blocks: [
           { type: `instance_${gameObject.name}` },
           { type: `init_${gameObject.name}` },
@@ -167,7 +200,44 @@ class BlocklyPart extends React.Component {
       }
       return object;
     }));
-    this.updateBlocks(gameObjects);
+    this.updateBlocks(gameObjects, scenes, slectedSceneIndex);
+  };
+
+  createVariableCallback = () => {
+    this.props.setVariableDialogState(true);
+  }
+
+  customVariableCallback = (workspace, scenes, slectedSceneIndex) => {
+    let xmlList = [];
+    const currentScene = scenes.find(scene => scene.key === slectedSceneIndex);
+    if (currentScene) {
+      console.log(currentScene.variables);
+      xmlList = [Blockly.Xml.textToDom('<xml><button text="Create Variable" callbackKey = "CREATE_VARIABLE_CALLBACK"></button></xml>').firstChild];
+      for (let i = 0; i < currentScene.variables.length; i++) {
+        const blockText = '<xml>' +
+          '<block type="variables">' +
+          `<field name="variable_list" variabletype="">${currentScene.variables[i]}</field>` +
+          '</block>' +
+          '</xml>';
+        const block = Blockly.Xml.textToDom(blockText).firstChild;
+        xmlList.push(block);
+      }
+    }
+    return xmlList;
+  };
+
+  classInstanceCallback = (workspace) => {
+    const xmlList = [Blockly.Xml.textToDom('<xml><button text="Create Variable" callbackKey = "CREATE_VARIABLE_CALLBACK"></button></xml>').firstChild];
+    for (let i = 0; i < variables.length; i++) {
+      const blockText = '<xml>' +
+        '<block type="variables">' +
+        `<field name="variable_list" variabletype="">${variables[i]}</field>` +
+        '</block>' +
+        '</xml>';
+      const block = Blockly.Xml.textToDom(blockText).firstChild;
+      xmlList.push(block);
+    }
+    return xmlList;
   };
 
   workspaceDidChange = (
@@ -206,6 +276,7 @@ class BlocklyPart extends React.Component {
       this.props.updateSceneWorkspace(newScenes);
     }
     document.getElementById('code').value = code;
+    document.getElementById('xml').value = newXml;
   };
 
   render() {
@@ -273,20 +344,33 @@ class BlocklyPart extends React.Component {
                 : null
           }
           wrapperDivClassName="fill-height"
-          workspaceDidChange={workspace =>
+          ref={(node) => {
+            if (node) {
+              if (currentScene) {
+                this.variableListBlockUpdate(currentScene.variables);
+              }
+              node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_VARIABLE', () => this.customVariableCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex));
+              // node.workspace.state.workspace.registerToolboxCategoryCallback('INSTANCE_CALLBACK', () => this.classInstanceCallback(node.workspace));
+              node.workspace.state.workspace.refreshToolboxSelection();
+            }
+          }}
+          workspaceDidChange={(workspace) => {
+            console.log(workspace);
+            workspace.registerButtonCallback('CREATE_VARIABLE_CALLBACK', this.createVariableCallback);
             this.workspaceDidChange(
               workspace,
               this.props.gameObjects,
               this.props.slectedGameobjectIndex,
               this.props.scenes,
               this.props.slectedSceneIndex,
-            )
+            );
+            workspace.refreshToolboxSelection();
+          }
           }
         />
         <input
           type="file"
           name="file"
-          // onClick={() => this.props.selectFile({})}
           onChange={this.onChangeHandler}
         />
         <button
@@ -298,7 +382,7 @@ class BlocklyPart extends React.Component {
                 resolve(this.props.uploadImage(this.props.selectedFile));
               });
               promise.then((res) => {
-                this.updateToolBox(this.props.gameObjects);
+                this.updateToolBox(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex);
               });
             }
           }}
@@ -373,7 +457,8 @@ class BlocklyPart extends React.Component {
             </div>
           ))}
         </div>
-        <SpriteEditor updateToolBoxAnimations={() => this.updateToolBox(this.props.gameObjects)} />
+        <SpriteEditor updateToolBoxAnimations={() => this.updateToolBox(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex)} />
+        <VariableDialog />
       </div>
     );
   }
@@ -400,6 +485,7 @@ const mapDispatchToProps = {
   updateToolbox,
   setSpriteEditorState,
   setObjectMenuState,
+  setVariableDialogState,
 };
 
 export default connect(

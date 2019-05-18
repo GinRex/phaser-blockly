@@ -58,6 +58,8 @@ export const uploadImage = file => (dispatch) => {
       jsCode: '',
       key: res.data.name,
       animations: [],
+      variables: [],
+      instances: [],
     }));
   });
 };
@@ -120,6 +122,11 @@ export const setSpriteEditorState = open => ({
   open,
 });
 
+export const setVariableDialogState = open => ({
+  type: 'SET_VARIABLE_DIALOG_STATE',
+  open,
+});
+
 export const setObjectMenuState = open => ({
   type: 'SET_OBJECT_MENU_STATE',
   open,
@@ -153,4 +160,9 @@ export const updateSpriteInfo = info => ({
 export const addJsonSprite = gameObjects => ({
   type: 'UPDATE_SPRITE_INFO',
   gameObjects,
+});
+
+export const addVariable = (name, variable) => ({
+  type: 'ADD_VARIABLE',
+  data: { name, variable },
 });

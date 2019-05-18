@@ -50,6 +50,7 @@ export default [
   {
     name: 'Variable',
     colour: 250,
+    custom: 'CUSTOM_VARIABLE',
     blocks: [
       { type: 'variables' },
       { type: 'set_var' },
