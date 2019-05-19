@@ -31,6 +31,7 @@ class SceneManager extends React.Component {
       jsCode: '',
       key: name,
       variables: [],
+      objects: [],
     });
   };
   render() {

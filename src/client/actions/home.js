@@ -166,3 +166,15 @@ export const addVariable = (name, variable) => ({
   type: 'ADD_VARIABLE',
   data: { name, variable },
 });
+
+export const addInstance = (instance, name) => ({
+  type: 'ADD_INSTANCE',
+  data: { name, instance },
+});
+
+export const addInstancesToScene = scene => (dispatch) => {
+  const data = scene;
+  return axios.post('http://localhost:8080/api/initObject', data, {}).then((res) => {
+    console.log('aaa');
+  });
+};

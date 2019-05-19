@@ -11,11 +11,15 @@ class scene1 extends Phaser.Scene {
     Phaser.Scene.call(this, { key: 'scene1', active: false });
   }
   // game state start
-  preload() {}
+  preload() { }
 
-  create() {}
+  create() {
+    // create instances start
 
-  update() {}
+    // create instances end
+  }
+
+  update() { }
   // game state end
 }
 

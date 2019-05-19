@@ -422,5 +422,40 @@ app.post('/api/updateSceneCode', (req, res) => {
   // const gameObjects = req.data.gameObjects
 });
 
+app.post('/api/initObject', (req, res) => {
+  const scene = req.body;
+  console.log(scene);
+  const sceneName = `${__dirname}/../Game/Scenes/${scene.name}.jsx`;
+  try {
+    const data = fs
+      .readFileSync(sceneName)
+      .toString()
+      .split('\n');
+    let code = '';
+    scene.objects.map((object) => {
+      code +=
+        `this.${object.variableName} = new Class.${object.class}({
+          scene: this,
+          key: '${object.class}',
+          x: ${object.x},
+          y: ${object.y},
+          w: ${object.w},
+          h: ${object.h},
+        });\n`;
+    });
+    const updateEndIndex = data.indexOf('    // create instances end');
+    const updateStartIndex = data.indexOf('    // create instances start');
+    data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, code);
+    const text = data.join('\n');
+    fs.writeFile(`${sceneName}`, text, (err) => {
+      console.log(err);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+  return res.status(200).send({});
+  // const gameObjects = req.data.gameObjects
+});
+
 app.post('/api/createGameObject', (req, res) => { });
 app.listen(8080, () => console.log('Listening on port 8080!'));

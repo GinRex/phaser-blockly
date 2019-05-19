@@ -4,14 +4,14 @@ const initState = {
   selectedFile: {},
   gameObjects: [],
   scenes: [{
-    name: 'scene1', key: 'scene1', workspace: '', jsCode: '', variables: [],
+    name: 'scene1', key: 'scene1', workspace: '', jsCode: '', variables: [], objects: [],
   }],
   gameState: 'STOP',
   slectedGameobjectIndex: '',
   slectedSceneIndex: 'scene1',
   toolboxCategories,
   spriteEditOpen: false,
-  variableDialogOpen: false,
+  variableDialogOpen: '',
   objectMenuOpen: { target: null },
   animations: { example: [0, 0, 0, 0] },
   animInfo: {
@@ -97,6 +97,13 @@ const gameReducer = (state = initState, action) => {
       const newScenes = state.scenes.map(scene =>
         (scene.key === action.data.name
           ? { ...scene, variables: [...scene.variables, action.data.variable] }
+          : scene));
+      return { ...state, scenes: newScenes };
+    }
+    case 'ADD_INSTANCE': {
+      const newScenes = state.scenes.map(scene =>
+        (scene.key === action.data.name
+          ? { ...scene, objects: [...scene.objects, action.data.instance].sort((a, b) => b.order - a.order) }
           : scene));
       return { ...state, scenes: newScenes };
     }
