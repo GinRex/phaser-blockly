@@ -24,10 +24,6 @@ class boot extends Phaser.Scene {
     progressBox.fillStyle(0x222222, 0.8);
     progressBox.fillRect(width / 4, height / 2, width / 2, height / 12);
 
-// load asset for Anothergreatfind
-this.load.image('Anothergreatfind', 'assets/anothergreatfind.jpg');
-// load asset for Blanc
-this.load.image('Blanc', 'assets/blanc.jpg');
     // launch scene start
     this.load.on('progress', (value) => {
       progressBar.clear();

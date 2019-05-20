@@ -80,12 +80,12 @@ export default [
   {
     name: 'Group Object',
     colour: '100',
-    blocks: [{ type: 'create_group' }, { type: 'add_child' }],
+    blocks: [{ type: 'create_group' }, { type: 'add_child' }, { type: 'group_length' }, { type: 'random_between' }, { type: 'remove_child' }],
   },
   {
     name: 'Object',
     colour: 250,
-    blocks: [{ type: 'set_pos' }, { type: 'set_size' }],
+    blocks: [{ type: 'set_pos' }, { type: 'set_size' }, { type: 'self' }, { type: 'get_object_info' }],
   },
   {
     name: 'Physic',
