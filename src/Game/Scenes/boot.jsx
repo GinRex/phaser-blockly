@@ -36,7 +36,7 @@ class boot extends Phaser.Scene {
     this.load.on('complete', () => {
       // create animations
       // select scene
-      this.scene.start('scene3');
+      this.scene.start('scene1');
     });
   }
   create() {

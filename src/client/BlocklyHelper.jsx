@@ -80,7 +80,6 @@ function transformed(result) {
     if (c.block) {
       cNew.blocks = parseBlocks(c.block);
     }
-    console.log(cNew);
     filteredResult.push(cNew);
   }
 

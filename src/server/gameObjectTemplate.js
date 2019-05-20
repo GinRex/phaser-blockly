@@ -11,11 +11,15 @@ export default class Name extends Phaser.GameObjects.Sprite {
     // this.body.maxVelocity.y = 0;
     this.x = config.x;
     this.y = config.y;
-    // this.setDisplaySize(config.width, config.height);
-    // constructor here
+    this.setDisplaySize(config.w, config.h);
+    // create start
+
+    // create end
+
+    // code start
+    
   }
   update(scene) {
-    console.log;
-    // update here
   }
+  // code end
 }

@@ -384,8 +384,8 @@ app.post('/api/updateCode', (req, res) => {
         .readFileSync(objectName)
         .toString()
         .split('\n');
-      const updateEndIndex = data.indexOf('    // update here');
-      const updateStartIndex = data.indexOf('  update(scene) {');
+      const updateEndIndex = data.indexOf('  // code end');
+      const updateStartIndex = data.indexOf('    // code start');
       data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, object.jsCode);
       const text = data.join('\n');
       fs.writeFile(`${objectName}`, text, (err) => {
@@ -407,8 +407,8 @@ app.post('/api/updateSceneCode', (req, res) => {
         .readFileSync(sceneName)
         .toString()
         .split('\n');
-      const updateEndIndex = data.indexOf('  // game state end');
-      const updateStartIndex = data.indexOf('  // game state start');
+      const updateEndIndex = data.indexOf('    // game state end');
+      const updateStartIndex = data.indexOf('    // game state start');
       data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, scene.jsCode);
       const text = data.join('\n');
       fs.writeFile(`${sceneName}`, text, (err) => {
@@ -418,6 +418,49 @@ app.post('/api/updateSceneCode', (req, res) => {
       console.error(err);
     }
   });
+  return res.status(200).send({});
+  // const gameObjects = req.data.gameObjects
+});
+
+app.post('/api/initObject', (req, res) => {
+  const scene = req.body;
+  console.log(scene);
+  const sceneName = `${__dirname}/../Game/Scenes/${scene.name}.jsx`;
+  try {
+    const data = fs
+      .readFileSync(sceneName)
+      .toString()
+      .split('\n');
+    let code = '';
+    let objectCode = '';
+    scene.objects.map((object) => {
+      code +=
+        `this.${object.variableName} = new Class.${object.class}({
+          scene: this,
+          key: '${object.class}',
+          x: ${object.x},
+          y: ${object.y},
+          w: ${object.w},
+          h: ${object.h},
+        });\n`;
+      objectCode +=
+        `this.${object.variableName}.update(this);\n`;
+    });
+    const updateEndIndex = data.indexOf('    // create instances end');
+    const updateStartIndex = data.indexOf('    // create instances start');
+    data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, code);
+
+    const updateObjectEndIndex = data.indexOf('    // update object end');
+    const updateObjectStartIndex = data.indexOf('    // update object start');
+    data.splice(updateObjectStartIndex + 1, updateObjectEndIndex - updateObjectStartIndex - 1, objectCode);
+
+    const text = data.join('\n');
+    fs.writeFile(`${sceneName}`, text, (err) => {
+      console.log(err);
+    });
+  } catch (err) {
+    console.error(err);
+  }
   return res.status(200).send({});
   // const gameObjects = req.data.gameObjects
 });
