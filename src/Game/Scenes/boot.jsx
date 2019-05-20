@@ -24,6 +24,8 @@ class boot extends Phaser.Scene {
     progressBox.fillStyle(0x222222, 0.8);
     progressBox.fillRect(width / 4, height / 2, width / 2, height / 12);
 
+// load asset for Cat
+this.load.atlas('Cat', 'assets/Cat.png', 'assets/cat.json');
     // launch scene start
     this.load.on('progress', (value) => {
       progressBar.clear();
@@ -35,6 +37,14 @@ class boot extends Phaser.Scene {
     });
     this.load.on('complete', () => {
       // create animations
+// create animation for jump
+        this.anims.create({
+        key: 'jump',
+        frames: this.anims.generateFrameNames('Cat', { prefix: 'cat_', suffix: '.png', start: 0, end: 4, zeroPad: 0 }),
+        frameRate: 30,
+        repeat: -1,
+      });
+// end create animation for jump
       // select scene
       this.scene.start('scene1');
     });

@@ -175,7 +175,7 @@ app.post('/api/createAnimation', (req, res) => {
       .readFileSync(gameFile)
       .toString()
       .split('\n');
-    const animationStart = gameData.indexOf('        // create animations');
+    const animationStart = gameData.indexOf('      // create animations');
     const replaceAnimationStart = gameData.indexOf(`// create animation for ${name}`);
     const replaceAnimationEnd = gameData.indexOf(`// end create animation for ${name}`);
     if (replaceAnimationStart !== -1) {
