@@ -73,20 +73,6 @@ class BlocklyPart extends React.Component {
             this.setHelpUrl('');
           },
         };
-        Blockly.Blocks[`update_${gameObject.name}`] = {
-          init() {
-            this.appendDummyInput()
-              .appendField(new Blockly.FieldImage(`assets/${gameObject.filename}`, 30, 30, '*'))
-              .appendField('update ')
-              .appendField(new Blockly.FieldTextInput('object'), 'object_name');
-            this.setInputsInline(true);
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(230);
-            this.setTooltip('update object');
-            this.setHelpUrl('');
-          },
-        };
         if (gameObject.animations.length) {
           Blockly.Blocks[`play_animation_${gameObject.name}`] = {
             init() {
@@ -119,17 +105,11 @@ class BlocklyPart extends React.Component {
         }
         // code
         Blockly.JavaScript[`instance_${gameObject.name}`] = function (block) {
-          let dropdown_variable_list = block.getFieldValue('object_list');
+          const dropdown_variable_list = block.getFieldValue('object_list');
           // TODO: Assemble JavaScript into code variable.
           const code = `this.${dropdown_variable_list}`;
           // TODO: Change ORDER_NONE to the correct strength.
           return [code, Blockly.JavaScript.ORDER_NONE];
-        };
-        Blockly.JavaScript[`update_${gameObject.name}`] = function (block) {
-          const text_object_name = block.getFieldValue('object_name');
-          // TODO: Assemble JavaScript into code variable.
-          const code = `this.${text_object_name}.update(this);\n`;
-          return code;
         };
       });
     }
@@ -218,6 +198,29 @@ class BlocklyPart extends React.Component {
     scenes,
     slectedSceneIndex,
   ) => {
+    Blockly.JavaScript.game_state = function (block) {
+      const statements_event_code = Blockly.JavaScript.statementToCode(block, 'GAME_CODE');
+      const dropdown_event = block.getFieldValue('GAME_STATE');
+      const value_event_name = Blockly.JavaScript.valueToCode(
+        block,
+        'STATE_NAME',
+        Blockly.JavaScript.ORDER_ATOMIC,
+      );
+      if (dropdown_event == 'NO_EVENT_SELECTED') {
+        return "//error, you did not select an STATE in the 'when game state' block\n";
+      }
+      if (dropdown_event == 'create') {
+        const code = `\n${statements_event_code}\n}`;
+        return code;
+      }
+      if (dropdown_event == 'update' && slectedSceneIndex == '') {
+        console.log('ppp');
+        const code = `${dropdown_event}(scene){\n${statements_event_code}\n}`;
+        return code;
+      }
+      const code = `${dropdown_event}(){\n${statements_event_code}\n}`;
+      return code;
+    };
     const newXml = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
     const code = Blockly.JavaScript.workspaceToCode(workspace);
     const currentGameobject =

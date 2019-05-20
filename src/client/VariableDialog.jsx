@@ -51,7 +51,6 @@ class VariableDialog extends React.Component {
 
   render() {
     const { classes } = this.props;
-    console.log(this.props);
     return (
       <div>
         {this.props.variableDialogOpen && this.props.variableDialogOpen.key ?

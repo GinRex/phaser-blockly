@@ -998,24 +998,24 @@ Blockly.JavaScript.events_when_event_happens = function (block) {
 
 // /////GAME
 
-Blockly.JavaScript.game_state = function (block) {
-  const statements_event_code = Blockly.JavaScript.statementToCode(block, 'GAME_CODE');
-  const dropdown_event = block.getFieldValue('GAME_STATE');
-  const value_event_name = Blockly.JavaScript.valueToCode(
-    block,
-    'STATE_NAME',
-    Blockly.JavaScript.ORDER_ATOMIC,
-  );
-  if (dropdown_event == 'NO_EVENT_SELECTED') {
-    return "//error, you did not select an STATE in the 'when game state' block\n";
-  }
-  if (dropdown_event == 'create') {
-    const code = `${dropdown_event}(){\nthis.cursors = this.input.keyboard.createCursorKeys();\n${statements_event_code}\n}`;
-    return code;
-  }
-  const code = `${dropdown_event}(){\n${statements_event_code}\n}`;
-  return code;
-};
+// Blockly.JavaScript.game_state = function (block) {
+//   const statements_event_code = Blockly.JavaScript.statementToCode(block, 'GAME_CODE');
+//   const dropdown_event = block.getFieldValue('GAME_STATE');
+//   const value_event_name = Blockly.JavaScript.valueToCode(
+//     block,
+//     'STATE_NAME',
+//     Blockly.JavaScript.ORDER_ATOMIC,
+//   );
+//   if (dropdown_event == 'NO_EVENT_SELECTED') {
+//     return "//error, you did not select an STATE in the 'when game state' block\n";
+//   }
+//   if (dropdown_event == 'create') {
+//     const code = `\n${statements_event_code}\n}`;
+//     return code;
+//   }
+//   const code = `${dropdown_event}(){\n${statements_event_code}\n}`;
+//   return code;
+// };
 
 Blockly.JavaScript.screen_width = function (block) {
   const code = 'this.cameras.main.width';

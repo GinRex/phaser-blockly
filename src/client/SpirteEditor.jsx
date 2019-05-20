@@ -55,7 +55,7 @@ const SquareList = (ani) => {
       width={info.w}
       height={info.h}
       stroke="red"
-        // fill="red"
+      // fill="red"
       strokeWidth={1}
     />);
   }
@@ -63,7 +63,6 @@ const SquareList = (ani) => {
 };
 
 function preload(file) {
-  console.log(this.load);
   this.load.atlas(
     'atlas',
     `assets/animations/${file.alt}.png`,
@@ -72,7 +71,6 @@ function preload(file) {
 }
 
 function create() {
-  console.log('create');
   this.anims.create({
     key: 'diamond',
     frames: this.anims.generateFrameNames('atlas', {
@@ -139,7 +137,6 @@ class SpriteEditor extends React.Component {
 
   render() {
     const { classes } = this.props;
-    console.log(this.props);
     return (
       <div>
         <Dialog
@@ -167,17 +164,17 @@ class SpriteEditor extends React.Component {
                 }}
               >
                 {this.props.selectedFile &&
-                this.props.gameObjects.find(gameObject => gameObject.key === this.props.selectedFile.alt) &&
-                this.props.gameObjects.find(gameObject => gameObject.key === this.props.selectedFile.alt).jsonSprite ? (
-                  <Stage width={2000} height={3000}>
-                    <Layer>
-                      <Image image={this.image} />
-                      <SquareList info={this.props.animInfo} />
-                    </Layer>
-                  </Stage>
-                ) : (
-                  'Please import JSON file for the sprite'
-                )}
+                  this.props.gameObjects.find(gameObject => gameObject.key === this.props.selectedFile.alt) &&
+                  this.props.gameObjects.find(gameObject => gameObject.key === this.props.selectedFile.alt).jsonSprite ? (
+                    <Stage width={2000} height={3000}>
+                      <Layer>
+                        <Image image={this.image} />
+                        <SquareList info={this.props.animInfo} />
+                      </Layer>
+                    </Stage>
+                  ) : (
+                    'Please import JSON file for the sprite'
+                  )}
                 <input
                   type="file"
                   name="file"
