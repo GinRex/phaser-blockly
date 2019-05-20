@@ -24,6 +24,7 @@ const initState = {
     frameRate: 30,
     repeat: -1,
   },
+  images: [],
 };
 
 const gameReducer = (state = initState, action) => {
@@ -36,6 +37,10 @@ const gameReducer = (state = initState, action) => {
     case 'ADD_OBJECT': {
       const gameObjects = [...state.gameObjects, action.gameObject];
       return { ...state, gameObjects };
+    }
+    case 'ADD_IMAGE': {
+      const newImages = [...state.images, action.image];
+      return { ...state, images: newImages };
     }
     case 'ADD_SCENE': {
       const scenes = [...state.scenes, action.scene];

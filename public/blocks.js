@@ -108,6 +108,97 @@ Blockly.Blocks.motion_set_y_to = {
 
 // variable
 
+Blockly.Blocks.tile_sprite = {
+  init() {
+    this.appendValueInput('variable')
+      .setCheck(null);
+    this.appendDummyInput()
+      .appendField('= tile sprite of')
+      .appendField(new Blockly.FieldDropdown([['option', 'option'], ['option', 'option']], 'image_list'))
+      .appendField('with x=');
+    this.appendValueInput('x')
+      .setCheck(null);
+    this.appendDummyInput()
+      .appendField('with y=');
+    this.appendValueInput('y')
+      .setCheck(null);
+    this.appendDummyInput()
+      .appendField('width =');
+    this.appendValueInput('w')
+      .setCheck(null);
+    this.appendDummyInput()
+      .appendField('height =');
+    this.appendValueInput('h')
+      .setCheck(null);
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.tile_sprite = function (block) {
+  const value_variable = Blockly.JavaScript.valueToCode(block, 'variable', Blockly.JavaScript.ORDER_ATOMIC);
+  const dropdown_image_list = block.getFieldValue('image_list');
+  const value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_w = Blockly.JavaScript.valueToCode(block, 'w', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_h = Blockly.JavaScript.valueToCode(block, 'h', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_variable} = this.add.tileSprite(${value_x}, ${value_y}, ${value_w}, ${value_h}, '${dropdown_image_list}');;\n`;
+  return code;
+};
+
+Blockly.Blocks.tile_info = {
+  init() {
+    this.appendValueInput('variable')
+      .setCheck(null);
+    this.appendDummyInput()
+      .appendField(new Blockly.FieldDropdown([['tilePositionX', 'tilePositionX'], ['tilePositionY', 'tilePositionY'], ['tileScaleX', 'tileScaleX'], ['tileScaleY', 'tileScaleY']]), 'type');
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.tile_info = function (block) {
+  const value_variable = Blockly.JavaScript.valueToCode(block, 'variable', Blockly.JavaScript.ORDER_ATOMIC);
+  const dropdown_type = block.getFieldValue('type');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_variable}.${dropdown_type}`;
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.Blocks.set_object = {
+  init() {
+    this.appendValueInput('variable')
+      .setCheck(null)
+      .appendField('set');
+    this.appendDummyInput()
+      .appendField('=');
+    this.appendValueInput('var_value')
+      .setCheck(null);
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.set_object = function (block) {
+  const value_variable = Blockly.JavaScript.valueToCode(block, 'variable', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_var_value = Blockly.JavaScript.valueToCode(block, 'var_value', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_variable} = ${value_var_value};\n`;
+  return code;
+};
+
 Blockly.JavaScript.variables = function (block) {
   const dropdown_variable_list = block.getFieldValue('variable_list');
   const code = `this.${dropdown_variable_list}`;
