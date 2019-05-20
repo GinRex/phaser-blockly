@@ -6,6 +6,7 @@ export default class Name extends Phaser.GameObjects.Sprite {
     super(config.scene, config.x, config.y, config.key);
     config.scene.physics.world.enable(this);
     config.scene.add.existing(this);
+    const scene = config.scene;
     // this.acceleration = 0;
     // this.body.maxVelocity.x = 0;
     // this.body.maxVelocity.y = 0;
@@ -17,7 +18,6 @@ export default class Name extends Phaser.GameObjects.Sprite {
     // create end
 
     // code start
-    
   }
   update(scene) {
   }

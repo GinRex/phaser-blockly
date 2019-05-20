@@ -100,6 +100,13 @@ const gameReducer = (state = initState, action) => {
           : scene));
       return { ...state, scenes: newScenes };
     }
+    case 'ADD_CLASS_VARIABLE': {
+      const newGameObjects = state.gameObjects.map(gameObject =>
+        (gameObject.key === action.data.name
+          ? { ...gameObject, variables: [...gameObject.variables, action.data.variable] }
+          : gameObject));
+      return { ...state, gameObjects: newGameObjects };
+    }
     case 'ADD_INSTANCE': {
       const newScenes = state.scenes.map(scene =>
         (scene.key === action.data.name

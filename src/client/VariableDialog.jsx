@@ -12,7 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import { connect } from 'react-redux';
 
-import { setVariableDialogState, addVariable, addInstance, addInstancesToScene } from './actions/home';
+import { setVariableDialogState, addVariable, addInstance, addInstancesToScene, addClassVariable } from './actions/home';
 
 const styles = theme => ({
   button: {
@@ -200,8 +200,11 @@ class VariableDialog extends React.Component {
               </Button>
               <Button
                 onClick={() => {
-                  // console.log(this.state.variableName);
-                  this.props.addVariable(this.props.slectedSceneIndex, this.state.variableName);
+                  if (this.props.slectedSceneIndex !== '') {
+                    this.props.addVariable(this.props.slectedSceneIndex, this.state.variableName);
+                  } else if (this.props.slectedSceneIndex === '') {
+                    this.props.addClassVariable(this.props.slectedGameobjectIndex, this.state.variableName);
+                  }
                   this.props.setVariableDialogState(null);
                 }
                 }
@@ -220,6 +223,7 @@ class VariableDialog extends React.Component {
 const mapStateToProps = state => ({
   variableDialogOpen: state.home.variableDialogOpen,
   slectedSceneIndex: state.home.slectedSceneIndex,
+  slectedGameobjectIndex: state.home.slectedGameobjectIndex,
   scenes: state.home.scenes,
 });
 
@@ -228,6 +232,7 @@ const mapDispatchToProps = {
   addVariable,
   addInstance,
   addInstancesToScene,
+  addClassVariable,
 };
 
 export default connect(

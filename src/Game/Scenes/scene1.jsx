@@ -24,7 +24,7 @@ class scene1 extends Phaser.Scene {
 
   update() {
     // game state end
-    
+
     // update object start
 
     // update object end
