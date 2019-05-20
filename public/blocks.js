@@ -107,17 +107,6 @@ Blockly.Blocks.motion_set_y_to = {
 };
 
 // variable
-// Blockly.Blocks.variables = {
-//   init() {
-//     this.appendDummyInput()
-//       .appendField(new Blockly.FieldDropdown([['1', '2']]), 'variable_list');
-//     this.setInputsInline(true);
-//     this.setOutput(true, null);
-//     this.setColour(230);
-//     this.setTooltip('');
-//     this.setHelpUrl('');
-//   },
-// };
 
 Blockly.JavaScript.variables = function (block) {
   const dropdown_variable_list = block.getFieldValue('variable_list');
@@ -126,26 +115,10 @@ Blockly.JavaScript.variables = function (block) {
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
 
-Blockly.Blocks.set_var = {
-  init() {
-    this.appendDummyInput()
-      .appendField('set')
-      .appendField(new Blockly.FieldTextInput('variable_name'), 'var_name')
-      .appendField('=')
-      .appendField(new Blockly.FieldTextInput('value'), 'var_value');
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(230);
-    this.setTooltip('');
-    this.setHelpUrl('');
-  },
-};
-
 Blockly.JavaScript.set_var = function (block) {
-  const text_var_name = block.getFieldValue('var_name');
-  const text_var_value = block.getFieldValue('var_value');
-  // TODO: Assemble JavaScript into code variable.
-  const code = `this.${text_var_name} = ${text_var_value};\n`;
+  const dropdown_var_list = block.getFieldValue('var_list');
+  const value_var_value = Blockly.JavaScript.valueToCode(block, 'var_value', Blockly.JavaScript.ORDER_ATOMIC); // TODO: Assemble JavaScript into code variable.
+  const code = `this.${dropdown_var_list} = ${value_var_value};\n`;
   return code;
 };
 

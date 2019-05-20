@@ -167,6 +167,11 @@ export const addVariable = (name, variable) => ({
   data: { name, variable },
 });
 
+export const addClassVariable = (name, variable) => ({
+  type: 'ADD_CLASS_VARIABLE',
+  data: { name, variable },
+});
+
 export const addInstance = (instance, name) => ({
   type: 'ADD_INSTANCE',
   data: { name, instance },
