@@ -87,6 +87,46 @@ app.post('/api/uploadImage', (req, res) => {
   });
 });
 
+app.post('/api/uploadImageForTile', (req, res) => {
+  // console.log(req);
+  // if (!req.file) {
+  //   return res.status(404).send('file not found');
+  // }
+  upload(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json(err);
+    } else if (err) {
+      return res.status(500).json(err);
+    }
+
+    req.file.name = capitalize(path.parse(req.file.filename).name);
+    // Load image to loader
+    try {
+      const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
+      const gameData = fs
+        .readFileSync(gameFile)
+        .toString()
+        .split('\n');
+      const selectedSceneEnd = gameData.indexOf('    // launch scene start');
+      gameData.splice(
+        selectedSceneEnd,
+        0,
+        `// load asset for ${req.file.name}\nthis.load.image('${req.file.name}', 'assets/${
+          req.file.filename
+        }');`,
+      );
+
+      const text = gameData.join('\n');
+      fs.writeFile(gameFile, text, (err) => {
+        console.log(err);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+    return res.status(200).send(req.file);
+  });
+});
+
 app.post('/api/uploadJson', (req, res) => {
   upload(req, res, (err) => {
     if (err instanceof multer.MulterError) {
@@ -181,15 +221,6 @@ app.post('/api/createAnimation', (req, res) => {
 app.post('/api/createGame', (req, res) => {
   GAME_NAME = req.body.game_name;
   console.log(GAME_NAME);
-  // // create game foler
-  // const folderName = `${__dirname}/../Game/${GAME_NAME}`;
-  // try {
-  //   if (!fs.existsSync(folderName)) {
-  //     fs.mkdirSync(folderName);
-  //   }
-  // } catch (err) {
-  //   console.error(err);
-  // }
   // create scenes folder and default scene
   const scenesFolder = `${__dirname}/../Game/Scenes`;
   const classesFolder = `${__dirname}/../Game/Classes`;

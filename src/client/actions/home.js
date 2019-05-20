@@ -64,6 +64,22 @@ export const uploadImage = file => (dispatch) => {
   });
 };
 
+
+export const uploadImageForTile = file => (dispatch) => {
+  console.log(file.file);
+  const data = new FormData();
+  data.append('file', file.file);
+  return axios.post('http://localhost:8080/api/uploadImageForTile', data, {}).then((res) => {
+    dispatch({
+      type: 'ADD_IMAGE',
+      image: {
+        name: res.data.name,
+        filename: res.data.filename,
+      },
+    });
+  });
+};
+
 export const uploadJson = (file, name) => (dispatch) => {
   console.log(file);
   const data = new FormData();
