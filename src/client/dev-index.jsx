@@ -60,10 +60,10 @@ class BlocklyPart extends React.Component {
 
     if (currentScene) {
       console.log('scene');
-      this.variableListBlockUpdate(currentScene.variables, null);
+      this.variableListBlockUpdate(currentScene.variables, null, gameObjects);
     } else if (currentGameobject) {
       console.log('object');
-      this.variableListBlockUpdate(null, currentGameobject.variables);
+      this.variableListBlockUpdate(null, currentGameobject.variables, gameObjects);
     }
 
     if (currentScene) {
@@ -124,7 +124,7 @@ class BlocklyPart extends React.Component {
     }
   };
 
-  variableListBlockUpdate = (variables, classVariables) => {
+  variableListBlockUpdate = (variables, classVariables, gameObjects) => {
     console.log(variables);
     const vars = variables || classVariables;
     Blockly.Blocks.variables = {
@@ -152,6 +152,104 @@ class BlocklyPart extends React.Component {
         this.setColour(230);
       },
     };
+    if (gameObjects.length > 0) {
+      Blockly.Blocks.add_child = {
+        init() {
+          this.appendValueInput('parent')
+            .setCheck(null)
+            .appendField('add child to');
+          this.appendDummyInput()
+            .appendField('with Class =')
+            .appendField(new Blockly.FieldDropdown(gameObjects.map(gameObject => [gameObject.key, `${gameObject.key}`])), 'type');
+          this.appendValueInput('x')
+            .setCheck(null)
+            .appendField('x =');
+          this.appendValueInput('y')
+            .setCheck(null)
+            .appendField('y =');
+          this.appendValueInput('w')
+            .setCheck(null)
+            .appendField('width =');
+          this.appendValueInput('h')
+            .setCheck(null)
+            .appendField('height =');
+          // this.appendValueInput('order')
+          //   .setCheck(null)
+          //   .appendField('order =');
+          this.setInputsInline(true);
+          this.setPreviousStatement(true, null);
+          this.setNextStatement(true, null);
+          this.setColour(230);
+          this.setTooltip('');
+          this.setHelpUrl('');
+        },
+      };
+
+      Blockly.JavaScript.add_child = function (block) {
+        const value_parent = Blockly.JavaScript.valueToCode(block, 'parent', Blockly.JavaScript.ORDER_ATOMIC);
+        const dropdown_type = block.getFieldValue('type');
+        const value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
+        const value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
+        const value_w = Blockly.JavaScript.valueToCode(block, 'w', Blockly.JavaScript.ORDER_ATOMIC);
+        const value_h = Blockly.JavaScript.valueToCode(block, 'h', Blockly.JavaScript.ORDER_ATOMIC);
+        // const value_order = Blockly.JavaScript.valueToCode(block, 'order', Blockly.JavaScript.ORDER_ATOMIC);
+        // TODO: Assemble JavaScript into code variable.
+        const code = `${value_parent}.add(
+          new Class.${dropdown_type} ({
+            scene: this,
+          key: '${dropdown_type}',
+          x: ${value_x},
+          y: ${value_y},
+          w: ${value_w},
+          h: ${value_h},
+          })
+        );\n`;
+        return code;
+      };
+      //   console.log('hhh', gameObjects);
+      //   Blockly.Blocks.create_group = {
+      //     init() {
+      //       this.appendDummyInput()
+      //         .appendField('group of')
+      //         .appendField(new Blockly.FieldDropdown(gameObjects.map(gameObject => [gameObject.key, `Class.${gameObject.key}`])), 'class_list')
+      //         .appendField('with size =');
+      //       this.appendValueInput('size')
+      //         .setCheck(null);
+      //       this.setInputsInline(true);
+      //       this.setOutput(true, null);
+      //       this.setColour(230);
+      //       this.setTooltip('');
+      //       this.setHelpUrl('');
+      //     },
+      //   };
+
+      //   Blockly.JavaScript.create_group = function (block) {
+      //     const dropdown_class_list = block.getFieldValue('class_list');
+      //     const value_size = Blockly.JavaScript.valueToCode(block, 'size', Blockly.JavaScript.ORDER_ATOMIC);
+      //     // TODO: Assemble JavaScript into code variable.
+      //     const code = `this.add.group({
+      //       classType: ${dropdown_class_list},
+      //       visible: true,
+      // active: true,
+      //       maxSize: ${value_size},
+      //       runChildUpdate: true,
+      //       setXY: {
+      //         x:100,
+      //         y:100,
+      //         stepX:10,
+      //         stepY:10
+      //     },
+      //     setScale: {
+      //       x:20,
+      //       y:20,
+      //       stepX:10,
+      //       stepY:10
+      //   },
+      //   })`;
+      //     // TODO: Change ORDER_NONE to the correct strength.
+      //     return [code, Blockly.JavaScript.ORDER_NONE];
+      //   };
+    }
   }
 
   updateToolBox = (gameObjects, scenes, slectedSceneIndex, slectedGameobjectIndex) => {
@@ -367,7 +465,7 @@ class BlocklyPart extends React.Component {
       const currentGameobject = gameObjects.find(gameObject => gameObject.key === slectedGameobjectIndex);
 
       if (slectedGameobjectIndex && !currentGameobject.variables.includes(dropdown_variable_list)) {
-        code = `scene.${dropdown_variable_list}`;
+        code = `this.scene.${dropdown_variable_list}`;
       } else {
         code = `this.${dropdown_variable_list}`;
       }

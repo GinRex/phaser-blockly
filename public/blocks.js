@@ -173,6 +173,146 @@ Blockly.JavaScript.tile_info = function (block) {
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
 
+// groups
+// Blockly.Blocks.create_group = {
+//   init() {
+//     this.appendDummyInput()
+//       .appendField('group of')
+//       .appendField(new Blockly.FieldDropdown([['option', 'OPTIONNAME'], ['option', 'OPTIONNAME'], ['option', 'OPTIONNAME']]), 'class_list')
+//       .appendField('with size =');
+//     this.appendValueInput('size')
+//       .setCheck(null);
+//     this.setInputsInline(true);
+//     this.setOutput(true, null);
+//     this.setColour(230);
+//     this.setTooltip('');
+//     this.setHelpUrl('');
+//   },
+// };
+
+Blockly.Blocks.remove_child = {
+  init() {
+    this.appendValueInput('child')
+      .setCheck(null)
+      .appendField('remove');
+    this.appendValueInput('group')
+      .setCheck(null)
+      .appendField('from');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.remove_child = function (block) {
+  const value_child = Blockly.JavaScript.valueToCode(block, 'child', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_group = Blockly.JavaScript.valueToCode(block, 'group', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_group}.remove(${value_child});\n${value_child}.destroy();\n`;
+  return code;
+};
+
+Blockly.Blocks.group_length = {
+  init() {
+    this.appendValueInput('group')
+      .setCheck(null)
+      .appendField('get length of');
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.group_length = function (block) {
+  const value_group = Blockly.JavaScript.valueToCode(block, 'group', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_group}.getLength()`;
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.Blocks.add_child = {
+  init() {
+    this.appendValueInput('parent')
+      .setCheck(null)
+      .appendField('add child to');
+    this.appendDummyInput()
+      .appendField('with Class =')
+      .appendField(new Blockly.FieldDropdown([['option', 'OPTIONNAME'], ['option', 'OPTIONNAME'], ['option', 'OPTIONNAME']]), 'type');
+    this.appendValueInput('x')
+      .setCheck(null)
+      .appendField('x =');
+    this.appendValueInput('y')
+      .setCheck(null)
+      .appendField('y =');
+    this.appendValueInput('w')
+      .setCheck(null)
+      .appendField('width =');
+    this.appendValueInput('h')
+      .setCheck(null)
+      .appendField('height =');
+    this.appendValueInput('order')
+      .setCheck(null)
+      .appendField('order =');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.Blocks.create_group = {
+  init() {
+    this.appendDummyInput()
+      .appendField('create group');
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.create_group = function (block) {
+  // TODO: Assemble JavaScript into code variable.
+  const code = 'this.add.group({runChildUpdate: true})';
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+
+// object
+Blockly.Blocks.get_object_info = {
+  init() {
+    this.appendValueInput('object')
+      .setCheck(null)
+      .appendField('get')
+      .appendField(new Blockly.FieldDropdown([['x', 'x'], ['y', 'y']]), 'att')
+      .appendField('from');
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.get_object_info = function (block) {
+  const dropdown_att = block.getFieldValue('att');
+  const value_object = Blockly.JavaScript.valueToCode(block, 'object', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_object}.${dropdown_att}`;
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
 Blockly.Blocks.set_object = {
   init() {
     this.appendValueInput('variable')
@@ -403,27 +543,6 @@ Blockly.Blocks.set_font_size = {
   },
 };
 
-// group game objects
-Blockly.Blocks.create_group = {
-  init() {
-    this.appendDummyInput()
-      .appendField('create group name')
-      .appendField(new Blockly.FieldTextInput('group name'), 'group_name');
-    this.setInputsInline(true);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(230);
-    this.setTooltip('');
-    this.setHelpUrl('');
-  },
-};
-
-Blockly.JavaScript.create_group = function (block) {
-  const text_group_name = block.getFieldValue('group_name');
-  // TODO: Assemble JavaScript into code variable.
-  const code = `this.${text_group_name} = this.add.group();\n`;
-  return code;
-};
 
 Blockly.Blocks.add_child = {
   init() {
@@ -1363,4 +1482,50 @@ Blockly.JavaScript.add_collider_this = function (block) {
   // TODO: Assemble JavaScript into code variable.
   const code = `this.physics.add.collider(this, ${value_obj_2});\n`;
   return code;
+};
+
+
+// math
+Blockly.Blocks.random_between = {
+  init() {
+    this.appendValueInput('min')
+      .setCheck(null)
+      .appendField('random from');
+    this.appendValueInput('max')
+      .setCheck(null)
+      .appendField('to');
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.random_between = function (block) {
+  const value_min = Blockly.JavaScript.valueToCode(block, 'min', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_max = Blockly.JavaScript.valueToCode(block, 'max', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `Math.random() * (${value_max} - ${value_min}) + ${value_min}`;
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.Blocks.self = {
+  init() {
+    this.appendDummyInput()
+      .appendField('self');
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.self = function (block) {
+  // TODO: Assemble JavaScript into code variable.
+  const code = 'this';
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
 };

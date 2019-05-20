@@ -20,12 +20,9 @@ class scene1 extends Phaser.Scene {
     // create instances end
 
     // game state start
-  (this.bg) = this.add.tileSprite(400, 400, 1600, 1600, 'Anothergreatfind');;
+  }
 
-}
-update(){
-  ((this.bg).tilePositionX) = (((this.bg).tilePositionX) - 1);
-
+  update() {
     // game state end
 
     // update object start
