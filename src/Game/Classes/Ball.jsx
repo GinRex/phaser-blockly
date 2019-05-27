@@ -1,12 +1,12 @@
 import * as Motion from '../../client/HandleMotion';
 import * as Sprite from '../../client/HandleSprite';
+import key from '../keyBoardInput';
 
-export default class Cat extends Phaser.GameObjects.Sprite {
+export default class Ball extends Phaser.GameObjects.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, config.key);
     config.scene.physics.world.enable(this);
     config.scene.add.existing(this);
-    const scene = config.scene;
     // this.acceleration = 0;
     // this.body.maxVelocity.x = 0;
     // this.body.maxVelocity.y = 0;
@@ -19,7 +19,7 @@ export default class Cat extends Phaser.GameObjects.Sprite {
 
     // code start
   }
-  update(scene) {
+  update() {
   }
   // code end
 }

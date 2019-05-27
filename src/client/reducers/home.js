@@ -1,6 +1,7 @@
 import toolboxCategories from '../toolBox';
 
 const initState = {
+  listGames: [],
   selectedFile: {},
   gameObjects: [],
   scenes: [{
@@ -119,6 +120,8 @@ const gameReducer = (state = initState, action) => {
           : scene));
       return { ...state, scenes: newScenes };
     }
+    case 'SET_LIST_GAMES':
+      return { ...state, listGames: action.listGames };
     default:
       return state;
   }

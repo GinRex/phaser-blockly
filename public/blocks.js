@@ -147,7 +147,7 @@ Blockly.JavaScript.tile_sprite = function (block) {
   const value_w = Blockly.JavaScript.valueToCode(block, 'w', Blockly.JavaScript.ORDER_ATOMIC);
   const value_h = Blockly.JavaScript.valueToCode(block, 'h', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  const code = `${value_variable} = this.add.tileSprite(${value_x}, ${value_y}, ${value_w}, ${value_h}, '${dropdown_image_list}');;\n`;
+  const code = `${value_variable} = this.add.tileSprite(${value_x}, ${value_y}, ${value_w}, ${value_h}, '${dropdown_image_list}');\n${value_variable}.depth = -1000;\n`;
   return code;
 };
 
@@ -211,7 +211,7 @@ Blockly.JavaScript.remove_child = function (block) {
   const value_child = Blockly.JavaScript.valueToCode(block, 'child', Blockly.JavaScript.ORDER_ATOMIC);
   const value_group = Blockly.JavaScript.valueToCode(block, 'group', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  const code = `${value_group}.remove(${value_child});\n${value_child}.destroy();\n`;
+  const code = `${value_group}.remove(${value_child});\n`;
   return code;
 };
 
@@ -282,7 +282,7 @@ Blockly.Blocks.create_group = {
 
 Blockly.JavaScript.create_group = function (block) {
   // TODO: Assemble JavaScript into code variable.
-  const code = 'this.add.group({runChildUpdate: true})';
+  const code = 'this.physics.add.group({runChildUpdate: true, allowGravity: false})';
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
@@ -1526,6 +1526,41 @@ Blockly.Blocks.self = {
 Blockly.JavaScript.self = function (block) {
   // TODO: Assemble JavaScript into code variable.
   const code = 'this';
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.Blocks.key_condition = {
+  init() {
+    this.appendDummyInput()
+      .appendField(new Blockly.FieldDropdown([...Array(26)].map((val, i) => {
+        const keyCode = String.fromCharCode(i + 65);
+        console.log([keyCode, keyCode]);
+        return [keyCode, keyCode];
+      })
+        .concat([...Array(10)].map(((val, i) => [i.toString(), i.toString()]))
+          .concat([
+            ['BACKSPACE', 'BACKSPACE'],
+            ['ENTER', 'ENTER'],
+            ['SPACE', 'SPACE'],
+            ['LEFT', 'LEFT'],
+            ['UP', 'UP'],
+            ['RIGHT', 'RIGHT'],
+            ['DOWN', 'DOWN']]))), 'key')
+      .appendField(new Blockly.FieldDropdown([['is down', 'isDown'], ['is up', 'isUp']]), 'type');
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.key_condition = function (block) {
+  const dropdown_key = block.getFieldValue('key');
+  const dropdown_type = block.getFieldValue('type');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `key(this.scene.input.keyboard, '${dropdown_key}').${dropdown_type}`;
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.JavaScript.ORDER_NONE];
 };

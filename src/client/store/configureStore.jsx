@@ -9,6 +9,7 @@ import rootReducer from '../reducers';
 // export const store = createStore(gameReducer);
 
 const blacklistFilter = createBlacklistFilter('home', [
+  'listGames',
   'selectedFile',
   'spriteEditOpen',
   'objectMenuOpen',

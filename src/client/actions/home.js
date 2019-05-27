@@ -199,3 +199,22 @@ export const addInstancesToScene = scene => (dispatch) => {
     console.log('aaa');
   });
 };
+
+export const saveGame = gameName => (dispatch) => {
+  const data = localStorage.getItem('persist:root');
+  return axios.post('http://localhost:8080/api/saveGame', { gameName, data }, {}).then((res) => {
+    console.log('aaa');
+  });
+};
+
+export const loadGame = gameName => dispatch => axios.post('http://localhost:8080/api/loadGame', { gameName }, {}).then((res) => {
+  localStorage.setItem('persist:root', JSON.stringify(res.data));
+  window.location.reload();
+});
+
+export const loadListGame = () => dispatch => axios.post('http://localhost:8080/api/loadListGame', {}, {}).then((res) => {
+  dispatch({
+    type: 'SET_LIST_GAMES',
+    listGames: res.data,
+  });
+});
