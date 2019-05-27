@@ -259,7 +259,7 @@ class BlocklyPart extends React.Component {
         custom: `CLASS_INSTANCE_${gameObject.name}`,
       };
       if (gameObject.animations.length) {
-        object.blocks.push({ type: `play_animation_${gameObject.name}` });
+        // object.blocks.push({ type: `play_animation_${gameObject.name}` });
       }
       return object;
     }));
@@ -410,6 +410,7 @@ class BlocklyPart extends React.Component {
     if (currentScene) {
       xmlList = [Blockly.Xml.textToDom(`<xml><button text="Create Object" callbackKey = "CREATE_VARIABLE_CALLBACK_${gameObject.name}"></button></xml>`).firstChild];
       const variables = currentScene.objects.filter(object => (object.class === gameObject.name));
+      console.log('xxx', gameObject.animations);
       for (let i = 0; i < variables.length; i++) {
         const blockText = '<xml>' +
           `<block type="instance_${gameObject.name}">` +
@@ -418,6 +419,15 @@ class BlocklyPart extends React.Component {
           '</xml>';
         const block = Blockly.Xml.textToDom(blockText).firstChild;
         xmlList.push(block);
+      }
+      for (let i = 0; i < gameObject.animations.length; i++) {
+        const aniBlockText = '<xml>' +
+          `<block type="play_animation_${gameObject.name}">` +
+          `<field name="animation" variabletype="">${gameObject.animations[i].name}</field>` +
+          '</block>' +
+          '</xml>';
+        const aniBlock = Blockly.Xml.textToDom(aniBlockText).firstChild;
+        xmlList.push(aniBlock);
       }
     }
     return xmlList;

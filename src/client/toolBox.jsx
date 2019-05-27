@@ -16,7 +16,7 @@ export default [
   {
     name: 'Event',
     colour: 250,
-    blocks: [{ type: 'events_when_event_happens' }],
+    blocks: [{ type: 'key_condition' }],
   },
   {
     name: 'Game',

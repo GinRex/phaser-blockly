@@ -5,6 +5,8 @@ const fse = require('fs-extra');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
+const { lstatSync, readdirSync } = require('fs');
+const { join } = require('path');
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -28,6 +30,96 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage }).single('file');
+
+// const isDirectory = source => lstatSync(source).isDirectory();
+const getDirecttories = source => readdirSync(source);
+const getFilesFromDirectorie = source =>
+  readdirSync(source);
+
+app.post('/api/loadListGame', (req, res) => {
+  const list = getDirecttories(`${__dirname}/games`);
+  console.log(list);
+  return res.status(200).send(list);
+});
+
+app.post('/api/saveGame', (req, res) => {
+  // console.log(req.body);
+  const GAME_NAME = req.body.gameName;
+  const gameData = req.body.data;
+  const gameDir = `${__dirname}/games/${GAME_NAME}`;
+  const gameRoot = `${__dirname}/../Game`;
+  try {
+    if (fs.existsSync(gameDir)) {
+      fse.remove(gameDir, (err) => {
+        console.log('a', err);
+        fs.mkdirSync(gameDir);
+        // copy game.jsx file
+        fse.copySync(`${gameRoot}/Game.jsx`, `${gameDir}/Game.jsx`);
+        // save localstorage data
+        fs.writeFile(`${gameDir}/data.json`, gameData, (err) => {
+          console.log(err);
+        });
+        // copy scenes and classes
+        const scenesFolder = `${gameDir}/Scenes`;
+        const classesFolder = `${gameDir}/Classes`;
+        fs.mkdirSync(scenesFolder);
+        fs.mkdirSync(classesFolder);
+
+        const classes = getFilesFromDirectorie(`${gameRoot}/Classes`);
+        classes.forEach((classFile) => {
+          console.log(classFile);
+          fse.copySync(`${gameRoot}/Classes/${classFile}`, `${classesFolder}/${classFile}`);
+        });
+        const scenes = getFilesFromDirectorie(`${gameRoot}/Scenes`);
+        scenes.forEach((sceneFile) => {
+          console.log(sceneFile);
+          fse.copySync(`${gameRoot}/Scenes/${sceneFile}`, `${scenesFolder}/${sceneFile}`);
+        });
+      });
+    } else fs.mkdirSync(gameDir);
+  } catch (err) {
+    console.log(err);
+  }
+  return res.status(200).send(req.file);
+});
+
+app.post('/api/loadGame', (req, res) => {
+  // console.log(req.body);
+  const GAME_NAME = req.body.gameName;
+  const gameRoot = `${__dirname}/games/${GAME_NAME}`;
+  const gameDir = `${__dirname}/../Game`;
+  try {
+    if (fs.existsSync(gameDir)) {
+      // copy game.jsx file
+      fse.copySync(`${gameRoot}/Game.jsx`, `${gameDir}/Game.jsx`);
+      // copy scenes and classes
+      const scenesFolder = `${gameDir}/Scenes`;
+      const classesFolder = `${gameDir}/Classes`;
+      fse.remove(scenesFolder, (err) => {
+        fs.mkdirSync(scenesFolder);
+        const scenes = getFilesFromDirectorie(`${gameRoot}/Scenes`);
+        scenes.forEach((sceneFile) => {
+          console.log(sceneFile);
+          fse.copySync(`${gameRoot}/Scenes/${sceneFile}`, `${scenesFolder}/${sceneFile}`);
+        });
+      });
+      fse.remove(classesFolder, (err) => {
+        fs.mkdirSync(classesFolder);
+        const classes = getFilesFromDirectorie(`${gameRoot}/Classes`);
+        classes.forEach((classFile) => {
+          console.log(classFile);
+          fse.copySync(`${gameRoot}/Classes/${classFile}`, `${classesFolder}/${classFile}`);
+        });
+      });
+    } else fs.mkdirSync(gameDir);
+  } catch (err) {
+    console.log(err);
+  }
+  const gameData = fs
+    .readFileSync(`${gameRoot}/data.json`)
+    .toString();
+  return res.status(200).send(gameData);
+});
 
 app.post('/api/uploadImage', (req, res) => {
   // console.log(req);
@@ -175,7 +267,7 @@ app.post('/api/createAnimation', (req, res) => {
       .readFileSync(gameFile)
       .toString()
       .split('\n');
-    const animationStart = gameData.indexOf('        // create animations');
+    const animationStart = gameData.indexOf('      // create animations');
     const replaceAnimationStart = gameData.indexOf(`// create animation for ${name}`);
     const replaceAnimationEnd = gameData.indexOf(`// end create animation for ${name}`);
     if (replaceAnimationStart !== -1) {
@@ -219,12 +311,23 @@ app.post('/api/createAnimation', (req, res) => {
 });
 
 app.post('/api/createGame', (req, res) => {
-  GAME_NAME = req.body.game_name;
+  const GAME_NAME = req.body.game_name;
   console.log(GAME_NAME);
   // create scenes folder and default scene
   const scenesFolder = `${__dirname}/../Game/Scenes`;
   const classesFolder = `${__dirname}/../Game/Classes`;
   // const scenesFolder = `${__dirname}/../Game/${GAME_NAME}/Scenes`;
+  const gameDir = `${__dirname}/games/${GAME_NAME}`;
+  try {
+    if (fs.existsSync(gameDir)) {
+      fse.remove(gameDir, (err) => {
+        console.log('a', err);
+        fs.mkdirSync(gameDir);
+      });
+    } else fs.mkdirSync(gameDir);
+  } catch (err) {
+    console.error(err);
+  }
   try {
     fse.remove(scenesFolder, (err) => {
       fs.mkdir(scenesFolder, () => {
@@ -260,6 +363,11 @@ app.post('/api/createGame', (req, res) => {
 
   // create game file
   try {
+    // add imported files
+    const keyData = fs.readFileSync(`${__dirname}/keyBoardInput.js`).toString();
+    fs.writeFile(`${__dirname}/../Game/keyBoardInput.js`, keyData, (err) => {
+      console.log(err);
+    });
     const data = fs.readFileSync(`${__dirname}/gameTemplate.js`).toString();
     fs.writeFile(`${__dirname}/../Game/Game.jsx`, data, (err) => {
       console.log(err);

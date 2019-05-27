@@ -1,5 +1,6 @@
 import 'phaser';
 import * as Class from '../Classes';
+import key from '../keyBoardInput';
 
 class SceneName extends Phaser.Scene {
   constructor(props) {
