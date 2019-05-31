@@ -24,8 +24,10 @@ class boot extends Phaser.Scene {
     progressBox.fillStyle(0x222222, 0.8);
     progressBox.fillRect(width / 4, height / 2, width / 2, height / 12);
 
-// load asset for Ball
-this.load.image('Ball', 'assets/ball.png');
+// load asset for Enemy
+this.load.image('Enemy', 'assets/enemy.png');
+// load asset for Background
+this.load.image('Background', 'assets/background.jpg');
     // launch scene start
     this.load.on('progress', (value) => {
       progressBar.clear();

@@ -21,9 +21,11 @@ class scene1 extends Phaser.Scene {
     // create instances end
 
     // game state start
-  }
+  (this.bg) = this.add.tileSprite(((this.cameras.main.width) / 2), ((this.cameras.main.height) / 2), (this.cameras.main.width), (this.cameras.main.height), 'Warning2');;
 
-  update() {
+}
+update(){
+
     // game state end
 
     // update object start

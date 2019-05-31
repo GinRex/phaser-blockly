@@ -236,37 +236,37 @@ Blockly.JavaScript.group_length = function (block) {
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
 
-Blockly.Blocks.add_child = {
-  init() {
-    this.appendValueInput('parent')
-      .setCheck(null)
-      .appendField('add child to');
-    this.appendDummyInput()
-      .appendField('with Class =')
-      .appendField(new Blockly.FieldDropdown([['option', 'OPTIONNAME'], ['option', 'OPTIONNAME'], ['option', 'OPTIONNAME']]), 'type');
-    this.appendValueInput('x')
-      .setCheck(null)
-      .appendField('x =');
-    this.appendValueInput('y')
-      .setCheck(null)
-      .appendField('y =');
-    this.appendValueInput('w')
-      .setCheck(null)
-      .appendField('width =');
-    this.appendValueInput('h')
-      .setCheck(null)
-      .appendField('height =');
-    this.appendValueInput('order')
-      .setCheck(null)
-      .appendField('order =');
-    this.setInputsInline(true);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(230);
-    this.setTooltip('');
-    this.setHelpUrl('');
-  },
-};
+// Blockly.Blocks.add_child = {
+//   init() {
+//     this.appendValueInput('parent')
+//       .setCheck(null)
+//       .appendField('add child to');
+//     this.appendDummyInput()
+//       .appendField('with Class =')
+//       .appendField(new Blockly.FieldDropdown([['option', 'OPTIONNAME'], ['option', 'OPTIONNAME'], ['option', 'OPTIONNAME']]), 'type');
+//     this.appendValueInput('x')
+//       .setCheck(null)
+//       .appendField('x =');
+//     this.appendValueInput('y')
+//       .setCheck(null)
+//       .appendField('y =');
+//     this.appendValueInput('w')
+//       .setCheck(null)
+//       .appendField('width =');
+//     this.appendValueInput('h')
+//       .setCheck(null)
+//       .appendField('height =');
+//     this.appendValueInput('order')
+//       .setCheck(null)
+//       .appendField('order =');
+//     this.setInputsInline(true);
+//     this.setPreviousStatement(true, null);
+//     this.setNextStatement(true, null);
+//     this.setColour(230);
+//     this.setTooltip('');
+//     this.setHelpUrl('');
+//   },
+// };
 
 Blockly.Blocks.create_group = {
   init() {

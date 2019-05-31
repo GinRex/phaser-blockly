@@ -56,8 +56,8 @@ app.post('/api/saveGame', (req, res) => {
         // copy game.jsx file
         fse.copySync(`${gameRoot}/Game.jsx`, `${gameDir}/Game.jsx`);
         // save localstorage data
-        fs.writeFile(`${gameDir}/data.json`, gameData, (err) => {
-          console.log(err);
+        fs.writeFile(`${gameDir}/data.json`, gameData, (error) => {
+          console.log(error);
         });
         // copy scenes and classes
         const scenesFolder = `${gameDir}/Scenes`;
@@ -146,28 +146,26 @@ app.post('/api/uploadImage', (req, res) => {
       gameData.splice(
         selectedSceneEnd,
         0,
-        `// load asset for ${req.file.name}\nthis.load.image('${req.file.name}', 'assets/${
-          req.file.filename
-        }');`,
+        `// load asset for ${req.file.name}\nthis.load.image('${req.file.name}', 'assets/${req.file.filename}');`,
       );
 
       const text = gameData.join('\n');
       fs.writeFile(gameFile, text, (err) => {
         console.log(err);
       });
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
     }
 
     // create object file
     const objectName = `${__dirname}/../Game/Classes/${req.file.name}`;
-    fs.readFile(`${__dirname}/gameObjectTemplate.js`, 'utf8', (err, data) => {
-      if (err) {
+    fs.readFile(`${__dirname}/gameObjectTemplate.js`, 'utf8', (error, data) => {
+      if (error) {
         return console.log(err);
       }
       const result = data.replace(/Name/g, req.file.name);
-      fs.writeFile(`${objectName}.jsx`, result, 'utf8', (err) => {
-        if (err) return console.log(err);
+      fs.writeFile(`${objectName}.jsx`, result, 'utf8', (e) => {
+        if (e) return console.log(err);
       });
     });
     // export all objects file to index
@@ -312,6 +310,8 @@ app.post('/api/createAnimation', (req, res) => {
 
 app.post('/api/createGame', (req, res) => {
   const GAME_NAME = req.body.game_name;
+  const width = req.body.width;
+  const height = req.body.height;
   console.log(GAME_NAME);
   // create scenes folder and default scene
   const scenesFolder = `${__dirname}/../Game/Scenes`;
@@ -368,7 +368,7 @@ app.post('/api/createGame', (req, res) => {
     fs.writeFile(`${__dirname}/../Game/keyBoardInput.js`, keyData, (err) => {
       console.log(err);
     });
-    const data = fs.readFileSync(`${__dirname}/gameTemplate.js`).toString();
+    const data = fs.readFileSync(`${__dirname}/gameTemplate.js`).toString().replace(/GAME_WIDTH/g, width).replace(/GAME_HEIGHT/g, height);
     fs.writeFile(`${__dirname}/../Game/Game.jsx`, data, (err) => {
       console.log(err);
     });

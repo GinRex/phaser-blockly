@@ -26,6 +26,8 @@ class boot extends Phaser.Scene {
 
 // load asset for Enemy
 this.load.image('Enemy', 'assets/enemy.png');
+// load asset for Background
+this.load.image('Background', 'assets/background.jpg');
     // launch scene start
     this.load.on('progress', (value) => {
       progressBar.clear();
