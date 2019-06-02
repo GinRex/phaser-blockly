@@ -2,14 +2,13 @@
 
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Popover from '@material-ui/core/Popover';
 import { connect } from 'react-redux';
 import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
 import ReactBlocklyComponent from './index';
 import SpriteEditor from './SpirteEditor';
 import VariableDialog from './VariableDialog';
+
 
 import {
   selectFile,
@@ -35,10 +34,18 @@ const styles = theme => ({
 class BlocklyPart extends React.Component {
   constructor(props) {
     super(props);
+    this.editor = React.createRef();
     this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
   }
   componentDidMount() {
     this.updateToolBox(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
+  }
+
+  resizeEditor = () => {
+    console.log(this.editor);
+    if (this.editor.current) {
+      this.editor.current.resize();
+    }
   }
 
   // upload image
@@ -462,39 +469,10 @@ class BlocklyPart extends React.Component {
     const currentGameobject = this.props.gameObjects.find(gameObject => gameObject.key === this.props.slectedGameobjectIndex);
     const currentScene = this.props.scenes.find(scene => scene.key === this.props.slectedSceneIndex);
     return (
-      <div style={{ height: 500 }}>
-        <Button
-          onClick={() => {
-            if (this.props.slectedGameobjectIndex) {
-              this.props.updateGame(this.props.gameObjects);
-            }
-            if (this.props.slectedSceneIndex) {
-              this.props.updateScene(this.props.scenes);
-            }
-          }}
-          variant="contained"
-          color="primary"
-          className={classes.button}
-        >
-          Build and Run
-        </Button>
-        <Button
-          onClick={() => {
-            const myWindow = window.open(`${window.location.href}game_iframe.html`, 'game');
-            myWindow.focus();
-            // if (this.props.slectedGameobjectIndex) {
-            //   this.props.updateGame(this.props.gameObjects);
-            // }
-            // if (this.props.slectedSceneIndex) {
-            //   this.props.updateScene(this.props.scenes);
-            // }
-          }}
-          variant="contained"
-          color="secondary"
-          className={classes.button}
-        >
-          Open in new tab
-        </Button>
+      <div style={{
+        width: '100%', height: '100%', marginTop: 10, paddingRight: 10,
+      }}
+      >
         <ReactBlocklyComponent.BlocklyEditor
           toolboxCategories={parseWorkspaceXml(ConfigFiles.INITIAL_TOOLBOX_XML).concat(this.props.toolboxCategories)}
           workspaceConfiguration={{
@@ -521,9 +499,11 @@ class BlocklyPart extends React.Component {
                 ? currentScene.workspace
                 : null
           }
-          wrapperDivClassName="fill-height"
+          wrapperDivClassName="fill-width-height"
           ref={(node) => {
             if (node) {
+              node.resize();
+              this.editor = node;
               if (currentScene) {
                 // this.variableListBlockUpdate(currentScene.variables);
                 this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
@@ -588,74 +568,6 @@ class BlocklyPart extends React.Component {
         >
           Upload Image
         </button>
-        <div
-          style={{
-            borderWidth: 3,
-            borderColor: 'black',
-            borderRadius: 20,
-            width: 550,
-            maxHeight: 300,
-            backgroundColor: 'grey',
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
-            overflow: 'auto',
-            minHeight: 150,
-          }}
-        >
-          {this.props.gameObjects.map(gameObject => (
-            <div
-              style={{
-                width: 100,
-                height: 100,
-                margin: 5,
-                backgroundColor:
-                  gameObject.key === this.props.slectedGameobjectIndex ? 'yellow' : 'white',
-                borderWidth: 3,
-                borderRadius: 20,
-              }}
-            >
-              <img
-                src={`assets/${gameObject.filename}`}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 20,
-                }}
-                onClick={(event) => {
-                  this.props.selectFile(event.currentTarget);
-                  this.props.setObjectMenuState(null);
-                  this.props.setObjectMenuState(event.currentTarget);
-                  this.props.setSlectedGameobjectIndex(gameObject.key);
-                  Blockly.mainWorkspace.clear();
-                  if (gameObject.workspace !== '') {
-                    const xml = Blockly.Xml.textToDom(gameObject.workspace);
-                    Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
-                  }
-                }}
-                alt={gameObject.name}
-              />
-              <Popover
-                id="simple-popper"
-                open={Boolean(this.props.objectMenuOpen)}
-                anchorEl={this.props.objectMenuOpen}
-                onClose={() => this.props.setObjectMenuState(null)}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-              >
-                <div onClick={() => this.props.setSpriteEditorState(true)}>Create Animation</div>
-                {/* <div onClick={() => this.props.setSpriteEditorState(true)}>Import JSON sprite</div> */}
-              </Popover>
-            </div>
-          ))}
-        </div>
         <SpriteEditor updateToolBoxAnimations={() => this.updateToolBox(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images)} />
         <VariableDialog />
       </div>
@@ -692,4 +604,6 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
+  null,
+  { forwardRef: true },
 )(withStyles(styles)(BlocklyPart));

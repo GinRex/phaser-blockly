@@ -2,17 +2,17 @@ import 'phaser';
 import * as Class from '../Classes';
 import key from '../keyBoardInput';
 
-class SceneName extends Phaser.Scene {
+class scene2 extends Phaser.Scene {
   constructor(props) {
     super({
-      key: 'SceneName'
+      key: 'scene2',
     });
   }
-  SceneName() {
-    Phaser.Scene.call(this, { key: 'SceneName', active: false });
+  scene2() {
+    Phaser.Scene.call(this, { key: 'scene2', active: false });
   }
 
-  preload() {}
+  preload() { }
 
   create() {
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -32,4 +32,4 @@ class SceneName extends Phaser.Scene {
   }
 }
 
-export default SceneName;
+export default scene2;

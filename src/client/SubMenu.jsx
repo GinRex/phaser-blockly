@@ -6,6 +6,9 @@ import red from '@material-ui/core/colors/red';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputBase from '@material-ui/core/InputBase';
+import SaveIcon from '@material-ui/icons/Save';
+import SettingsIcon from '@material-ui/icons/Settings';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 
 import { connect } from 'react-redux';
@@ -98,9 +101,9 @@ class SubMenu extends React.Component {
     const { classes } = this.props;
     return (
       <div >
-        <div
+        {/* <div
           style={{
-            width: 550,
+            width: '100%',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -183,10 +186,10 @@ class SubMenu extends React.Component {
           >
             New Game
           </Button>
-        </div>
+        </div> */}
         <div
           style={{
-            width: 550,
+            width: '100%',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -206,10 +209,10 @@ class SubMenu extends React.Component {
               this.props.loadGame(this.state.loadGameName);
             }}
             variant="contained"
-            color="primary"
+            color="secondary"
             className={classes.button}
           >
-            Load Project
+            <CloudDownloadIcon />
           </Button>
           <Button
             onClick={() => {
@@ -219,7 +222,19 @@ class SubMenu extends React.Component {
             color="secondary"
             className={classes.button}
           >
-            Save Project
+            <SaveIcon />
+          </Button>
+          <Button
+            onClick={() => {
+              // this.props.createNewGame(this.state);
+              // this.props.saveGame(this.state.game_name);
+              // this.props.loadListGame();
+            }}
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+          >
+            <SettingsIcon />
           </Button>
         </div>
       </div>

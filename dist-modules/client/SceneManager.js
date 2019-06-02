@@ -59,7 +59,9 @@ const SceneManager = _wrapComponent('SceneManager')(class SceneManager extends R
         name,
         workspace: '',
         jsCode: '',
-        key: name
+        key: name,
+        variables: [],
+        objects: []
       });
     };
   }
@@ -89,10 +91,8 @@ const SceneManager = _wrapComponent('SceneManager')(class SceneManager extends R
         onClick: () => {
           const promise = new Promise((resolve, reject) => {
             resolve(this.props.setSlectedSceneIndex(scene.key));
-            console.log('a');
           });
           promise.then(res => {
-            console.log('b');
             Blockly.mainWorkspace.clear();
             if (scene.workspace !== '') {
               const xml = Blockly.Xml.textToDom(scene.workspace);

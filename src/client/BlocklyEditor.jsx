@@ -104,6 +104,7 @@ class BlocklyEditor extends React.Component {
   importFromXml = xml => this.workspace.importFromXml(xml)
 
   resize = () => {
+    console.log('resize');
     this.workspace.resize();
   }
 
