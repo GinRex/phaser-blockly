@@ -182,10 +182,10 @@ class App extends Component {
                   zIndex: 10,
                 }}
               >
-                <SubHeader 
-                setClassHandler={val => this.setState({ openClassHandler: val })}
-                setSceneHandler={val => this.setState({ openSceneHandler: val })}
-                 />
+                <SubHeader
+                  setClassHandler={val => this.setState({ openClassHandler: val })}
+                  setSceneHandler={val => this.setState({ openSceneHandler: val })}
+                />
                 {this.state.openGame ?
                   (
                     <div>
@@ -230,6 +230,7 @@ class App extends Component {
               })}
             >
               <div className={classes.drawerHeader} style={{ marginTop: 50, justifyContent: 'flex-end' }}>
+
                 <IconButton
                   color="inherit"
                   aria-label="Zoom in"
@@ -246,11 +247,12 @@ class App extends Component {
                 >
                   <ZoomInIcon />
                 </IconButton>
+                {Math.floor(this.state.scaleRatio * 100)} %
                 <IconButton
                   color="inherit"
                   aria-label="Zoom out"
                   onClick={() => {
-                    const newRatio = this.state.scaleRatio - 0.1;
+                    const newRatio = (this.state.scaleRatio - 0.1 > 0) ? (this.state.scaleRatio - 0.1) : this.state.scaleRatio;
                     this.setState({
                       scaleRatio: newRatio,
                       iframeW: (1 / newRatio) * 100,

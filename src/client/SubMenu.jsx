@@ -9,6 +9,7 @@ import InputBase from '@material-ui/core/InputBase';
 import SaveIcon from '@material-ui/icons/Save';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 
 
 import { connect } from 'react-redux';
@@ -100,7 +101,16 @@ class SubMenu extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div >
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          overflow: 'auto',
+          // margin: 10,
+        }}
+      >
         {/* <div
           style={{
             width: '100%',
@@ -191,7 +201,7 @@ class SubMenu extends React.Component {
           style={{
             width: '100%',
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-start',
             alignItems: 'center',
             overflow: 'auto',
             // margin: 10,
@@ -231,10 +241,22 @@ class SubMenu extends React.Component {
               // this.props.loadListGame();
             }}
             variant="contained"
-            color="secondary"
+            color="inherit"
             className={classes.button}
           >
             <SettingsIcon />
+          </Button>
+        </div>
+        <div>
+          <Button
+            onClick={() => {
+              this.props.saveGame(this.state.loadGameName);
+            }}
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+          >
+            <CreateNewFolderIcon />
           </Button>
         </div>
       </div>
