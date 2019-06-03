@@ -8,4 +8,6 @@ Clone this repository, and then inside it, do:
 npm install
 npm run dev
 ```
-![pv](https://i.imgur.com/w5JUSle.png)
+Choose Project then click "Download" button
+
+![pv](https://i.imgur.com/8iszcgB.png)
