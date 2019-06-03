@@ -72,7 +72,6 @@ class BlocklyToolbox extends React.Component {
 
   render = () => {
     if (this.props.categories) {
-      console.log(this.props.categories);
       return (
         <xml
           style={{ display: 'none' }}

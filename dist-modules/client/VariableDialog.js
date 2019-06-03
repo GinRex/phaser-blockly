@@ -129,56 +129,6 @@ const VariableDialog = _wrapComponent('VariableDialog')(class VariableDialog ext
             fullWidth: true,
             value: this.state.variableName,
             onChange: event => this.setState({ variableName: event.target.value })
-          }),
-          React.createElement(TextField, {
-            autoFocus: true,
-            margin: 'dense',
-            id: 'name',
-            label: 'x',
-            type: 'number',
-            fullWidth: true,
-            value: this.state.x,
-            onChange: event => this.setState({ x: event.target.value })
-          }),
-          React.createElement(TextField, {
-            autoFocus: true,
-            margin: 'dense',
-            id: 'name',
-            label: 'y',
-            type: 'number',
-            fullWidth: true,
-            value: this.state.y,
-            onChange: event => this.setState({ y: event.target.value })
-          }),
-          React.createElement(TextField, {
-            autoFocus: true,
-            margin: 'dense',
-            id: 'name',
-            label: 'width',
-            type: 'number',
-            fullWidth: true,
-            value: this.state.w,
-            onChange: event => this.setState({ w: event.target.value })
-          }),
-          React.createElement(TextField, {
-            autoFocus: true,
-            margin: 'dense',
-            id: 'name',
-            label: 'height',
-            type: 'number',
-            fullWidth: true,
-            value: this.state.h,
-            onChange: event => this.setState({ h: event.target.value })
-          }),
-          React.createElement(TextField, {
-            autoFocus: true,
-            margin: 'dense',
-            id: 'name',
-            label: 'order (to camera)',
-            type: 'number',
-            fullWidth: true,
-            value: this.state.order,
-            onChange: event => this.setState({ order: event.target.value })
           })
         ),
         React.createElement(
@@ -197,17 +147,17 @@ const VariableDialog = _wrapComponent('VariableDialog')(class VariableDialog ext
                 const promise = new Promise((resolve, reject) => {
                   resolve(this.props.addInstance({
                     variableName: this.state.variableName,
-                    class: this.props.variableDialogOpen.name,
-                    x: this.state.x,
-                    y: this.state.y,
-                    w: this.state.w,
-                    h: this.state.h,
-                    order: this.state.order
+                    class: this.props.variableDialogOpen.name
+                    // x: this.state.x,
+                    // y: this.state.y,
+                    // w: this.state.w,
+                    // h: this.state.h,
+                    // order: this.state.order,
                   }, this.props.slectedSceneIndex));
                 });
                 promise.then(res => {
-                  const currentScene = this.props.scenes.find(scene => scene.key === this.props.slectedSceneIndex);
-                  this.props.addInstancesToScene(currentScene);
+                  // const currentScene = this.props.scenes.find(scene => scene.key === this.props.slectedSceneIndex);
+                  // this.props.addInstancesToScene(currentScene);
                   this.props.setVariableDialogState(null);
                 });
               },

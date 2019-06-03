@@ -52,8 +52,8 @@ export const uploadImage = file => dispatch => {
     dispatch(addObject({
       name: res.data.name,
       filename: res.data.filename,
-      workspace: '',
-      jsCode: '',
+      workspace: ['', '', ''],
+      jsCode: ['', '', ''],
       key: res.data.name,
       animations: [],
       variables: [],
@@ -187,6 +187,7 @@ export const addInstance = (instance, name) => ({
   data: { name, instance }
 });
 
+// delete this
 export const addInstancesToScene = scene => dispatch => {
   const data = scene;
   return axios.post('http://localhost:8080/api/initObject', data, {}).then(res => {

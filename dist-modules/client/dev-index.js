@@ -32,12 +32,12 @@ function _wrapComponent(id) {
 
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
-import ArrowDropDownCircle from '@material-ui/icons/ArrowDropDownCircle';
-import Popover from '@material-ui/core/Popover';
 import { connect } from 'react-redux';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PublicIcon from '@material-ui/icons/Public';
+import StartIcon from '@material-ui/icons/ChangeHistory';
+import UpdateIcon from '@material-ui/icons/Cached';
 
 import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
@@ -57,9 +57,13 @@ const BlocklyPart = _wrapComponent('BlocklyPart')(class BlocklyPart extends Reac
   constructor(props) {
     super(props);
     this.state = {
-      top: false,
-      down: false,
-      right: false
+      gameState: 0
+    };
+
+    this.resizeEditor = () => {
+      if (this.editor.current) {
+        this.editor.current.resize();
+      }
     };
 
     this.onChangeHandler = event => {
@@ -308,7 +312,7 @@ const BlocklyPart = _wrapComponent('BlocklyPart')(class BlocklyPart extends Reac
       return xmlList;
     };
 
-    this.workspaceDidChange = (workspace, gameObjects, slectedGameobjectIndex, scenes, slectedSceneIndex, images) => {
+    this.workspaceDidChange = (workspace, gameObjects, slectedGameobjectIndex, scenes, slectedSceneIndex, images, gameState) => {
       Blockly.JavaScript.game_state = function (block) {
         const statements_event_code = Blockly.JavaScript.statementToCode(block, 'GAME_CODE');
         const dropdown_event = block.getFieldValue('GAME_STATE');
@@ -366,8 +370,8 @@ const BlocklyPart = _wrapComponent('BlocklyPart')(class BlocklyPart extends Reac
       const code = Blockly.JavaScript.workspaceToCode(workspace);
       const currentGameobject = gameObjects && slectedGameobjectIndex && gameObjects.find(gameObject => gameObject.key === slectedGameobjectIndex);
       if (currentGameobject) {
-        currentGameobject.workspace = newXml;
-        currentGameobject.jsCode = code;
+        currentGameobject.workspace[gameState] = newXml;
+        currentGameobject.jsCode[gameState] = code;
 
         const newGameObjects = gameObjects;
         const index = newGameObjects.findIndex(gameObject => gameObject.key === slectedGameobjectIndex);
@@ -377,8 +381,8 @@ const BlocklyPart = _wrapComponent('BlocklyPart')(class BlocklyPart extends Reac
       }
       const currentScene = scenes && slectedSceneIndex && scenes.find(scene => scene.key === slectedSceneIndex);
       if (currentScene) {
-        currentScene.workspace = newXml;
-        currentScene.jsCode = code;
+        currentScene.workspace[gameState] = newXml;
+        currentScene.jsCode[gameState] = code;
 
         const newScenes = scenes;
         const index = newScenes.findIndex(scene => scene.key === slectedSceneIndex);
@@ -389,6 +393,7 @@ const BlocklyPart = _wrapComponent('BlocklyPart')(class BlocklyPart extends Reac
       document.getElementById('code').value = code;
     };
 
+    this.editor = React.createRef();
     this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
   }
 
@@ -405,137 +410,33 @@ const BlocklyPart = _wrapComponent('BlocklyPart')(class BlocklyPart extends Reac
     const currentScene = this.props.scenes.find(scene => scene.key === this.props.slectedSceneIndex);
     return React.createElement(
       'div',
-      { style: { height: 500 } },
+      { style: {
+          width: '100%', height: '80%', marginTop: 10, paddingRight: 10
+        }
+      },
       React.createElement(
-        Fab,
+        Tabs,
         {
-          variant: 'extended',
-          color: 'primary',
-          'aria-label': 'Add',
-          style: {
-            width: 150, position: 'absolute', top: 0, left: 0, right: 0, marginLeft: 'auto', marginRight: 'auto'
-          },
-          onClick: () => this.setState({ top: true })
-        },
-        React.createElement(ArrowDropDownCircle, null),
-        'Class'
-      ),
-      React.createElement(
-        Button,
-        {
-          onClick: () => {
-            if (this.props.slectedGameobjectIndex) {
-              this.props.updateGame(this.props.gameObjects);
+          value: this.state.gameState,
+          onChange: (event, value) => {
+            Blockly.mainWorkspace.clear();
+            if (currentScene && currentScene.workspace[value] !== '') {
+              const xml = Blockly.Xml.textToDom(currentScene.workspace[value]);
+              Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
             }
-            if (this.props.slectedSceneIndex) {
-              this.props.updateScene(this.props.scenes);
+            if (currentGameobject && currentGameobject.workspace[value] !== '') {
+              const xml = Blockly.Xml.textToDom(currentGameobject.workspace[value]);
+              Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
             }
+            this.setState({ gameState: value });
           },
-          variant: 'contained',
-          color: 'primary',
-          className: classes.button
+          variant: 'fullWidth',
+          indicatorColor: 'secondary',
+          textColor: 'secondary'
         },
-        'Build and Run'
-      ),
-      React.createElement(
-        Button,
-        {
-          onClick: () => {
-            const myWindow = window.open(`${window.location.href}game_iframe.html`, 'game');
-            myWindow.focus();
-            // if (this.props.slectedGameobjectIndex) {
-            //   this.props.updateGame(this.props.gameObjects);
-            // }
-            // if (this.props.slectedSceneIndex) {
-            //   this.props.updateScene(this.props.scenes);
-            // }
-          },
-          variant: 'contained',
-          color: 'secondary',
-          className: classes.button
-        },
-        'Open in new tab'
-      ),
-      React.createElement(
-        SwipeableDrawer,
-        {
-          anchor: 'top',
-          open: this.state.top,
-          onClose: () => this.setState({ top: false }),
-          onOpen: () => this.setState({ top: true })
-        },
-        React.createElement(
-          'div',
-          {
-            style: {
-              width: '100%',
-              maxHeight: 300,
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              overflow: 'auto',
-              minHeight: 150
-            }
-          },
-          this.props.gameObjects.map(gameObject => React.createElement(
-            'div',
-            {
-              style: {
-                width: 100,
-                height: 100,
-                margin: 5,
-                backgroundColor: gameObject.key === this.props.slectedGameobjectIndex ? 'yellow' : 'white',
-                borderWidth: 3,
-                borderStyle: 'solid',
-                borderColor: 'black',
-                borderRadius: 20
-              }
-            },
-            React.createElement('img', {
-              src: `assets/${gameObject.filename}`,
-              style: {
-                width: 95,
-                height: 95,
-                borderRadius: 20
-              },
-              onClick: event => {
-                this.props.selectFile(event.currentTarget);
-                this.props.setObjectMenuState(null);
-                this.props.setObjectMenuState(event.currentTarget);
-                this.props.setSlectedGameobjectIndex(gameObject.key);
-                Blockly.mainWorkspace.clear();
-                if (gameObject.workspace !== '') {
-                  const xml = Blockly.Xml.textToDom(gameObject.workspace);
-                  Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
-                }
-              },
-              alt: gameObject.name
-            }),
-            React.createElement(
-              Popover,
-              {
-                id: 'simple-popper',
-                open: Boolean(this.props.objectMenuOpen),
-                anchorEl: this.props.objectMenuOpen,
-                onClose: () => this.props.setObjectMenuState(null),
-                anchorOrigin: {
-                  vertical: 'bottom',
-                  horizontal: 'center'
-                },
-                transformOrigin: {
-                  vertical: 'top',
-                  horizontal: 'center'
-                }
-              },
-              React.createElement(
-                'div',
-                { onClick: () => this.props.setSpriteEditorState(true) },
-                'Create Animation'
-              )
-            )
-          ))
-        )
+        React.createElement(Tab, { icon: React.createElement(PublicIcon, null), label: 'Public' }),
+        React.createElement(Tab, { icon: React.createElement(StartIcon, null), label: 'Start' }),
+        React.createElement(Tab, { icon: React.createElement(UpdateIcon, null), label: 'Update' })
       ),
       React.createElement(ReactBlocklyComponent.BlocklyEditor, {
         toolboxCategories: parseWorkspaceXml(ConfigFiles.INITIAL_TOOLBOX_XML).concat(this.props.toolboxCategories),
@@ -555,10 +456,12 @@ const BlocklyPart = _wrapComponent('BlocklyPart')(class BlocklyPart extends Reac
             scaleSpeed: 1.2
           }
         },
-        initialXml: this.props.gameObjects.length !== 0 && currentGameobject && currentGameobject.workspace ? currentGameobject.workspace : this.props.scenes.length !== 0 && currentScene && currentScene.workspace ? currentScene.workspace : null,
-        wrapperDivClassName: 'fill-height',
+        initialXml: this.props.gameObjects.length !== 0 && currentGameobject && currentGameobject.workspace[this.state.gameState] !== '' ? currentGameobject.workspace[this.state.gameState] : this.props.scenes.length !== 0 && currentScene && currentScene.workspace[this.state.gameState] !== '' ? currentScene.workspace[this.state.gameState] : '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>',
+        wrapperDivClassName: 'fill-width-height',
         ref: node => {
           if (node) {
+            node.resize();
+            this.editor = node;
             if (currentScene) {
               // this.variableListBlockUpdate(currentScene.variables);
               this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
@@ -574,7 +477,7 @@ const BlocklyPart = _wrapComponent('BlocklyPart')(class BlocklyPart extends Reac
           }
         },
         workspaceDidChange: workspace => {
-          this.workspaceDidChange(workspace, this.props.gameObjects, this.props.slectedGameobjectIndex, this.props.scenes, this.props.slectedSceneIndex, this.props.images);
+          this.workspaceDidChange(workspace, this.props.gameObjects, this.props.slectedGameobjectIndex, this.props.scenes, this.props.slectedSceneIndex, this.props.images, this.state.gameState);
           workspace.refreshToolboxSelection();
         }
       }),
@@ -651,4 +554,4 @@ const mapDispatchToProps = {
   setVariableDialogState
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(BlocklyPart));
+export default connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(withStyles(styles)(BlocklyPart));

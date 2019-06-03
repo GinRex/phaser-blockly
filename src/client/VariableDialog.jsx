@@ -86,7 +86,7 @@ class VariableDialog extends React.Component {
                 value={this.state.variableName}
                 onChange={event => this.setState({ variableName: event.target.value })}
               />
-              <TextField
+              {/* <TextField
                 autoFocus
                 margin="dense"
                 id="name"
@@ -135,7 +135,7 @@ class VariableDialog extends React.Component {
                 fullWidth
                 value={this.state.order}
                 onChange={event => this.setState({ order: event.target.value })}
-              />
+              /> */}
             </DialogContent>
             <DialogActions>
               <Button onClick={() => this.props.setVariableDialogState(null)} color="primary">
@@ -148,16 +148,16 @@ class VariableDialog extends React.Component {
                     resolve(this.props.addInstance({
                       variableName: this.state.variableName,
                       class: this.props.variableDialogOpen.name,
-                      x: this.state.x,
-                      y: this.state.y,
-                      w: this.state.w,
-                      h: this.state.h,
-                      order: this.state.order,
+                      // x: this.state.x,
+                      // y: this.state.y,
+                      // w: this.state.w,
+                      // h: this.state.h,
+                      // order: this.state.order,
                     }, this.props.slectedSceneIndex));
                   });
                   promise.then((res) => {
-                    const currentScene = this.props.scenes.find(scene => scene.key === this.props.slectedSceneIndex);
-                    this.props.addInstancesToScene(currentScene);
+                    // const currentScene = this.props.scenes.find(scene => scene.key === this.props.slectedSceneIndex);
+                    // this.props.addInstancesToScene(currentScene);
                     this.props.setVariableDialogState(null);
                   });
                 }

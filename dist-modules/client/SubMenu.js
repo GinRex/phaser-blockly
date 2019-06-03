@@ -2,6 +2,9 @@ import _UsersMacPhaserBlocklyNode_modulesRedboxReactLibIndexJs from '/Users/mac/
 import _UsersMacPhaserBlocklyNode_modulesReactTransformCatchErrorsLibIndexJs from '/Users/mac/phaser-blockly/node_modules/react-transform-catch-errors/lib/index.js';
 import _react from 'react';
 import _UsersMacPhaserBlocklyNode_modulesReactTransformHmrLibIndexJs from '/Users/mac/phaser-blockly/node_modules/react-transform-hmr/lib/index.js';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 const _components = {
   SubMenu: {
     displayName: 'SubMenu'
@@ -36,6 +39,16 @@ import red from '@material-ui/core/colors/red';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputBase from '@material-ui/core/InputBase';
+import SaveIcon from '@material-ui/icons/Save';
+import SettingsIcon from '@material-ui/icons/Settings';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
+import DoneIcon from '@material-ui/icons/Done';
+
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import Grow from '@material-ui/core/Grow';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import { connect } from 'react-redux';
 
@@ -62,6 +75,9 @@ const BootstrapInput = withStyles(theme => ({
       borderRadius: 4,
       borderColor: '#80bdff',
       boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)'
+    },
+    paper: {
+      marginRight: 15
     }
   }
 }))(InputBase);
@@ -105,8 +121,10 @@ const SubMenu = _wrapComponent('SubMenu')(class SubMenu extends React.Component 
       game_name: '',
       width: 500,
       height: 400,
-      loadGameName: ''
+      loadGameName: '',
+      createOpen: false
     };
+    this.newGameBtn = React.createRef();
   }
   componentDidMount() {
     this.props.loadListGame();
@@ -116,118 +134,23 @@ const SubMenu = _wrapComponent('SubMenu')(class SubMenu extends React.Component 
     const { classes } = this.props;
     return React.createElement(
       'div',
-      null,
+      {
+        style: {
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          overflow: 'auto'
+          // margin: 10,
+        }
+      },
       React.createElement(
         'div',
         {
           style: {
-            width: 550,
+            width: '100%',
             display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            overflow: 'auto'
-            // margin: 10,
-          }
-        },
-        React.createElement(TextField, {
-          className: classes.margin,
-          InputLabelProps: {
-            classes: {
-              root: classes.cssLabel,
-              focused: classes.cssFocused
-            }
-          },
-          InputProps: {
-            classes: {
-              root: classes.cssOutlinedInput,
-              focused: classes.cssFocused,
-              notchedOutline: classes.notchedOutline
-            }
-          },
-          label: 'Name',
-          variant: 'outlined',
-          id: 'custom-css-outlined-input',
-          value: this.state.game_name,
-          onChange: event => this.setState({ game_name: event.target.value })
-        }),
-        React.createElement(TextField, {
-          className: classes.margin,
-          InputLabelProps: {
-            classes: {
-              root: classes.cssLabel,
-              focused: classes.cssFocused
-            }
-          },
-          InputProps: {
-            classes: {
-              root: classes.cssOutlinedInput,
-              focused: classes.cssFocused,
-              notchedOutline: classes.notchedOutline
-            }
-          },
-          label: 'Width',
-          variant: 'outlined',
-          id: 'custom-css-outlined-input',
-          value: this.state.width,
-          onChange: event => this.setState({ width: event.target.value })
-        }),
-        React.createElement(TextField, {
-          className: classes.margin,
-          InputLabelProps: {
-            classes: {
-              root: classes.cssLabel,
-              focused: classes.cssFocused
-            }
-          },
-          InputProps: {
-            classes: {
-              root: classes.cssOutlinedInput,
-              focused: classes.cssFocused,
-              notchedOutline: classes.notchedOutline
-            }
-          },
-          label: 'Height',
-          variant: 'outlined',
-          id: 'custom-css-outlined-input',
-          value: this.state.height,
-          onChange: event => this.setState({ height: event.target.value })
-        }),
-        React.createElement(
-          Button,
-          {
-            onClick: () => {
-              this.props.createNewGame(this.state);
-              // this.props.saveGame(this.state.game_name);
-              // this.props.loadListGame();
-            },
-            variant: 'contained',
-            color: 'primary',
-            className: classes.button
-          },
-          'New Game'
-        ),
-        React.createElement(
-          Button,
-          {
-            onClick: () => {
-              // this.props.createNewGame(this.state);
-              // this.props.saveGame(this.state.game_name);
-              // this.props.loadListGame();
-            },
-            variant: 'contained',
-            color: 'primary',
-            className: classes.button
-          },
-          'Game Setting'
-        )
-      ),
-      React.createElement(
-        'div',
-        {
-          style: {
-            width: 550,
-            display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-start',
             alignItems: 'center',
             overflow: 'auto'
             // margin: 10,
@@ -254,10 +177,10 @@ const SubMenu = _wrapComponent('SubMenu')(class SubMenu extends React.Component 
               this.props.loadGame(this.state.loadGameName);
             },
             variant: 'contained',
-            color: 'primary',
+            color: 'secondary',
             className: classes.button
           },
-          'Load Project'
+          React.createElement(CloudDownloadIcon, null)
         ),
         React.createElement(
           Button,
@@ -269,7 +192,155 @@ const SubMenu = _wrapComponent('SubMenu')(class SubMenu extends React.Component 
             color: 'secondary',
             className: classes.button
           },
-          'Save Project'
+          React.createElement(SaveIcon, null)
+        ),
+        React.createElement(
+          Button,
+          {
+            onClick: () => {
+              // this.props.createNewGame(this.state);
+              // this.props.saveGame(this.state.game_name);
+              // this.props.loadListGame();
+            },
+            variant: 'contained',
+            color: 'inherit',
+            className: classes.button
+          },
+          React.createElement(SettingsIcon, null)
+        )
+      ),
+      React.createElement(
+        'div',
+        null,
+        React.createElement(
+          Button,
+          {
+            onClick: () => {
+              this.setState({ createOpen: true });
+            },
+            variant: 'contained',
+            color: 'secondary',
+            className: classes.button,
+            ref: node => {
+              if (node) {
+                this.newGameBtn = node;
+              }
+            }
+          },
+          React.createElement(CreateNewFolderIcon, null)
+        ),
+        React.createElement(
+          Popper,
+          { open: this.state.createOpen, anchorEl: this.newGameBtn.current, transition: true, disablePortal: true },
+          ({ TransitionProps, placement }) => React.createElement(
+            Grow,
+            _extends({}, TransitionProps, {
+              style: { transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }
+            }),
+            React.createElement(
+              Paper,
+              { id: 'menu-list-grow' },
+              React.createElement(
+                ClickAwayListener,
+                { onClickAway: () => this.setState({ createOpen: false }) },
+                React.createElement(
+                  Paper,
+                  { className: classes.paper, style: { width: 200, marginLeft: -120 } },
+                  React.createElement(
+                    'div',
+                    {
+                      style: {
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        overflow: 'auto'
+                        // margin: 10,
+                      }
+                    },
+                    React.createElement(TextField, {
+                      className: classes.margin,
+                      InputLabelProps: {
+                        classes: {
+                          root: classes.cssLabel,
+                          focused: classes.cssFocused
+                        }
+                      },
+                      InputProps: {
+                        classes: {
+                          root: classes.cssOutlinedInput,
+                          focused: classes.cssFocused,
+                          notchedOutline: classes.notchedOutline
+                        }
+                      },
+                      label: 'Name',
+                      variant: 'outlined',
+                      id: 'custom-css-outlined-input',
+                      value: this.state.game_name,
+                      onChange: event => this.setState({ game_name: event.target.value })
+                    }),
+                    React.createElement(TextField, {
+                      className: classes.margin,
+                      InputLabelProps: {
+                        classes: {
+                          root: classes.cssLabel,
+                          focused: classes.cssFocused
+                        }
+                      },
+                      InputProps: {
+                        classes: {
+                          root: classes.cssOutlinedInput,
+                          focused: classes.cssFocused,
+                          notchedOutline: classes.notchedOutline
+                        }
+                      },
+                      label: 'Width',
+                      variant: 'outlined',
+                      id: 'custom-css-outlined-input',
+                      value: this.state.width,
+                      onChange: event => this.setState({ width: event.target.value })
+                    }),
+                    React.createElement(TextField, {
+                      className: classes.margin,
+                      InputLabelProps: {
+                        classes: {
+                          root: classes.cssLabel,
+                          focused: classes.cssFocused
+                        }
+                      },
+                      InputProps: {
+                        classes: {
+                          root: classes.cssOutlinedInput,
+                          focused: classes.cssFocused,
+                          notchedOutline: classes.notchedOutline
+                        }
+                      },
+                      label: 'Height',
+                      variant: 'outlined',
+                      id: 'custom-css-outlined-input',
+                      value: this.state.height,
+                      onChange: event => this.setState({ height: event.target.value })
+                    }),
+                    React.createElement(
+                      Button,
+                      {
+                        onClick: () => {
+                          this.props.createNewGame(this.state);
+                          // this.props.saveGame(this.state.game_name);
+                          // this.props.loadListGame();
+                        },
+                        variant: 'contained',
+                        color: 'primary',
+                        className: classes.button
+                      },
+                      React.createElement(DoneIcon, null)
+                    )
+                  )
+                )
+              )
+            )
+          )
         )
       )
     );

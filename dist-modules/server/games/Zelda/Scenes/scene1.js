@@ -2,14 +2,14 @@ import 'phaser';
 import * as Class from '../Classes';
 import key from '../keyBoardInput';
 
-class SceneName extends Phaser.Scene {
+class scene1 extends Phaser.Scene {
   constructor(props) {
     super({
-      key: 'SceneName'
+      key: 'scene1'
     });
   }
-  SceneName() {
-    Phaser.Scene.call(this, { key: 'SceneName', active: false });
+  scene1() {
+    Phaser.Scene.call(this, { key: 'scene1', active: false });
   }
 
   preload() {
@@ -23,16 +23,20 @@ class SceneName extends Phaser.Scene {
 
   create() {
     // create start
+    this.score = this.add.text(100, 100, '0');
+    this.i = 0;
 
     // create end
   }
 
   update() {
     // update start
+    this.i = this.i + 1;
+    this.score.setText(this.i);
 
     // update end
   }
 
 }
 
-export default SceneName;
+export default scene1;

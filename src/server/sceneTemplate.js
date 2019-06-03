@@ -12,24 +12,29 @@ class SceneName extends Phaser.Scene {
     Phaser.Scene.call(this, { key: 'SceneName', active: false });
   }
 
-  preload() { }
+  preload() {
+    this.cursors = this.input.keyboard.createCursorKeys();
+  }
+
+  // functions start
+
+  // functions end
+
 
   create() {
-    this.cursors = this.input.keyboard.createCursorKeys();
-    // create instances start
+    // create start
 
-    // create instances end
-
-    // game state start
+    // create end
   }
+
+
 
   update() {
-    // game state end
+    // update start
 
-    // update object start
-
-    // update object end
+    // update end
   }
+
 }
 
 export default SceneName;

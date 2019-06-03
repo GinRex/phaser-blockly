@@ -3,7 +3,7 @@ import 'phaser';
 class boot extends Phaser.Scene {
   constructor(props) {
     super({
-      key: 'boot',
+      key: 'boot'
     });
   }
   preload() {
@@ -15,8 +15,8 @@ class boot extends Phaser.Scene {
       text: 'Loading...',
       style: {
         font: '20px monospace',
-        fill: '#ffffff',
-      },
+        fill: '#ffffff'
+      }
     });
     loadingText.setOrigin(0.5, 0.5);
     const progressBar = this.add.graphics();
@@ -24,17 +24,15 @@ class boot extends Phaser.Scene {
     progressBox.fillStyle(0x222222, 0.8);
     progressBox.fillRect(width / 4, height / 2, width / 2, height / 12);
 
-// load asset for Enemy
-this.load.image('Enemy', 'assets/enemy.png');
-// load asset for Background
-this.load.image('Background', 'assets/background.jpg');
+    // load asset for Ball
+    this.load.image('Ball', 'assets/ball.png');
     // launch scene start
-    this.load.on('progress', (value) => {
+    this.load.on('progress', value => {
       progressBar.clear();
       progressBar.fillStyle(0xffffff, 1);
-      progressBar.fillRect(width / 4, height / 2, (width / 2) * value, height / 12);
+      progressBar.fillRect(width / 4, height / 2, width / 2 * value, height / 12);
     });
-    this.load.on('fileprogress', (file) => {
+    this.load.on('fileprogress', file => {
       console.log(file.src);
     });
     this.load.on('complete', () => {

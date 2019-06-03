@@ -194,7 +194,6 @@ class App extends Component {
                       </IconButton>
                       <IconButton onClick={() => {
                         this.setState({ openGame: false });
-                        console.log(this.blockly.editor);
                         this.blockly.editor.resize();
                       }}
                       >
@@ -215,7 +214,7 @@ class App extends Component {
               </div>
               <Blockly innerRef={(node) => {
                 if (node) {
-                  this.blockly = node; console.log(this.blockly);
+                  this.blockly = node;
                 }
               }}
               />

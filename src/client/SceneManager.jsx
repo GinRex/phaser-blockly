@@ -28,8 +28,8 @@ class SceneManager extends React.Component {
     const name = `scene${nextScene}`;
     this.props.addScene({
       name,
-      workspace: '',
-      jsCode: '',
+      workspace: ['', '', ''],
+      jsCode: ['', '', ''],
       key: name,
       variables: [],
       objects: [],

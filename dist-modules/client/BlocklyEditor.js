@@ -63,6 +63,7 @@ class BlocklyEditor extends React.Component {
         this.props.workspaceDidChange(workspace);
       }
     }, this.importFromXml = xml => this.workspace.importFromXml(xml), this.resize = () => {
+      console.log('resize');
       this.workspace.resize();
     }, this.render = () => {
       let toolboxMode;

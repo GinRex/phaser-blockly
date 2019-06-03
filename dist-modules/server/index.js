@@ -25,7 +25,6 @@ const storage = multer.diskStorage({
     cb(null, 'public/assets');
   },
   filename(req, file, cb) {
-    console.log(req, file);
     cb(null, `${file.originalname}`);
   }
 });
@@ -42,7 +41,6 @@ app.post('/api/loadListGame', (req, res) => {
 });
 
 app.post('/api/saveGame', (req, res) => {
-  // console.log(req.body);
   const GAME_NAME = req.body.gameName;
   const gameData = req.body.data;
   const gameDir = `${__dirname}/games/${GAME_NAME}`;
@@ -50,7 +48,6 @@ app.post('/api/saveGame', (req, res) => {
   try {
     if (fs.existsSync(gameDir)) {
       fse.remove(gameDir, err => {
-        console.log('a', err);
         fs.mkdirSync(gameDir);
         // copy game.jsx file
         fse.copySync(`${gameRoot}/Game.jsx`, `${gameDir}/Game.jsx`);
@@ -66,12 +63,10 @@ app.post('/api/saveGame', (req, res) => {
 
         const classes = getFilesFromDirectorie(`${gameRoot}/Classes`);
         classes.forEach(classFile => {
-          console.log(classFile);
           fse.copySync(`${gameRoot}/Classes/${classFile}`, `${classesFolder}/${classFile}`);
         });
         const scenes = getFilesFromDirectorie(`${gameRoot}/Scenes`);
         scenes.forEach(sceneFile => {
-          console.log(sceneFile);
           fse.copySync(`${gameRoot}/Scenes/${sceneFile}`, `${scenesFolder}/${sceneFile}`);
         });
       });
@@ -83,7 +78,6 @@ app.post('/api/saveGame', (req, res) => {
 });
 
 app.post('/api/loadGame', (req, res) => {
-  // console.log(req.body);
   const GAME_NAME = req.body.gameName;
   const gameRoot = `${__dirname}/games/${GAME_NAME}`;
   const gameDir = `${__dirname}/../Game`;
@@ -98,7 +92,6 @@ app.post('/api/loadGame', (req, res) => {
         fs.mkdirSync(scenesFolder);
         const scenes = getFilesFromDirectorie(`${gameRoot}/Scenes`);
         scenes.forEach(sceneFile => {
-          console.log(sceneFile);
           fse.copySync(`${gameRoot}/Scenes/${sceneFile}`, `${scenesFolder}/${sceneFile}`);
         });
       });
@@ -106,7 +99,6 @@ app.post('/api/loadGame', (req, res) => {
         fs.mkdirSync(classesFolder);
         const classes = getFilesFromDirectorie(`${gameRoot}/Classes`);
         classes.forEach(classFile => {
-          console.log(classFile);
           fse.copySync(`${gameRoot}/Classes/${classFile}`, `${classesFolder}/${classFile}`);
         });
       });
@@ -119,7 +111,6 @@ app.post('/api/loadGame', (req, res) => {
 });
 
 app.post('/api/uploadImage', (req, res) => {
-  // console.log(req);
   // if (!req.file) {
   //   return res.status(404).send('file not found');
   // }
@@ -168,7 +159,6 @@ app.post('/api/uploadImage', (req, res) => {
 });
 
 app.post('/api/uploadImageForTile', (req, res) => {
-  // console.log(req);
   // if (!req.file) {
   //   return res.status(404).send('file not found');
   // }
@@ -206,7 +196,6 @@ app.post('/api/uploadJson', (req, res) => {
       return res.status(500).json(err);
     }
 
-    // console.log(req.file);
     req.file.name = capitalize(path.parse(req.file.filename).name);
 
     // load image to loader
@@ -447,9 +436,15 @@ app.post('/api/updateCode', (req, res) => {
     const objectName = `${__dirname}/../Game/Classes/${object.name}.jsx`;
     try {
       const data = fs.readFileSync(objectName).toString().split('\n');
-      const updateEndIndex = data.indexOf('  // code end');
-      const updateStartIndex = data.indexOf('    // code start');
-      data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, object.jsCode);
+      const updateEndIndex = data.indexOf('    // update end');
+      const updateStartIndex = data.indexOf('    // update start');
+      data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, object.jsCode[2]);
+      const createEndIndex = data.indexOf('    // create end');
+      const createStartIndex = data.indexOf('    // create start');
+      data.splice(createStartIndex + 1, createEndIndex - createStartIndex - 1, object.jsCode[1]);
+      const functionsEndIndex = data.indexOf('  // functions end');
+      const functionsStartIndex = data.indexOf('  // functions start');
+      data.splice(functionsStartIndex + 1, functionsEndIndex - functionsStartIndex - 1, object.jsCode[0]);
       const text = data.join('\n');
       fs.writeFile(`${objectName}`, text, err => {
         console.log(err);
@@ -467,9 +462,15 @@ app.post('/api/updateSceneCode', (req, res) => {
     const sceneName = `${__dirname}/../Game/Scenes/${scene.name}.jsx`;
     try {
       const data = fs.readFileSync(sceneName).toString().split('\n');
-      const updateEndIndex = data.indexOf('    // game state end');
-      const updateStartIndex = data.indexOf('    // game state start');
-      data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, scene.jsCode);
+      const functionsEndIndex = data.indexOf('  // functions end');
+      const functionStartIndex = data.indexOf('  // functions start');
+      data.splice(functionStartIndex + 1, functionsEndIndex - functionStartIndex - 1, scene.jsCode[0]);
+      const createEndIndex = data.indexOf('    // create end');
+      const createStartIndex = data.indexOf('    // create start');
+      data.splice(createStartIndex + 1, createEndIndex - createStartIndex - 1, scene.jsCode[1]);
+      const updateEndIndex = data.indexOf('    // update end');
+      const updateStartIndex = data.indexOf('    // update start');
+      data.splice(updateStartIndex + 1, updateEndIndex - updateStartIndex - 1, scene.jsCode[2]);
       const text = data.join('\n');
       fs.writeFile(`${sceneName}`, text, err => {
         console.log(err);
@@ -482,9 +483,9 @@ app.post('/api/updateSceneCode', (req, res) => {
   // const gameObjects = req.data.gameObjects
 });
 
+// delete this
 app.post('/api/initObject', (req, res) => {
   const scene = req.body;
-  console.log(scene);
   const sceneName = `${__dirname}/../Game/Scenes/${scene.name}.jsx`;
   try {
     const data = fs.readFileSync(sceneName).toString().split('\n');

@@ -3,6 +3,13 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PublicIcon from '@material-ui/icons/Public';
+import StartIcon from '@material-ui/icons/ChangeHistory';
+import UpdateIcon from '@material-ui/icons/Cached';
+
+
 import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
 import ReactBlocklyComponent from './index';
@@ -37,12 +44,14 @@ class BlocklyPart extends React.Component {
     this.editor = React.createRef();
     this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
   }
+  state = {
+    gameState: 0,
+  }
   componentDidMount() {
     this.updateToolBox(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
   }
 
   resizeEditor = () => {
-    console.log(this.editor);
     if (this.editor.current) {
       this.editor.current.resize();
     }
@@ -375,6 +384,7 @@ class BlocklyPart extends React.Component {
     scenes,
     slectedSceneIndex,
     images,
+    gameState,
   ) => {
     Blockly.JavaScript.game_state = function (block) {
       const statements_event_code = Blockly.JavaScript.statementToCode(block, 'GAME_CODE');
@@ -440,8 +450,8 @@ class BlocklyPart extends React.Component {
       slectedGameobjectIndex &&
       gameObjects.find(gameObject => gameObject.key === slectedGameobjectIndex);
     if (currentGameobject) {
-      currentGameobject.workspace = newXml;
-      currentGameobject.jsCode = code;
+      currentGameobject.workspace[gameState] = newXml;
+      currentGameobject.jsCode[gameState] = code;
 
       const newGameObjects = gameObjects;
       const index = newGameObjects.findIndex(gameObject => gameObject.key === slectedGameobjectIndex);
@@ -452,8 +462,8 @@ class BlocklyPart extends React.Component {
     const currentScene =
       scenes && slectedSceneIndex && scenes.find(scene => scene.key === slectedSceneIndex);
     if (currentScene) {
-      currentScene.workspace = newXml;
-      currentScene.jsCode = code;
+      currentScene.workspace[gameState] = newXml;
+      currentScene.jsCode[gameState] = code;
 
       const newScenes = scenes;
       const index = newScenes.findIndex(scene => scene.key === slectedSceneIndex);
@@ -470,9 +480,31 @@ class BlocklyPart extends React.Component {
     const currentScene = this.props.scenes.find(scene => scene.key === this.props.slectedSceneIndex);
     return (
       <div style={{
-        width: '100%', height: '100%', marginTop: 10, paddingRight: 10,
+        width: '100%', height: '80%', marginTop: 10, paddingRight: 10,
       }}
       >
+        <Tabs
+          value={this.state.gameState}
+          onChange={(event, value) => {
+            Blockly.mainWorkspace.clear();
+            if (currentScene && currentScene.workspace[value] !== '') {
+              const xml = Blockly.Xml.textToDom(currentScene.workspace[value]);
+              Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
+            }
+            if (currentGameobject && currentGameobject.workspace[value] !== '') {
+              const xml = Blockly.Xml.textToDom(currentGameobject.workspace[value]);
+              Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
+            }
+            this.setState({ gameState: value });
+          }}
+          variant="fullWidth"
+          indicatorColor="secondary"
+          textColor="secondary"
+        >
+          <Tab icon={<PublicIcon />} label="Public" />
+          <Tab icon={<StartIcon />} label="Start" />
+          <Tab icon={<UpdateIcon />} label="Update" />
+        </Tabs>
         <ReactBlocklyComponent.BlocklyEditor
           toolboxCategories={parseWorkspaceXml(ConfigFiles.INITIAL_TOOLBOX_XML).concat(this.props.toolboxCategories)}
           workspaceConfiguration={{
@@ -493,11 +525,11 @@ class BlocklyPart extends React.Component {
             },
           }}
           initialXml={
-            this.props.gameObjects.length !== 0 && currentGameobject && currentGameobject.workspace
-              ? currentGameobject.workspace
-              : this.props.scenes.length !== 0 && currentScene && currentScene.workspace
-                ? currentScene.workspace
-                : null
+            this.props.gameObjects.length !== 0 && currentGameobject && currentGameobject.workspace[this.state.gameState] !== ''
+              ? currentGameobject.workspace[this.state.gameState]
+              : this.props.scenes.length !== 0 && currentScene && currentScene.workspace[this.state.gameState] !== ''
+                ? currentScene.workspace[this.state.gameState]
+                : '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
           }
           wrapperDivClassName="fill-width-height"
           ref={(node) => {
@@ -526,6 +558,7 @@ class BlocklyPart extends React.Component {
               this.props.scenes,
               this.props.slectedSceneIndex,
               this.props.images,
+              this.state.gameState,
             );
             workspace.refreshToolboxSelection();
           }

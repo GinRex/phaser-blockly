@@ -12,26 +12,27 @@ class scene1 extends Phaser.Scene {
     Phaser.Scene.call(this, { key: 'scene1', active: false });
   }
 
-  preload() {}
+  preload() {
+    this.cursors = this.input.keyboard.createCursorKeys();
+  }
+
+  // functions start
+
+  // functions end
+
 
   create() {
-    this.cursors = this.input.keyboard.createCursorKeys();
-    // create instances start
+    // create start
 
-    // create instances end
-
-    // game state start
-    this.bg = this.add.tileSprite(this.cameras.main.width / 2, this.cameras.main.height / 2, this.cameras.main.width, this.cameras.main.height, 'Background');;
+    // create end
   }
+
   update() {
-    this.bg.tilePositionX = this.bg.tilePositionX + 1;
+    // update start
 
-    // game state end
-
-    // update object start
-
-    // update object end
+    // update end
   }
+
 }
 
 export default scene1;

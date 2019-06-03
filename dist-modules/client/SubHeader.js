@@ -7,38 +7,39 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import ClassIcon from '@material-ui/icons/Build';
 import SceneIcon from '@material-ui/icons/Tv';
 
-
-import {
-  updateGame,
-  updateScene,
-} from './actions/home';
+import { updateGame, updateScene } from './actions/home';
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
-  },
+    margin: theme.spacing.unit
+  }
 });
 
-const SubHeader = props => (
-  <div >
-    <Button
-      onClick={() => {
+const SubHeader = props => React.createElement(
+  'div',
+  null,
+  React.createElement(
+    Button,
+    {
+      onClick: () => {
         if (props.slectedGameobjectIndex) {
           props.updateGame(props.gameObjects);
         }
         if (props.slectedSceneIndex) {
           props.updateScene(props.scenes);
         }
-      }}
-      variant="contained"
-      color="primary"
-      className={props.classes.button}
-    >
-      <PlayArrow />
-      Build
-    </Button>
-    <Button
-      onClick={() => {
+      },
+      variant: 'contained',
+      color: 'primary',
+      className: props.classes.button
+    },
+    React.createElement(PlayArrow, null),
+    'Build'
+  ),
+  React.createElement(
+    Button,
+    {
+      onClick: () => {
         const myWindow = window.open(`${window.location.href}game_iframe.html`, 'game');
         myWindow.focus();
         // if (this.props.slectedGameobjectIndex) {
@@ -47,51 +48,51 @@ const SubHeader = props => (
         // if (this.props.slectedSceneIndex) {
         //   this.props.updateScene(this.props.scenes);
         // }
-      }}
-      variant="contained"
-      color="secondary"
-      className={props.classes.button}
-    >
-      <OpenInNew />
-    </Button>
-    <Button
-      onClick={() => {
+      },
+      variant: 'contained',
+      color: 'secondary',
+      className: props.classes.button
+    },
+    React.createElement(OpenInNew, null)
+  ),
+  React.createElement(
+    Button,
+    {
+      onClick: () => {
         props.setClassHandler(true);
-      }}
-      variant="contained"
-      color="inherit"
-      className={props.classes.button}
-    >
-      <ClassIcon />
-      Class
-    </Button>
-    <Button
-      onClick={() => {
+      },
+      variant: 'contained',
+      color: 'inherit',
+      className: props.classes.button
+    },
+    React.createElement(ClassIcon, null),
+    'Class'
+  ),
+  React.createElement(
+    Button,
+    {
+      onClick: () => {
         props.setSceneHandler(true);
-      }}
-      variant="contained"
-      color="inherit"
-      className={props.classes.button}
-    >
-      <SceneIcon />
-      Scene
-    </Button>
-  </div>
+      },
+      variant: 'contained',
+      color: 'inherit',
+      className: props.classes.button
+    },
+    React.createElement(SceneIcon, null),
+    'Scene'
+  )
 );
 
 const mapStateToProps = state => ({
   slectedGameobjectIndex: state.home.slectedGameobjectIndex,
   slectedSceneIndex: state.home.slectedSceneIndex,
   scenes: state.home.scenes,
-  gameObjects: state.home.gameObjects,
+  gameObjects: state.home.gameObjects
 });
 
 const mapDispatchToProps = {
   updateGame,
-  updateScene,
+  updateScene
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withStyles(styles)(SubHeader));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SubHeader));

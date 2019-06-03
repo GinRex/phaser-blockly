@@ -16,10 +16,15 @@ export default class Name extends Phaser.GameObjects.Sprite {
     // create start
 
     // create end
+  }
 
-    // code start
-  }
+  // functions start
+
+  // functions end
+
   update() {
+    // update start
+
+    // update end
   }
-  // code end
 }

@@ -44,7 +44,6 @@ class BlocklyToolbox extends React.Component {
       });
     }), this.render = () => {
       if (this.props.categories) {
-        console.log(this.props.categories);
         return React.createElement(
           'xml',
           {

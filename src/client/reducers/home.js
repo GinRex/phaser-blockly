@@ -5,7 +5,7 @@ const initState = {
   selectedFile: {},
   gameObjects: [],
   scenes: [{
-    name: 'scene1', key: 'scene1', workspace: '', jsCode: '', variables: [], objects: [],
+    name: 'scene1', key: 'scene1', workspace: ['', '', ''], jsCode: ['', '', ''], variables: [], objects: [],
   }],
   gameState: 'STOP',
   slectedGameobjectIndex: '',
