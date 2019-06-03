@@ -75,7 +75,7 @@ export default [
   {
     name: 'Text',
     colour: 250,
-    blocks: [{ type: 'add_label' }, { type: 'label' }, { type: 'set_font_size' }],
+    blocks: [{ type: 'add_label' }, { type: 'label' }, { type: 'set_font_size' }, { type: 'text_color' }, {type: 'text_wrap'}],
   },
   {
     name: 'Group Object',

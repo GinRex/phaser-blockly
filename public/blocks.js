@@ -475,13 +475,15 @@ Blockly.Blocks.add_label = {
     this.appendValueInput('NAME')
       .setCheck(null)
       .appendField('add');
-    this.appendDummyInput()
-      .appendField('=')
-      .appendField(new Blockly.FieldTextInput('label value'), 'label_value')
-      .appendField('at  x =')
-      .appendField(new Blockly.FieldTextInput('100'), 'x')
-      .appendField('y =')
-      .appendField(new Blockly.FieldTextInput('100'), 'y');
+    this.appendValueInput('text')
+      .setCheck(null)
+      .appendField('=');
+    this.appendValueInput('x')
+      .setCheck(null)
+      .appendField('at  x =');
+    this.appendValueInput('y')
+      .setCheck(null)
+      .appendField('y =');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -491,13 +493,14 @@ Blockly.Blocks.add_label = {
   },
 };
 
+
 Blockly.JavaScript.add_label = function (block) {
   const value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
-  const text_label_value = block.getFieldValue('label_value');
-  const text_x = block.getFieldValue('x');
-  const text_y = block.getFieldValue('y');
+  const value_text = Blockly.JavaScript.valueToCode(block, 'text', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  const code = `${value_name} = this.add.text(${text_x}, ${text_y}, '${text_label_value}');\n`;
+  const code = `${value_name} = this.add.text(${value_x}, ${value_y}, ${value_text});\n`;
   return code;
 };
 
@@ -589,7 +592,7 @@ Blockly.JavaScript.set_font_size = function (block) {
     Blockly.JavaScript.ORDER_ATOMIC,
   );
   // TODO: Assemble JavaScript into code variable.
-  const code = `${value_label_name}.setFontSize({${text_font_size}});\n`;
+  const code = `${value_label_name}.setFontSize(${text_font_size});\n`;
   return code;
 };
 
@@ -1563,4 +1566,75 @@ Blockly.JavaScript.key_condition = function (block) {
   const code = `key(this.scene.input.keyboard, '${dropdown_key}').${dropdown_type}`;
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.Blocks.text_color = {
+  init() {
+    this.appendValueInput('val')
+      .setCheck(null)
+      .appendField('set');
+    this.appendValueInput('color')
+      .setCheck(null)
+      .appendField('cokor')
+      .appendField('=');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.text_color = function (block) {
+  const value_val = Blockly.JavaScript.valueToCode(block, 'val', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_color = Blockly.JavaScript.valueToCode(block, 'color', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_val}.setColor(${value_color});\n`;
+  return code;
+};
+
+Blockly.Blocks.on_mouse_down = {
+  init() {
+    this.appendDummyInput()
+      .appendField('on mouse down');
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.on_mouse_down = function (block) {
+  // TODO: Assemble JavaScript into code variable.
+  const code = '...';
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.Blocks.text_wrap = {
+  init() {
+    this.appendValueInput('val')
+      .setCheck(null)
+      .appendField('set');
+    this.appendValueInput('width')
+      .setCheck(null)
+      .appendField('wrap width')
+      .appendField('=');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.text_wrap = function (block) {
+  const value_val = Blockly.JavaScript.valueToCode(block, 'val', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_width = Blockly.JavaScript.valueToCode(block, 'width', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_val}.setStyle({wordWrap: { width: ${value_width} }});\n`;
+  return code;
 };

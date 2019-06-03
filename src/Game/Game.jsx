@@ -6,8 +6,8 @@ const config = {
   type: Phaser.AUTO,
   pixelArt: true,
   // game width and height start
-width: 800,
-        height: 400,
+  width: 800,
+  height: 600,
   // game width and height end
   parent: 'phaser-game',
   physics: {

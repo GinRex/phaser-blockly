@@ -96,6 +96,38 @@ class BlocklyPart extends React.Component {
             this.setHelpUrl('');
           },
         };
+        Blockly.Blocks[`create_gameobject_${gameObject.name}`] = {
+          init() {
+            this.appendDummyInput()
+              .appendField(new Blockly.FieldImage(`assets/${gameObject.filename}`, 20, 20, '*'));
+            this.appendDummyInput()
+              .appendField('create')
+              .appendField(new Blockly.FieldDropdown(currentScene.objects.filter(object =>
+                (object.class === gameObject.name)).map(object => [object.variableName, object.variableName])), 'object_list');
+            this.setInputsInline(true);
+            this.setPreviousStatement(true, null);
+            this.setNextStatement(true, null);
+            this.setColour(230);
+            this.setTooltip('');
+            this.setHelpUrl('');
+          },
+        };
+        Blockly.Blocks[`update_gameobject_${gameObject.name}`] = {
+          init() {
+            this.appendDummyInput()
+              .appendField(new Blockly.FieldImage(`assets/${gameObject.filename}`, 20, 20, '*'));
+            this.appendDummyInput()
+              .appendField('update')
+              .appendField(new Blockly.FieldDropdown(currentScene.objects.filter(object =>
+                (object.class === gameObject.name)).map(object => [object.variableName, object.variableName])), 'object_list');
+            this.setInputsInline(true);
+            this.setPreviousStatement(true, null);
+            this.setNextStatement(true, null);
+            this.setColour(230);
+            this.setTooltip('');
+            this.setHelpUrl('');
+          },
+        };
         if (gameObject.animations.length) {
           Blockly.Blocks[`play_animation_${gameObject.name}`] = {
             init() {
@@ -133,6 +165,23 @@ class BlocklyPart extends React.Component {
           const code = `this.${dropdown_variable_list}`;
           // TODO: Change ORDER_NONE to the correct strength.
           return [code, Blockly.JavaScript.ORDER_NONE];
+        };
+        Blockly.JavaScript[`create_gameobject_${gameObject.name}`] = function (block) {
+          const dropdown_variable_list = block.getFieldValue('object_list'); // TODO: Assemble JavaScript into code variable.
+          const code = `this.${dropdown_variable_list} = new Class.${gameObject.name}({
+            scene: this,
+            key: '${gameObject.name}',
+            x: 0,
+            y: 0,
+            w: 100,
+            h: 100,
+          });\n`;
+          return code;
+        };
+        Blockly.JavaScript[`update_gameobject_${gameObject.name}`] = function (block) {
+          const dropdown_variable_list = block.getFieldValue('object_list'); // TODO: Assemble JavaScript into code variable.
+          const code = `this.${dropdown_variable_list}.update();\n`;
+          return code;
         };
       });
     }
@@ -363,6 +412,20 @@ class BlocklyPart extends React.Component {
           '</xml>';
         const block = Blockly.Xml.textToDom(blockText).firstChild;
         xmlList.push(block);
+        const blockCreateText = '<xml>' +
+          `<block type="create_gameobject_${gameObject.name}">` +
+          `<field name="object_list" variabletype="">${variables[i].variableName}</field>` +
+          '</block>' +
+          '</xml>';
+        const blockCreate = Blockly.Xml.textToDom(blockCreateText).firstChild;
+        xmlList.push(blockCreate);
+        const blockUpdateText = '<xml>' +
+          `<block type="update_gameobject_${gameObject.name}">` +
+          `<field name="object_list" variabletype="">${variables[i].variableName}</field>` +
+          '</block>' +
+          '</xml>';
+        const blockUpdate = Blockly.Xml.textToDom(blockUpdateText).firstChild;
+        xmlList.push(blockUpdate);
       }
       for (let i = 0; i < gameObject.animations.length; i++) {
         const aniBlockText = '<xml>' +
@@ -420,8 +483,10 @@ class BlocklyPart extends React.Component {
 
       if (slectedGameobjectIndex && !currentGameobject.variables.includes(dropdown_variable_list)) {
         code = `this.scene.${dropdown_variable_list}`;
-      } else {
+      } else if (gameState!==0) {
         code = `this.${dropdown_variable_list}`;
+      } else {
+        code = `${dropdown_variable_list}`;
       }
       // TODO: Change ORDER_NONE to the correct strength.
       return [code, Blockly.JavaScript.ORDER_NONE];
@@ -436,11 +501,28 @@ class BlocklyPart extends React.Component {
 
       if (slectedGameobjectIndex && !currentGameobject.variables.includes(dropdown_var_list)) {
         code = `scene.${dropdown_var_list} = ${value_var_value};\n`;
-      } else {
+      } else if (gameState!==0) {
         code = `this.${dropdown_var_list} = ${value_var_value};\n`;
+      } else {
+        code = `${dropdown_var_list} = ${value_var_value};\n`;
       }
 
       return code;
+    };
+
+    Blockly.JavaScript.key_condition = function (block) {
+      const dropdown_key = block.getFieldValue('key');
+      const dropdown_type = block.getFieldValue('type');
+      // TODO: Assemble JavaScript into code variable.
+      let code = '';
+      if (slectedGameobjectIndex) {
+        code = `key(this.scene.input.keyboard, '${dropdown_key}').${dropdown_type}`;
+      }
+      else {
+        code = `key(this.input.keyboard, '${dropdown_key}').${dropdown_type}`;
+      }
+      // TODO: Change ORDER_NONE to the correct strength.
+      return [code, Blockly.JavaScript.ORDER_NONE];
     };
 
     const newXml = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));

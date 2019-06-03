@@ -2,7 +2,7 @@ import * as Motion from '../../client/HandleMotion';
 import * as Sprite from '../../client/HandleSprite';
 import key from '../keyBoardInput';
 
-export default class Ball extends Phaser.GameObjects.Sprite {
+export default class Monika extends Phaser.GameObjects.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, config.key);
     config.scene.physics.world.enable(this);
@@ -16,10 +16,15 @@ export default class Ball extends Phaser.GameObjects.Sprite {
     // create start
 
     // create end
+  }
 
-    // code start
-  }
+  // functions start
+
+  // functions end
+
   update() {
+    // update start
+
+    // update end
   }
-  // code end
 }
