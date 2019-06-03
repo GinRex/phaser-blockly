@@ -5,8 +5,10 @@ import scene1 from './Scenes/scene1';
 const config = {
   type: Phaser.AUTO,
   pixelArt: true,
-  width: 500,
-  height: 400,
+  // game width and height start
+width: 800,
+        height: 400,
+  // game width and height end
   parent: 'phaser-game',
   physics: {
     default: 'arcade',

@@ -367,6 +367,34 @@ app.post('/api/createGame', (req, res) => {
   return res.status(200).send(GAME_NAME);
 });
 
+app.post('/api/updateGameSetting', (req, res) => {
+  const GAME_NAME = req.body.game_name;
+  const width = req.body.width;
+  const height = req.body.height;
+  console.log(GAME_NAME);
+
+  // update game file
+  try {
+    // add imported files
+    const data = fs.readFileSync(`${__dirname}/../Game/Game.jsx`).toString().split('\n');
+    const updateEndIndex = data.indexOf('  // game width and height end');
+    const updateStartIndex = data.indexOf('  // game width and height start');
+    console.log(data);
+    data.splice(
+      updateStartIndex + 1, updateEndIndex - updateStartIndex - 1,
+      `width: ${width},
+        height: ${height},`,
+    );
+    const text = data.join('\n');
+    fs.writeFile(`${__dirname}/../Game/Game.jsx`, text, (err) => {
+      console.log(err);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+  return res.status(200).send(GAME_NAME);
+});
+
 app.post('/api/createScene', (req, res) => {
   const scene = req.body;
   // create scenes folder and default scene

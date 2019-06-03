@@ -123,6 +123,13 @@ export const createNewGame = game => (dispatch) => {
   });
 };
 
+export const updateGameSetting = game => (dispatch) => {
+  const data = game;
+  return axios.post('http://localhost:8080/api/updateGameSetting', data, {}).then((res) => {
+    // window.location.reload();
+  });
+};
+
 export const setGame = game => ({
   type: 'SET_GAME',
   game,

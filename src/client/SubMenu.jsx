@@ -20,7 +20,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import { connect } from 'react-redux';
 
-import { createNewGame, saveGame, loadGame, loadListGame } from './actions/home';
+import { createNewGame, updateGameSetting, saveGame, loadGame, loadListGame } from './actions/home';
 
 const BootstrapInput = withStyles(theme => ({
   root: {
@@ -102,8 +102,10 @@ class SubMenu extends React.Component {
       height: 400,
       loadGameName: '',
       createOpen: false,
+      settingOpen: false,
     };
     this.newGameBtn = React.createRef();
+    this.settingBtn = React.createRef();
   }
   componentDidMount() {
     this.props.loadListGame();
@@ -161,6 +163,7 @@ class SubMenu extends React.Component {
           </Button>
           <Button
             onClick={() => {
+              this.setState({ settingOpen: true });
               // this.props.createNewGame(this.state);
               // this.props.saveGame(this.state.game_name);
               // this.props.loadListGame();
@@ -168,9 +171,116 @@ class SubMenu extends React.Component {
             variant="contained"
             color="inherit"
             className={classes.button}
+            ref={(node) => {
+              if (node) {
+                this.settingBtn = node;
+              }
+            }}
           >
             <SettingsIcon />
           </Button>
+          <Popper open={this.state.settingOpen} anchorEl={this.settingBtn} transition disablePortal>
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+              >
+                <Paper id="menu-list-grow">
+                  <ClickAwayListener onClickAway={() => this.setState({ settingOpen: false })} >
+                    <Paper className={classes.paper} style={{ width: 200, marginLeft: -120, marginTop: 50 }} >
+                      <div
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          overflow: 'auto',
+                          // margin: 10,
+                        }}
+                      >
+                        {/* <TextField
+                          className={classes.margin}
+                          InputLabelProps={{
+                            classes: {
+                              root: classes.cssLabel,
+                              focused: classes.cssFocused,
+                            },
+                          }}
+                          InputProps={{
+                            classes: {
+                              root: classes.cssOutlinedInput,
+                              focused: classes.cssFocused,
+                              notchedOutline: classes.notchedOutline,
+                            },
+                          }}
+                          label="Name"
+                          variant="outlined"
+                          id="custom-css-outlined-input"
+                          value={this.state.game_name}
+                          onChange={event => this.setState({ game_name: event.target.value })}
+                        /> */}
+                        <TextField
+                          className={classes.margin}
+                          InputLabelProps={{
+                            classes: {
+                              root: classes.cssLabel,
+                              focused: classes.cssFocused,
+                            },
+                          }}
+                          InputProps={{
+                            classes: {
+                              root: classes.cssOutlinedInput,
+                              focused: classes.cssFocused,
+                              notchedOutline: classes.notchedOutline,
+                            },
+                          }}
+                          label="Width"
+                          variant="outlined"
+                          id="custom-css-outlined-input"
+                          value={this.state.width}
+                          onChange={event => this.setState({ width: event.target.value })}
+                        />
+                        <TextField
+                          className={classes.margin}
+                          InputLabelProps={{
+                            classes: {
+                              root: classes.cssLabel,
+                              focused: classes.cssFocused,
+                            },
+                          }}
+                          InputProps={{
+                            classes: {
+                              root: classes.cssOutlinedInput,
+                              focused: classes.cssFocused,
+                              notchedOutline: classes.notchedOutline,
+                            },
+                          }}
+                          label="Height"
+                          variant="outlined"
+                          id="custom-css-outlined-input"
+                          value={this.state.height}
+                          onChange={event => this.setState({ height: event.target.value })}
+                        />
+                        <Button
+                          onClick={() => {
+                            this.props.updateGameSetting(this.state);
+                            // this.props.saveGame(this.state.game_name);
+                            // this.props.loadListGame();
+                          }}
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                        >
+                          <DoneIcon />
+                        </Button>
+                      </div>
+                    </Paper>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
         </div>
         <div>
           <Button
@@ -305,6 +415,7 @@ const mapDispatchToProps = {
   saveGame,
   loadGame,
   loadListGame,
+  updateGameSetting,
 };
 
 export default connect(
