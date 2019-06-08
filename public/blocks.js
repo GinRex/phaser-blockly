@@ -401,13 +401,15 @@ Blockly.Blocks.add_function = {
     this.appendDummyInput()
       .appendField('function')
       .appendField(new Blockly.FieldTextInput('function name'), 'function_name');
-    this.appendStatementInput('func_code').setCheck(null);
+    this.appendStatementInput('func_code')
+      .setCheck(null);
     this.setInputsInline(false);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
     this.setColour(230);
     this.setTooltip('');
     this.setHelpUrl('');
+  },
+  getFuncDef() {
+    return this.getFieldValue('function_name');
   },
 };
 
@@ -415,37 +417,30 @@ Blockly.JavaScript.add_function = function (block) {
   const text_function_name = block.getFieldValue('function_name');
   const statements_func_code = Blockly.JavaScript.statementToCode(block, 'func_code');
   // TODO: Assemble JavaScript into code variable.
-  const code = `this.${text_function_name} = () => {\n${statements_func_code}\n};\n`;
+  const code = `${text_function_name} () {\n${statements_func_code}\n}\n`;
   return code;
 };
 
-Blockly.Blocks.call_function_from_class = {
-  init() {
-    this.appendValueInput('object_name')
-      .setCheck(null)
-      .appendField('Call ')
-      .appendField(new Blockly.FieldTextInput('function'), 'func_name')
-      .appendField('from');
-    this.setInputsInline(true);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(230);
-    this.setTooltip('');
-    this.setHelpUrl('');
-  },
-};
+// Blockly.Blocks.call_function = {
+//   init() {
+//     this.appendDummyInput()
+//       .appendField('function_name');
+//     this.setInputsInline(true);
+//     this.setPreviousStatement(true, null);
+//     this.setNextStatement(true, null);
+//     this.setColour(230);
+//     this.setTooltip('');
+//     this.setHelpUrl('');
+//   },
+// };
 
-Blockly.JavaScript.call_function_from_class = function (block) {
-  const text_func_name = block.getFieldValue('func_name');
-  const value_object_name = Blockly.JavaScript.valueToCode(
-    block,
-    'object_name',
-    Blockly.JavaScript.ORDER_ATOMIC,
-  );
-  // TODO: Assemble JavaScript into code variable.
-  const code = `${value_object_name}.${text_func_name}();\n`;
-  return code;
-};
+
+// Blockly.JavaScript.call_function = function (block) {
+//   // TODO: Assemble JavaScript into code variable.
+//   const text_function_name = block.getFieldValue('function_name');
+//   const code = `this.${text_function_name}();\n`;
+//   return code;
+// };
 
 Blockly.Blocks.call_function_from_scene = {
   init() {

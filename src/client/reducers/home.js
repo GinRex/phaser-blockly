@@ -5,9 +5,9 @@ const initState = {
   selectedFile: {},
   gameObjects: [],
   scenes: [{
-    name: 'scene1', key: 'scene1', workspace: ['', '', ''], jsCode: ['', '', ''], variables: [], objects: [],
+    name: 'scene1', key: 'scene1', workspace: ['', '', ''], jsCode: ['', '', ''], variables: [], objects: [], functions: [],
   }],
-  gameState: 'STOP',
+  gameState: 0,
   slectedGameobjectIndex: '',
   slectedSceneIndex: 'scene1',
   toolboxCategories,
@@ -33,8 +33,10 @@ const gameReducer = (state = initState, action) => {
   switch (action.type) {
     case 'SELECT_FILE':
       return { ...state, selectedFile: { file: action.selectedFile } };
+    case 'SET_GAME_STATE':
+      return { ...state, gameState: action.gameState };
     case 'BUILD_GAME':
-      return { ...state, gameState: 'BUILD', gameObjects: action.gameObjects };
+      return { ...state, gameObjects: action.gameObjects };
     case 'ADD_OBJECT': {
       const gameObjects = [...state.gameObjects, action.gameObject];
       return { ...state, gameObjects };
@@ -122,6 +124,23 @@ const gameReducer = (state = initState, action) => {
     }
     case 'SET_LIST_GAMES':
       return { ...state, listGames: action.listGames };
+    case 'UPDATE_FUNCTIONS': {
+      return action.data.type === 'scene' ?
+        {
+          ...state,
+          scenes: state.scenes.map(scene =>
+            (scene.key === action.data.name
+              ? { ...scene, functions: action.data.functions }
+              : scene)),
+        } :
+        {
+          ...state,
+          gameObjects: state.gameObjects.map(gameObject =>
+            (gameObject.key === action.data.name
+              ? { ...gameObject, functions: action.data.functions }
+              : gameObject)),
+        };
+    }
     default:
       return state;
   }

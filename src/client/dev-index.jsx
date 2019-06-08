@@ -30,6 +30,8 @@ import {
   setSpriteEditorState,
   setObjectMenuState,
   setVariableDialogState,
+  updateFunctions,
+  updateGameState,
 } from './actions/home';
 
 const styles = theme => ({
@@ -43,9 +45,6 @@ class BlocklyPart extends React.Component {
     super(props);
     this.editor = React.createRef();
     this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
-  }
-  state = {
-    gameState: 0,
   }
   componentDidMount() {
     this.updateToolBox(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
@@ -76,8 +75,10 @@ class BlocklyPart extends React.Component {
 
     if (currentScene) {
       this.variableListBlockUpdate(currentScene.variables, null, gameObjects, images);
+      this.functionListBlockUpdate(currentScene.functions, null, gameObjects, images);
     } else if (currentGameobject) {
       this.variableListBlockUpdate(null, currentGameobject.variables, gameObjects, images);
+      this.functionListBlockUpdate(null, currentGameobject.functions, gameObjects, images);
     }
 
     if (currentScene) {
@@ -107,7 +108,7 @@ class BlocklyPart extends React.Component {
             this.setInputsInline(true);
             this.setPreviousStatement(true, null);
             this.setNextStatement(true, null);
-            this.setColour(230);
+            this.setColour(160);
             this.setTooltip('');
             this.setHelpUrl('');
           },
@@ -123,12 +124,12 @@ class BlocklyPart extends React.Component {
             this.setInputsInline(true);
             this.setPreviousStatement(true, null);
             this.setNextStatement(true, null);
-            this.setColour(230);
+            this.setColour(160);
             this.setTooltip('');
             this.setHelpUrl('');
           },
         };
-        if (gameObject.animations.length) {
+        if (gameObject.animations && gameObject.animations.length) {
           Blockly.Blocks[`play_animation_${gameObject.name}`] = {
             init() {
               this.appendValueInput('object_name').setCheck(null);
@@ -141,7 +142,7 @@ class BlocklyPart extends React.Component {
               this.setInputsInline(true);
               this.setPreviousStatement(true, null);
               this.setNextStatement(true, null);
-              this.setColour(230);
+              this.setColour(160);
               this.setTooltip('');
               this.setHelpUrl('');
             },
@@ -187,6 +188,70 @@ class BlocklyPart extends React.Component {
     }
   };
 
+  functionListBlockUpdate = (functions, classFunctions, gameObjects, images) => {
+    const functs = functions || classFunctions;
+    Blockly.Blocks.call_function = {
+      init() {
+        this.appendDummyInput()
+          .appendField('call')
+          .appendField(new Blockly.FieldDropdown(functs.map(func => [func, func])), 'function_list');
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip('');
+        this.setHelpUrl('');
+      },
+    };
+    Blockly.JavaScript.call_function = function (block) {
+      const dropdown_function_list = block.getFieldValue('function_list');
+      // TODO: Assemble JavaScript into code variable.
+      const code =  `this.${dropdown_function_list}();\n`;
+      return code;
+    };
+    Blockly.Blocks.call_scene_function = {
+      init() {
+        this.appendDummyInput()
+          .appendField('call')
+          .appendField(new Blockly.FieldDropdown(functs.map(func => [func, func])), 'function_list');
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+        this.setTooltip('');
+        this.setHelpUrl('');
+      },
+    };
+    Blockly.JavaScript.call_scene_function = function (block) {
+      const dropdown_function_list = block.getFieldValue('function_list');
+      // TODO: Assemble JavaScript into code variable.
+      const code =  `this.scene.${dropdown_function_list}();\n`;
+      return code;
+    };
+    Blockly.Blocks.call_function_from = {
+      init() {
+        this.appendValueInput('object_name')
+          .setCheck(null);
+        this.appendDummyInput()
+          .appendField('call')
+          .appendField(new Blockly.FieldDropdown(functs.map(func => [func, func])), 'function_list');
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip('');
+        this.setHelpUrl('');
+      },
+    };
+    Blockly.JavaScript.call_function_from = function (block) {
+      let value_object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
+      const dropdown_function_list = block.getFieldValue('function_list');
+      // TODO: Assemble JavaScript into code variable.
+      const code = `${value_object_name}.${dropdown_function_list}();\n`;
+      return code;
+    };
+  }
+
   variableListBlockUpdate = (variables, classVariables, gameObjects, images) => {
     const vars = variables || classVariables;
     Blockly.Blocks.variables = {
@@ -195,7 +260,7 @@ class BlocklyPart extends React.Component {
           .appendField(new Blockly.FieldDropdown(vars.map(variable => [variable, variable])), 'variable_list');
         this.setInputsInline(true);
         this.setOutput(true, null);
-        this.setColour(230);
+        this.setColour(330);
         this.setTooltip('');
         this.setHelpUrl('');
       },
@@ -211,9 +276,10 @@ class BlocklyPart extends React.Component {
         this.setInputsInline(true);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
-        this.setColour(230);
+        this.setColour(330);
       },
     };
+
     Blockly.Blocks.tile_sprite = {
       init() {
         this.appendValueInput('variable')
@@ -246,6 +312,8 @@ class BlocklyPart extends React.Component {
       },
     };
 
+
+    // get the tile_sprite out of this function
     Blockly.JavaScript.tile_sprite = function (block) {
       const value_variable = Blockly.JavaScript.valueToCode(block, 'variable', Blockly.JavaScript.ORDER_ATOMIC);
       const dropdown_image_list = block.getFieldValue('image_list');
@@ -290,6 +358,7 @@ class BlocklyPart extends React.Component {
         },
       };
 
+      // this shouldn't be here
       Blockly.JavaScript.add_child = function (block) {
         const value_parent = Blockly.JavaScript.valueToCode(block, 'parent', Blockly.JavaScript.ORDER_ATOMIC);
         const dropdown_type = block.getFieldValue('type');
@@ -320,7 +389,7 @@ class BlocklyPart extends React.Component {
         name: gameObject.name,
         custom: `CLASS_INSTANCE_${gameObject.name}`,
       };
-      if (gameObject.animations.length) {
+      if (gameObject.animations && gameObject.animations.length) {
         // object.blocks.push({ type: `play_animation_${gameObject.name}` });
       }
       return object;
@@ -391,6 +460,64 @@ class BlocklyPart extends React.Component {
           const setBlock = Blockly.Xml.textToDom(setText).firstChild;
           xmlList.push(block);
           xmlList.push(setBlock);
+        }
+        // xmlList.push(Blockly.Xml.textToDom('<xml/></sep></xml>').firstChild);
+      });
+    }
+    return xmlList;
+  };
+
+  customFunctionCallback = (workspace, scenes, slectedSceneIndex, gameObjects, slectedGameobjectIndex, gameState) => {
+    let xmlList = [];
+    const currentScene = scenes.find(scene => scene.key === slectedSceneIndex);
+    const currentObject = gameObjects.find(gameObject => gameObject.key === slectedGameobjectIndex);
+
+    xmlList = !gameState ? [Blockly.Xml.textToDom('<xml><block type="add_function"><field name="function_name">function_name</field></block></xml>').firstChild] : [];
+    if (currentScene) {
+      for (let i = 0; i < currentScene.functions.length; i++) {
+        const blockText = '<xml>' +
+          '<block type="call_function">' +
+          `<field name="function_list">${currentScene.functions[i]}</field>` +
+          '</block>' +
+          '</xml>';
+        const block = Blockly.Xml.textToDom(blockText).firstChild;
+        xmlList.push(block);
+      }
+      // generate code for functions from classes
+      gameObjects.map((gameObject) => {
+        xmlList.push(Blockly.Xml.textToDom('<xml>' + `<label text="From class: ${gameObject.name}"></label>` + '</xml>').firstChild);
+        for (let i = 0; i < gameObject.functions.length; i++) {
+          const blockText = '<xml>' +
+            '<block type="call_function_from">' +
+            `<field name="function_list">${gameObject.functions[i]}</field>` +
+            '</block>' +
+            '</xml>';
+          const block = Blockly.Xml.textToDom(blockText).firstChild;
+          xmlList.push(block);
+        }
+        // xmlList.push(Blockly.Xml.textToDom('<xml/></sep></xml>').firstChild);
+      });
+    } else if (currentObject) {
+      for (let i = 0; i < currentObject.functions.length; i++) {
+        const blockText = '<xml>' +
+          '<block type="call_function">' +
+          `<field name="function_list">${currentObject.functions[i]}</field>` +
+          '</block>' +
+          '</xml>';
+        const block = Blockly.Xml.textToDom(blockText).firstChild;
+        xmlList.push(block);
+      }
+      // generate code for functions from scenes
+      scenes.map((scene) => {
+        xmlList.push(Blockly.Xml.textToDom('<xml>' + `<label text="From scene: ${scene.name}"></label>` + '</xml>').firstChild);
+        for (let i = 0; i < scene.functions.length; i++) {
+          const blockText = '<xml>' +
+            '<block type="call_scene_function">' +
+            `<field name="function_list">${scene.functions[i]}</field>` +
+            '</block>' +
+            '</xml>';
+          const block = Blockly.Xml.textToDom(blockText).firstChild;
+          xmlList.push(block);
         }
         // xmlList.push(Blockly.Xml.textToDom('<xml/></sep></xml>').firstChild);
       });
@@ -483,7 +610,7 @@ class BlocklyPart extends React.Component {
 
       if (slectedGameobjectIndex && !currentGameobject.variables.includes(dropdown_variable_list)) {
         code = `this.scene.${dropdown_variable_list}`;
-      } else if (gameState!==0) {
+      } else if (gameState !== 0) {
         code = `this.${dropdown_variable_list}`;
       } else {
         code = `${dropdown_variable_list}`;
@@ -501,7 +628,7 @@ class BlocklyPart extends React.Component {
 
       if (slectedGameobjectIndex && !currentGameobject.variables.includes(dropdown_var_list)) {
         code = `scene.${dropdown_var_list} = ${value_var_value};\n`;
-      } else if (gameState!==0) {
+      } else if (gameState !== 0) {
         code = `this.${dropdown_var_list} = ${value_var_value};\n`;
       } else {
         code = `${dropdown_var_list} = ${value_var_value};\n`;
@@ -517,8 +644,7 @@ class BlocklyPart extends React.Component {
       let code = '';
       if (slectedGameobjectIndex) {
         code = `key(this.scene.input.keyboard, '${dropdown_key}').${dropdown_type}`;
-      }
-      else {
+      } else {
         code = `key(this.input.keyboard, '${dropdown_key}').${dropdown_type}`;
       }
       // TODO: Change ORDER_NONE to the correct strength.
@@ -553,6 +679,22 @@ class BlocklyPart extends React.Component {
 
       this.props.updateSceneWorkspace(newScenes);
     }
+
+    // update all functions if in tab functions
+    if (!gameState && (currentGameobject || currentScene)) {
+      const blocks = workspace.getAllBlocks(false);
+      const functionList = [];
+      for (let i = 0; i < blocks.length; i++) {
+        if (blocks[i].getFuncDef) {
+          const tuple = blocks[i].getFuncDef();
+          if (tuple) {
+            functionList.push(tuple);
+          }
+        }
+      }
+      console.log(functionList);
+      this.props.updateFunctions(currentScene ? 'scene' : 'object', currentScene.key || currentGameobject.key, functionList);
+    }
     document.getElementById('code').value = code;
   };
 
@@ -566,7 +708,7 @@ class BlocklyPart extends React.Component {
       }}
       >
         <Tabs
-          value={this.state.gameState}
+          value={this.props.gameState}
           onChange={(event, value) => {
             Blockly.mainWorkspace.clear();
             if (currentScene && currentScene.workspace[value] !== '') {
@@ -577,13 +719,13 @@ class BlocklyPart extends React.Component {
               const xml = Blockly.Xml.textToDom(currentGameobject.workspace[value]);
               Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
             }
-            this.setState({ gameState: value });
+            this.props.updateGameState(value);
           }}
           variant="fullWidth"
           indicatorColor="secondary"
           textColor="secondary"
         >
-          <Tab icon={<PublicIcon />} label="Public" />
+          <Tab icon={<PublicIcon />} label="Functions" />
           <Tab icon={<StartIcon />} label="Start" />
           <Tab icon={<UpdateIcon />} label="Update" />
         </Tabs>
@@ -607,10 +749,10 @@ class BlocklyPart extends React.Component {
             },
           }}
           initialXml={
-            this.props.gameObjects.length !== 0 && currentGameobject && currentGameobject.workspace[this.state.gameState] !== ''
-              ? currentGameobject.workspace[this.state.gameState]
-              : this.props.scenes.length !== 0 && currentScene && currentScene.workspace[this.state.gameState] !== ''
-                ? currentScene.workspace[this.state.gameState]
+            this.props.gameObjects.length !== 0 && currentGameobject && currentGameobject.workspace[this.props.gameState] !== ''
+              ? currentGameobject.workspace[this.props.gameState]
+              : this.props.scenes.length !== 0 && currentScene && currentScene.workspace[this.props.gameState] !== ''
+                ? currentScene.workspace[this.props.gameState]
                 : '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
           }
           wrapperDivClassName="fill-width-height"
@@ -623,6 +765,7 @@ class BlocklyPart extends React.Component {
                 this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
               }
               node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_VARIABLE', () => this.customVariableCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex));
+              node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_FUNCTION', () => this.customFunctionCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex, this.props.gameState));
               // node.workspace.state.workspace.registerToolboxCategoryCallback('TILE_CATEGORY', () => this.customTileCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex));
               this.props.gameObjects.map((object) => {
                 node.workspace.state.workspace.registerToolboxCategoryCallback(`CLASS_INSTANCE_${object.name}`, () => this.classInstanceCallback(node.workspace, object, this.props.scenes, this.props.slectedSceneIndex));
@@ -640,7 +783,7 @@ class BlocklyPart extends React.Component {
               this.props.scenes,
               this.props.slectedSceneIndex,
               this.props.images,
-              this.state.gameState,
+              this.props.gameState,
             );
             workspace.refreshToolboxSelection();
           }
@@ -699,6 +842,7 @@ const mapStateToProps = state => ({
   toolboxCategories: state.home.toolboxCategories,
   objectMenuOpen: state.home.objectMenuOpen.target,
   images: state.home.images,
+  gameState: state.home.gameState,
 });
 
 const mapDispatchToProps = {
@@ -714,6 +858,8 @@ const mapDispatchToProps = {
   setSpriteEditorState,
   setObjectMenuState,
   setVariableDialogState,
+  updateFunctions,
+  updateGameState,
 };
 
 export default connect(

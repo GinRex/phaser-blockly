@@ -356,7 +356,7 @@ const INITIAL_TOOLBOX_XML = '<xml xmlns="http://www.w3.org/1999/xhtml" id="toolb
   '  </category>\n' +
   '  <sep></sep>\n' +
   // '  <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>\n' +
-  '  <category name="Functions" colour="#9A5CA6" custom="PROCEDURE"></category>\n' +
+  // '  <category name="Functions" colour="#9A5CA6" custom="PROCEDURE"></category>\n' +
   '</xml>';
 
 const INITIAL_TOOLBOX_CATEGORIES = [

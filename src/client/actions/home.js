@@ -60,6 +60,7 @@ export const uploadImage = file => (dispatch) => {
       animations: [],
       variables: [],
       instances: [],
+      functions: [],
     }));
   });
 };
@@ -225,4 +226,14 @@ export const loadListGame = () => dispatch => axios.post('http://localhost:8080/
     type: 'SET_LIST_GAMES',
     listGames: res.data,
   });
+});
+
+export const updateFunctions = (type, name, functions) => ({
+  type: 'UPDATE_FUNCTIONS',
+  data: { type, name, functions },
+});
+
+export const updateGameState = gameState => ({
+  type: 'SET_GAME_STATE',
+  gameState,
 });

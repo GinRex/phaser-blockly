@@ -56,26 +56,27 @@ export default [
     name: 'Variable',
     colour: 250,
     custom: 'CUSTOM_VARIABLE',
-    blocks: [
-      { type: 'variables' },
-      { type: 'set_var' },
-      { type: 'value_from_scene' },
-      { type: 'value_from_class' },
-    ],
+    // blocks: [
+    //   { type: 'variables' },
+    //   { type: 'set_var' },
+    //   { type: 'value_from_scene' },
+    //   { type: 'value_from_class' },
+    // ],
   },
   {
     name: 'Function',
     colour: 150,
-    blocks: [
-      { type: 'add_function' },
-      { type: 'call_function_from_class' },
-      { type: 'call_function_from_scene' },
-    ],
+    custom: 'CUSTOM_FUNCTION',
+    // blocks: [
+    //   { type: 'add_function' },
+    //   { type: 'call_function' },
+    //   { type: 'call_function_from_scene' },
+    // ],
   },
   {
     name: 'Text',
     colour: 250,
-    blocks: [{ type: 'add_label' }, { type: 'label' }, { type: 'set_font_size' }, { type: 'text_color' }, {type: 'text_wrap'}],
+    blocks: [{ type: 'add_label' }, { type: 'label' }, { type: 'set_font_size' }, { type: 'text_color' }, { type: 'text_wrap' }],
   },
   {
     name: 'Group Object',

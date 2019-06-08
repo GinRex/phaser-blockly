@@ -33,6 +33,7 @@ class SceneManager extends React.Component {
       key: name,
       variables: [],
       objects: [],
+      functions: [],
     });
   };
   render() {
