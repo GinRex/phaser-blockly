@@ -147,8 +147,8 @@ const ClassHandler = (props) => {
                   props.setObjectMenuState(event.currentTarget);
                   props.setSlectedGameobjectIndex(gameObject.key);
                   Blockly.mainWorkspace.clear();
-                  if (gameObject.workspace !== '') {
-                    const xml = Blockly.Xml.textToDom(gameObject.workspace);
+                  if (gameObject.workspace[props.gameState] !== '') {
+                    const xml = Blockly.Xml.textToDom(gameObject.workspace[props.gameState]);
                     Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
                   }
                 }}
@@ -189,6 +189,7 @@ const mapStateToProps = state => ({
   toolboxCategories: state.home.toolboxCategories,
   objectMenuOpen: state.home.objectMenuOpen.target,
   images: state.home.images,
+  gameState: state.home.gameState,
 });
 
 const mapDispatchToProps = {

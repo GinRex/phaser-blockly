@@ -78,8 +78,8 @@ class SceneManager extends React.Component {
                     });
                     promise.then((res) => {
                       Blockly.mainWorkspace.clear();
-                      if (scene.workspace !== '') {
-                        const xml = Blockly.Xml.textToDom(scene.workspace);
+                      if (scene.workspace[this.props.gameState] !== '') {
+                        const xml = Blockly.Xml.textToDom(scene.workspace[this.props.gameState]);
                         Blockly.Xml.domToWorkspace(xml, Blockly.mainWorkspace);
                       }
                     });
@@ -119,6 +119,7 @@ const mapStateToProps = state => ({
   selectedFile: state.home.selectedFile,
   scenes: state.home.scenes,
   slectedSceneIndex: state.home.slectedSceneIndex,
+  gameState: state.home.gameState,
 });
 
 const mapDispatchToProps = {
