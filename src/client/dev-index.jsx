@@ -20,6 +20,7 @@ import VariableDialog from './VariableDialog';
 import {
   selectFile,
   uploadImage,
+  uploadAudio,
   uploadImageForTile,
   setSlectedGameobjectIndex,
   updateWorkspace,
@@ -44,6 +45,7 @@ class BlocklyPart extends React.Component {
   constructor(props) {
     super(props);
     this.editor = React.createRef();
+    this.hiddenInput = React.createRef();
     this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
   }
   componentDidMount() {
@@ -72,7 +74,6 @@ class BlocklyPart extends React.Component {
   updateBlocks = (gameObjects, scenes, slectedSceneIndex, slectedGameobjectIndex, images) => {
     const currentScene = scenes && scenes.find(scene => scene.key === slectedSceneIndex);
     const currentGameobject = gameObjects && gameObjects.find(gameObject => gameObject.key === slectedGameobjectIndex);
-    console.log('update blocks');
     if (currentScene) {
       this.variableListBlockUpdate(currentScene.variables, null, gameObjects, images);
       // this.functionListBlockUpdate(currentScene.functions, null, gameObjects, images);
@@ -311,6 +312,10 @@ class BlocklyPart extends React.Component {
     this.props.setVariableDialogState(object);
   }
 
+  createAudioCallback = () => {
+    this.hiddenInput.current.click();
+  }
+
   customVariableCallback = (workspace, scenes, slectedSceneIndex, gameObjects, slectedGameobjectIndex) => {
     let xmlList = [];
     const currentScene = scenes.find(scene => scene.key === slectedSceneIndex);
@@ -428,7 +433,6 @@ class BlocklyPart extends React.Component {
         // xmlList.push(Blockly.Xml.textToDom('<xml/></sep></xml>').firstChild);
       });
     } else if (currentObject) {
-      console.log(currentObject.functions);
       for (let i = 0; i < currentObject.functions.length; i++) {
         const blockText = '<xml>' +
           '<block type="call_function">' +
@@ -452,6 +456,28 @@ class BlocklyPart extends React.Component {
         }
         // xmlList.push(Blockly.Xml.textToDom('<xml/></sep></xml>').firstChild);
       });
+    }
+    return xmlList;
+  };
+
+  customAudioCallback = (workspace, audios) => {
+    let xmlList = [];
+
+    xmlList = [
+      Blockly.Xml.textToDom('<xml><button text="Upload Audio File" callbackKey = "CREATE_AUDIO_CALLBACK"></button></xml>').firstChild,
+      Blockly.Xml.textToDom('<xml><block type="play_audio"></block></xml>').firstChild,
+      Blockly.Xml.textToDom('<xml><block type="pause_audio"></block></xml>').firstChild,
+      Blockly.Xml.textToDom('<xml><block type="resume_audio"></block></xml>').firstChild,
+      Blockly.Xml.textToDom('<xml><block type="stop_audio"></block></xml>').firstChild,
+    ];
+    for (let i = 0; i < audios.length; i++) {
+      const blockText = '<xml>' +
+        '<block type="audio">' +
+        `<field name="NAME">${audios[i]}</field>` +
+        '</block>' +
+        '</xml>';
+      const block = Blockly.Xml.textToDom(blockText).firstChild;
+      xmlList.push(block);
     }
     return xmlList;
   };
@@ -598,7 +624,6 @@ class BlocklyPart extends React.Component {
           }
         }
       }
-      console.log(functionList);
       this.props.updateFunctions(currentScene ? 'scene' : 'object', currentScene.key || currentGameobject.key, functionList);
     }
     document.getElementById('code').value = code;
@@ -672,12 +697,15 @@ class BlocklyPart extends React.Component {
               // }
               node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_VARIABLE', () => this.customVariableCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex));
               node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_FUNCTION', () => this.customFunctionCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex, this.props.gameState));
+              node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_AUDIO', () => this.customAudioCallback(node.workspace, this.props.audios));
+
               // node.workspace.state.workspace.registerToolboxCategoryCallback('TILE_CATEGORY', () => this.customTileCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex));
               this.props.gameObjects.map((object) => {
                 node.workspace.state.workspace.registerToolboxCategoryCallback(`CLASS_INSTANCE_${object.name}`, () => this.classInstanceCallback(node.workspace, object, this.props.scenes, this.props.slectedSceneIndex));
                 node.workspace.state.workspace.registerButtonCallback(`CREATE_VARIABLE_CALLBACK_${object.name}`, () => this.createVariableCallback(object));
               });
               node.workspace.state.workspace.registerButtonCallback('CREATE_VARIABLE_CALLBACK', () => this.createVariableCallback('variable'));
+              node.workspace.state.workspace.registerButtonCallback('CREATE_AUDIO_CALLBACK', () => this.createAudioCallback());
               node.workspace.state.workspace.refreshToolboxSelection();
             }
           }}
@@ -695,6 +723,26 @@ class BlocklyPart extends React.Component {
             workspace.refreshToolboxSelection();
           }
           }
+        />
+        <input
+          type="file"
+          name="file"
+          onChange={(event) => {
+            this.onChangeHandler(event);
+            if (this.props.selectedFile.file) {
+              console.log(this.props.selectedFile);
+              const promise = new Promise((resolve, reject) => {
+                resolve(this.props.uploadAudio(this.props.selectedFile));
+                console.log(this.props.selectedFile);
+              });
+              promise.then((res) => {
+                this.updateToolBox(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
+              });
+            }
+          }
+          }
+          ref={this.hiddenInput}
+          style={{ display: 'none' }}
         />
         <input
           type="file"
@@ -749,12 +797,14 @@ const mapStateToProps = state => ({
   toolboxCategories: state.home.toolboxCategories,
   objectMenuOpen: state.home.objectMenuOpen.target,
   images: state.home.images,
+  audios: state.home.audios,
   gameState: state.home.gameState,
 });
 
 const mapDispatchToProps = {
   selectFile,
   uploadImage,
+  uploadAudio,
   uploadImageForTile,
   setSlectedGameobjectIndex,
   updateWorkspace,

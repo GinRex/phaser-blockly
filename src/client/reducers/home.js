@@ -26,6 +26,7 @@ const initState = {
     repeat: -1,
   },
   images: [],
+  audios: [],
 };
 
 const gameReducer = (state = initState, action) => {
@@ -44,6 +45,10 @@ const gameReducer = (state = initState, action) => {
     case 'ADD_IMAGE': {
       const newImages = [...state.images, action.image];
       return { ...state, images: newImages };
+    }
+    case 'ADD_AUDIO': {
+      const newAudios = [...state.audios, action.audio];
+      return { ...state, audios: newAudios };
     }
     case 'ADD_SCENE': {
       const scenes = [...state.scenes, action.scene];

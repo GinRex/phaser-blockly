@@ -107,4 +107,9 @@ export default [
     colour: 50,
     categories: [],
   },
+  {
+    name: 'Audio',
+    colour: 250,
+    custom: 'CUSTOM_AUDIO',
+  },
 ];

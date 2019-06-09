@@ -207,6 +207,45 @@ app.post('/api/uploadImageForTile', (req, res) => {
   });
 });
 
+app.post('/api/uploadAudio', (req, res) => {
+  // if (!req.file) {
+  //   return res.status(404).send('file not found');
+  // }
+  upload(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json(err);
+    } else if (err) {
+      return res.status(500).json(err);
+    }
+
+    req.file.name = capitalize(path.parse(req.file.filename).name);
+    // Load image to loader
+    try {
+      const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
+      const gameData = fs
+        .readFileSync(gameFile)
+        .toString()
+        .split('\n');
+      const selectedSceneEnd = gameData.indexOf('    // launch scene start');
+      gameData.splice(
+        selectedSceneEnd,
+        0,
+        `// load asset for ${req.file.name}\nthis.load.audio('${req.file.name}', 'assets/${
+          req.file.filename
+        }');`,
+      );
+
+      const text = gameData.join('\n');
+      fs.writeFile(gameFile, text, (err) => {
+        console.log(err);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+    return res.status(200).send(req.file);
+  });
+});
+
 app.post('/api/uploadJson', (req, res) => {
   upload(req, res, (err) => {
     if (err instanceof multer.MulterError) {

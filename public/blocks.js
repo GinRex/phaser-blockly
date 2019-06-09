@@ -1781,3 +1781,115 @@ Blockly.JavaScript.call_function_from = function (block) {
   const code = `${value_object_name}.${dropdown_function_list}();\n`;
   return code;
 };
+
+Blockly.Blocks.audio = {
+  init() {
+    this.appendValueInput('NAME')
+      .setCheck(null);
+    this.appendDummyInput()
+      .appendField(' = init sound')
+      .appendField(new Blockly.FieldTextInput('default'), 'NAME')
+      .appendField('loop')
+      .appendField(new Blockly.FieldCheckbox('TRUE'), 'loop');
+    this.setPreviousStatement(true, null);
+    this.setEditable(false);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.audio = function (block) {
+  const value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+  const text_name = block.getFieldValue('NAME');
+  const checkbox_loop = block.getFieldValue('loop') == 'TRUE';
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_name} = this.sound.add('${text_name}', { loop: ${checkbox_loop}});\n`;
+  return code;
+};
+
+
+Blockly.Blocks.play_audio = {
+  init() {
+    this.appendValueInput('NAME')
+      .setCheck(null)
+      .appendField('play');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.play_audio = function (block) {
+  const value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_name}.play();\n`;
+  return code;
+};
+
+Blockly.Blocks.pause_audio = {
+  init() {
+    this.appendValueInput('NAME')
+      .setCheck(null)
+      .appendField('pause');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.pause_audio = function (block) {
+  const value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_name}.pause();\n`;
+  return code;
+};
+
+Blockly.Blocks.resume_audio = {
+  init() {
+    this.appendValueInput('NAME')
+      .setCheck(null)
+      .appendField('resume');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.resume_audio = function (block) {
+  const value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_name}.resume();\n`;
+  return code;
+};
+
+Blockly.Blocks.stop_audio = {
+  init() {
+    this.appendValueInput('NAME')
+      .setCheck(null)
+      .appendField('stop');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.stop_audio = function (block) {
+  const value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_name}.stop();\n`;
+  return code;
+};
