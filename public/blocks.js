@@ -1633,3 +1633,151 @@ Blockly.JavaScript.text_wrap = function (block) {
   const code = `${value_val}.setStyle({wordWrap: { width: ${value_width} }});\n`;
   return code;
 };
+
+Blockly.Blocks.variables = {
+  init() {
+    this.appendDummyInput()
+      // .appendField(new Blockly.FieldDropdown(vars.map(variable => [variable, variable])), 'variable_list');
+      .appendField(new Blockly.FieldTextInput(''), 'variable_list');
+    this.setInputsInline(true);
+    this.setEditable(false);
+    this.setOutput(true, null);
+    this.setColour(330);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+Blockly.Blocks.variables_from = {
+  init() {
+    this.appendValueInput('object_name')
+      .setCheck(null);
+    this.appendDummyInput()
+      // .appendField(new Blockly.FieldDropdown(classVariables ? classVariables.map(variable => [variable, variable]) : []), 'variable_list');
+      .appendField(new Blockly.FieldTextInput(''), 'variable_list');
+    this.setInputsInline(true);
+    this.setEditable(false);
+    this.setOutput(true, null);
+    this.setColour(330);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+Blockly.Blocks.set_var = {
+  init() {
+    this.appendDummyInput()
+      .appendField('set')
+      // .appendField(new Blockly.FieldDropdown(vars.map(variable => [variable, variable])), 'var_list')
+      .appendField(new Blockly.FieldTextInput(''), 'var_list')
+      .appendField('=');
+    this.appendValueInput('var_value')
+      .setCheck(null);
+    this.setInputsInline(true);
+    this.setEditable(false);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(330);
+  },
+};
+Blockly.Blocks.set_var_from = {
+  init() {
+    this.appendValueInput('object_name')
+      .setCheck(null);
+    this.appendDummyInput()
+      .appendField('set')
+      // .appendField(new Blockly.FieldDropdown(vars.map(variable => [variable, variable])), 'var_list')
+      .appendField(new Blockly.FieldTextInput(''), 'var_list')
+      .appendField('=');
+    this.appendValueInput('var_value')
+      .setCheck(null);
+    this.setInputsInline(true);
+    this.setEditable(false);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(330);
+  },
+};
+
+Blockly.JavaScript.variables_from = function (block) {
+  const value_object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
+  const dropdown_variable_list = block.getFieldValue('variable_list');
+  const code = `${value_object_name}.${dropdown_variable_list}`;
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.JavaScript.set_var_from = function (block) {
+  const object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
+  const dropdown_var_list = block.getFieldValue('var_list');
+  const value_var_value = Blockly.JavaScript.valueToCode(block, 'var_value', Blockly.JavaScript.ORDER_ATOMIC);
+
+  const code = `${object_name}.${dropdown_var_list} = ${value_var_value};\n`;
+
+  return code;
+};
+
+Blockly.Blocks.call_function = {
+  init() {
+    this.appendDummyInput()
+      .appendField('call')
+      // .appendField(new Blockly.FieldDropdown(functs.map(func => [func, func])), 'function_list');
+      .appendField(new Blockly.FieldTextInput(''), 'function_list');
+    this.setInputsInline(true);
+    this.setEditable(false);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+Blockly.JavaScript.call_function = function (block) {
+  const dropdown_function_list = block.getFieldValue('function_list');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `this.${dropdown_function_list}();\n`;
+  return code;
+};
+Blockly.Blocks.call_scene_function = {
+  init() {
+    this.appendDummyInput()
+      .appendField('call')
+      // .appendField(new Blockly.FieldDropdown(functs.map(func => [func, func])), 'function_list');
+      .appendField(new Blockly.FieldTextInput(''), 'function_list');
+    this.setInputsInline(true);
+    this.setEditable(false);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(160);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+Blockly.JavaScript.call_scene_function = function (block) {
+  const dropdown_function_list = block.getFieldValue('function_list');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `this.scene.${dropdown_function_list}();\n`;
+  return code;
+};
+Blockly.Blocks.call_function_from = {
+  init() {
+    this.appendValueInput('object_name')
+      .setCheck(null);
+    this.appendDummyInput()
+      .appendField('call')
+      // .appendField(new Blockly.FieldDropdown(functs.map(func => [func, func])), 'function_list');
+      .appendField(new Blockly.FieldTextInput(''), 'function_list');
+    this.setInputsInline(true);
+    this.setEditable(false);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+Blockly.JavaScript.call_function_from = function (block) {
+  const value_object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
+  const dropdown_function_list = block.getFieldValue('function_list');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_object_name}.${dropdown_function_list}();\n`;
+  return code;
+};

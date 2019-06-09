@@ -72,13 +72,13 @@ class BlocklyPart extends React.Component {
   updateBlocks = (gameObjects, scenes, slectedSceneIndex, slectedGameobjectIndex, images) => {
     const currentScene = scenes && scenes.find(scene => scene.key === slectedSceneIndex);
     const currentGameobject = gameObjects && gameObjects.find(gameObject => gameObject.key === slectedGameobjectIndex);
-
+    console.log('update blocks');
     if (currentScene) {
       this.variableListBlockUpdate(currentScene.variables, null, gameObjects, images);
-      this.functionListBlockUpdate(currentScene.functions, null, gameObjects, images);
+      // this.functionListBlockUpdate(currentScene.functions, null, gameObjects, images);
     } else if (currentGameobject) {
       this.variableListBlockUpdate(null, currentGameobject.variables, gameObjects, images);
-      this.functionListBlockUpdate(null, currentGameobject.functions, gameObjects, images);
+      // this.functionListBlockUpdate(null, currentGameobject.functions, gameObjects, images);
     }
 
     if (currentScene) {
@@ -188,98 +188,8 @@ class BlocklyPart extends React.Component {
     }
   };
 
-  functionListBlockUpdate = (functions, classFunctions, gameObjects, images) => {
-    const functs = functions || classFunctions;
-    Blockly.Blocks.call_function = {
-      init() {
-        this.appendDummyInput()
-          .appendField('call')
-          .appendField(new Blockly.FieldDropdown(functs.map(func => [func, func])), 'function_list');
-        this.setInputsInline(true);
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setColour(230);
-        this.setTooltip('');
-        this.setHelpUrl('');
-      },
-    };
-    Blockly.JavaScript.call_function = function (block) {
-      const dropdown_function_list = block.getFieldValue('function_list');
-      // TODO: Assemble JavaScript into code variable.
-      const code =  `this.${dropdown_function_list}();\n`;
-      return code;
-    };
-    Blockly.Blocks.call_scene_function = {
-      init() {
-        this.appendDummyInput()
-          .appendField('call')
-          .appendField(new Blockly.FieldDropdown(functs.map(func => [func, func])), 'function_list');
-        this.setInputsInline(true);
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setColour(160);
-        this.setTooltip('');
-        this.setHelpUrl('');
-      },
-    };
-    Blockly.JavaScript.call_scene_function = function (block) {
-      const dropdown_function_list = block.getFieldValue('function_list');
-      // TODO: Assemble JavaScript into code variable.
-      const code =  `this.scene.${dropdown_function_list}();\n`;
-      return code;
-    };
-    Blockly.Blocks.call_function_from = {
-      init() {
-        this.appendValueInput('object_name')
-          .setCheck(null);
-        this.appendDummyInput()
-          .appendField('call')
-          .appendField(new Blockly.FieldDropdown(functs.map(func => [func, func])), 'function_list');
-        this.setInputsInline(true);
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setColour(230);
-        this.setTooltip('');
-        this.setHelpUrl('');
-      },
-    };
-    Blockly.JavaScript.call_function_from = function (block) {
-      let value_object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
-      const dropdown_function_list = block.getFieldValue('function_list');
-      // TODO: Assemble JavaScript into code variable.
-      const code = `${value_object_name}.${dropdown_function_list}();\n`;
-      return code;
-    };
-  }
-
   variableListBlockUpdate = (variables, classVariables, gameObjects, images) => {
     const vars = variables || classVariables;
-    Blockly.Blocks.variables = {
-      init() {
-        this.appendDummyInput()
-          .appendField(new Blockly.FieldDropdown(vars.map(variable => [variable, variable])), 'variable_list');
-        this.setInputsInline(true);
-        this.setOutput(true, null);
-        this.setColour(330);
-        this.setTooltip('');
-        this.setHelpUrl('');
-      },
-    };
-    Blockly.Blocks.set_var = {
-      init() {
-        this.appendDummyInput()
-          .appendField('set')
-          .appendField(new Blockly.FieldDropdown(vars.map(variable => [variable, variable])), 'var_list')
-          .appendField('=');
-        this.appendValueInput('var_value')
-          .setCheck(null);
-        this.setInputsInline(true);
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setColour(330);
-      },
-    };
-
     Blockly.Blocks.tile_sprite = {
       init() {
         this.appendValueInput('variable')
@@ -424,6 +334,26 @@ class BlocklyPart extends React.Component {
         xmlList.push(block);
         xmlList.push(setBlock);
       }
+      // generate code for variable from class
+      gameObjects.map((gameObject) => {
+        xmlList.push(Blockly.Xml.textToDom('<xml>' + `<label text="From Class: ${gameObject.name}"></label>` + '</xml>').firstChild);
+        for (let i = 0; i < gameObject.variables.length; i++) {
+          const blockText = '<xml>' +
+            '<block type="variables_from">' +
+            `<field name="variable_list" variabletype="">${gameObject.variables[i]}</field>` +
+            '</block>' +
+            '</xml>';
+          const setText = '<xml>' +
+            '<block type="set_var_from">' +
+            `<field name="var_list" variabletype="">${gameObject.variables[i]}</field>` +
+            '</block>' +
+            '</xml>';
+          const block = Blockly.Xml.textToDom(blockText).firstChild;
+          const setBlock = Blockly.Xml.textToDom(setText).firstChild;
+          xmlList.push(block);
+          xmlList.push(setBlock);
+        }
+      });
     } else if (currentObject) {
       xmlList = [Blockly.Xml.textToDom('<xml><button text="Create Variable" callbackKey = "CREATE_VARIABLE_CALLBACK"></button></xml>').firstChild];
       for (let i = 0; i < currentObject.variables.length; i++) {
@@ -498,6 +428,7 @@ class BlocklyPart extends React.Component {
         // xmlList.push(Blockly.Xml.textToDom('<xml/></sep></xml>').firstChild);
       });
     } else if (currentObject) {
+      console.log(currentObject.functions);
       for (let i = 0; i < currentObject.functions.length; i++) {
         const blockText = '<xml>' +
           '<block type="call_function">' +
@@ -576,32 +507,6 @@ class BlocklyPart extends React.Component {
     images,
     gameState,
   ) => {
-    Blockly.JavaScript.game_state = function (block) {
-      const statements_event_code = Blockly.JavaScript.statementToCode(block, 'GAME_CODE');
-      const dropdown_event = block.getFieldValue('GAME_STATE');
-      const value_event_name = Blockly.JavaScript.valueToCode(
-        block,
-        'STATE_NAME',
-        Blockly.JavaScript.ORDER_ATOMIC,
-      );
-      if (dropdown_event == 'NO_EVENT_SELECTED') {
-        return "//error, you did not select an STATE in the 'when game state' block\n";
-      }
-      if (dropdown_event == 'create') {
-        const code = `\n${statements_event_code}\n}`;
-        return code;
-      }
-      if (dropdown_event == 'update' && slectedSceneIndex !== '') {
-        const code = `${dropdown_event}(){\n${statements_event_code}\n`;
-        return code;
-      }
-      if (dropdown_event == 'update' && slectedSceneIndex == '') {
-        const code = `${dropdown_event}(scene){\n${statements_event_code}\n}`;
-        return code;
-      }
-      const code = `${dropdown_event}(){\n${statements_event_code}\n}`;
-      return code;
-    };
     // code js for variables
     Blockly.JavaScript.variables = function (block) {
       const dropdown_variable_list = block.getFieldValue('variable_list');
@@ -610,14 +515,15 @@ class BlocklyPart extends React.Component {
 
       if (slectedGameobjectIndex && !currentGameobject.variables.includes(dropdown_variable_list)) {
         code = `this.scene.${dropdown_variable_list}`;
-      } else if (gameState !== 0) {
-        code = `this.${dropdown_variable_list}`;
+        // } else if (gameState !== 0) {
+        //   code = `this.${dropdown_variable_list}`;
       } else {
-        code = `${dropdown_variable_list}`;
+        code = `this.${dropdown_variable_list}`;
       }
       // TODO: Change ORDER_NONE to the correct strength.
       return [code, Blockly.JavaScript.ORDER_NONE];
     };
+
 
     Blockly.JavaScript.set_var = function (block) {
       const dropdown_var_list = block.getFieldValue('var_list');
@@ -627,11 +533,11 @@ class BlocklyPart extends React.Component {
       const currentGameobject = gameObjects.find(gameObject => gameObject.key === slectedGameobjectIndex);
 
       if (slectedGameobjectIndex && !currentGameobject.variables.includes(dropdown_var_list)) {
-        code = `scene.${dropdown_var_list} = ${value_var_value};\n`;
-      } else if (gameState !== 0) {
-        code = `this.${dropdown_var_list} = ${value_var_value};\n`;
+        code = `this.scene.${dropdown_var_list} = ${value_var_value};\n`;
+        // } else if (gameState !== 0) {
+        //   code = `this.${dropdown_var_list} = ${value_var_value};\n`;
       } else {
-        code = `${dropdown_var_list} = ${value_var_value};\n`;
+        code = `this.${dropdown_var_list} = ${value_var_value};\n`;
       }
 
       return code;
@@ -760,10 +666,10 @@ class BlocklyPart extends React.Component {
             if (node) {
               node.resize();
               this.editor = node;
-              if (currentScene) {
-                // this.variableListBlockUpdate(currentScene.variables);
-                this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
-              }
+              // if (currentScene) {
+              // this.variableListBlockUpdate(currentScene.variables);
+              this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
+              // }
               node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_VARIABLE', () => this.customVariableCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex));
               node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_FUNCTION', () => this.customFunctionCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex, this.props.gameState));
               // node.workspace.state.workspace.registerToolboxCategoryCallback('TILE_CATEGORY', () => this.customTileCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex));
@@ -785,6 +691,7 @@ class BlocklyPart extends React.Component {
               this.props.images,
               this.props.gameState,
             );
+            // this.updateBlocks(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
             workspace.refreshToolboxSelection();
           }
           }
