@@ -14,17 +14,7 @@ const initState = {
   spriteEditOpen: false,
   variableDialogOpen: '',
   objectMenuOpen: { target: null },
-  animations: { example: [0, 0, 0, 0] },
-  animInfo: {
-    name: 'name',
-    prefix: 'sprite_',
-    suffix: '.png',
-    start: 0,
-    end: 0,
-    zeroPad: 0,
-    frameRate: 30,
-    repeat: -1,
-  },
+  animations: [],
   images: [],
   audios: [],
 };
@@ -84,14 +74,14 @@ const gameReducer = (state = initState, action) => {
       return { ...state, objectMenuOpen: { target: action.open } };
     case 'UPDATE_ANIMATIONS':
       return { ...state, animations: action.animations };
-    case 'UPDATE_SPRITE_INFO':
-      return { ...state, animInfo: action.info };
+    // case 'UPDATE_SPRITE_INFO':
+    //   return { ...state, animInfo: action.info };
     case 'UPDATE_JSON_SPRITE': {
-      const newGameObjects = state.gameObjects.map(gameObject =>
-        (gameObject.key === action.data.name
-          ? { ...gameObject, jsonSprite: action.data.filename }
-          : gameObject));
-      return { ...state, gameObjects: newGameObjects };
+      const newImages = state.images.map(image =>
+        (image.name === action.data.name
+          ? { ...image, jsonSprite: action.data.data }
+          : image));
+      return { ...state, images: newImages };
     }
     case 'ADD_ANIMATION': {
       const newGameObjects = state.gameObjects.map(gameObject =>

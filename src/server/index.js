@@ -137,7 +137,7 @@ app.post('/api/uploadImage', (req, res) => {
       gameData.splice(
         selectedSceneEnd,
         0,
-        `// load asset for ${req.file.name}\nthis.load.image('${req.file.name}', 'assets/${req.file.filename}');`,
+        `// load asset for ${req.file.filename}\nthis.load.image('${req.file.name}', 'assets/${req.file.filename}');`,
       );
 
       const text = gameData.join('\n');
@@ -191,8 +191,8 @@ app.post('/api/uploadImageForTile', (req, res) => {
       gameData.splice(
         selectedSceneEnd,
         0,
-        `// load asset for ${req.file.name}\nthis.load.image('${req.file.name}', 'assets/${
-          req.file.filename
+        `// load asset for ${req.file.filename}\nthis.load.image('${req.file.name}', 'assets/${
+        req.file.filename
         }');`,
       );
 
@@ -230,8 +230,8 @@ app.post('/api/uploadAudio', (req, res) => {
       gameData.splice(
         selectedSceneEnd,
         0,
-        `// load asset for ${req.file.name}\nthis.load.audio('${req.file.name}', 'assets/${
-          req.file.filename
+        `// load asset for ${req.file.filename}\nthis.load.audio('${req.file.name}', 'assets/${
+        req.file.filename
         }');`,
       );
 
@@ -253,8 +253,22 @@ app.post('/api/uploadJson', (req, res) => {
     } else if (err) {
       return res.status(500).json(err);
     }
+    console.log(req.body);
 
     req.file.name = capitalize(path.parse(req.file.filename).name);
+    const rawData = JSON.parse(fs
+      .readFileSync(req.file.path)
+      .toString());
+
+    const frames = [];
+    if (rawData.frames) {
+      Object.entries(rawData.frames).map((frame) => {
+        frame[1].filename = frame[0];
+        frames.push(frame[1]);
+      });
+    } else if (rawData.textures.length > 0) {
+
+    }
 
     // load image to loader
     try {
@@ -263,12 +277,12 @@ app.post('/api/uploadJson', (req, res) => {
         .readFileSync(gameFile)
         .toString()
         .split('\n');
-      const selectedSceneEnd = gameData.indexOf(`// load asset for ${req.file.name}`);
+      const selectedSceneEnd = gameData.indexOf(`// load asset for ${req.body.filename}`);
       gameData.splice(
         selectedSceneEnd + 1,
         1,
-        `this.load.atlas('${req.file.name}', 'assets/${req.file.name}.png', 'assets/${
-          req.file.filename
+        `this.load.atlas('${req.file.name}', 'assets/${req.body.filename}', 'assets/${
+        req.file.filename
         }');`,
       );
 
@@ -279,7 +293,7 @@ app.post('/api/uploadJson', (req, res) => {
     } catch (err) {
       console.error(err);
     }
-    return res.status(200).send(req.file);
+    return res.status(200).send({ name: req.file.name, data: frames });
   });
 });
 
@@ -304,8 +318,8 @@ app.post('/api/createAnimation', (req, res) => {
         this.anims.create({
         key: '${name}',
         frames: this.anims.generateFrameNames('${
-  req.body.className
-}', { prefix: '${prefix}', suffix: '${suffix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
+        req.body.className
+        }', { prefix: '${prefix}', suffix: '${suffix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
         frameRate: $${frameRate},
         repeat: ${repeat},
       });\n// end create animation for ${name}`,
@@ -318,8 +332,8 @@ app.post('/api/createAnimation', (req, res) => {
         this.anims.create({
         key: '${name}',
         frames: this.anims.generateFrameNames('${
-  req.body.className
-}', { prefix: '${prefix}', suffix: '${suffix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
+        req.body.className
+        }', { prefix: '${prefix}', suffix: '${suffix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
         frameRate: ${frameRate},
         repeat: ${repeat},
       });\n// end create animation for ${name}`,

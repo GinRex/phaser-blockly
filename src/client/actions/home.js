@@ -100,9 +100,10 @@ export const uploadJson = (file, name) => (dispatch) => {
   console.log(file);
   const data = new FormData();
   data.append('file', file);
-  data.append('className', name);
+  data.append('filename', name);
   console.log(data);
   return axios.post('http://localhost:8080/api/uploadJson', data, {}).then((res) => {
+    console.log(res.data);
     dispatch({
       type: 'UPDATE_JSON_SPRITE',
       data: res.data,
@@ -191,10 +192,10 @@ export const addAnimations = (className, animation) => dispatch =>
       });
     });
 
-export const updateSpriteInfo = info => ({
-  type: 'UPDATE_SPRITE_INFO',
-  info,
-});
+// export const updateSpriteInfo = info => ({
+//   type: 'UPDATE_SPRITE_INFO',
+//   info,
+// });
 
 export const addJsonSprite = gameObjects => ({
   type: 'UPDATE_SPRITE_INFO',

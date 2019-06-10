@@ -6,11 +6,13 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import ClassIcon from '@material-ui/icons/Build';
 import SceneIcon from '@material-ui/icons/Tv';
+import ImageIcon from '@material-ui/icons/Image';
 
 
 import {
   updateGame,
   updateScene,
+  setSpriteEditorState,
 } from './actions/home';
 
 const styles = theme => ({
@@ -63,7 +65,7 @@ const SubHeader = props => (
       className={props.classes.button}
     >
       <ClassIcon />
-      Class
+      {/* Class */}
     </Button>
     <Button
       onClick={() => {
@@ -74,7 +76,18 @@ const SubHeader = props => (
       className={props.classes.button}
     >
       <SceneIcon />
-      Scene
+      {/* Scene */}
+    </Button>
+    <Button
+      onClick={() => {
+        props.setSpriteEditorState(true);
+      }}
+      variant="contained"
+      color="inherit"
+      className={props.classes.button}
+    >
+      <ImageIcon />
+      {/* Animations */}
     </Button>
   </div>
 );
@@ -89,6 +102,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   updateGame,
   updateScene,
+  setSpriteEditorState,
 };
 
 export default connect(

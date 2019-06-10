@@ -13,7 +13,7 @@ import UpdateIcon from '@material-ui/icons/Cached';
 import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
 import ReactBlocklyComponent from './index';
-import SpriteEditor from './SpirteEditor';
+import SpriteEditor from './SpirteEditorAlter';
 import VariableDialog from './VariableDialog';
 
 

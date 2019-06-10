@@ -11,14 +11,22 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import { connect } from 'react-redux';
-import { Stage, Layer, Rect, Text, Image, Sprite } from 'react-konva';
+import { Stage, Layer, Rect, Text, Image, Sprite, Label } from 'react-konva';
 import Konva from 'konva';
 import Phaser from 'phaser';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Chip from '@material-ui/core/Chip';
+
 
 import {
   setSpriteEditorState,
   updateAnimations,
-  updateSpriteInfo,
   uploadJson,
   addAnimations,
 } from './actions/home';
@@ -45,71 +53,73 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-const SquareList = (ani) => {
-  const info = ani.info;
-  const squares = [];
-  for (let i = 0; i < info.n; i++) {
-    squares.push(<Rect
-      x={info.x + info.w * i}
-      y={info.y}
-      width={info.w}
-      height={info.h}
-      stroke="red"
-      // fill="red"
-      strokeWidth={1}
-    />);
-  }
-  return squares;
-};
+// maybe consider change this to draw sprite instead of json
 
-function preload(file) {
-  this.load.atlas(
-    'atlas',
-    `assets/animations/${file.alt}.png`,
-    `assets/animations/${file.alt}.json`,
-  );
-}
+// const SquareList = (ani) => {
+//   const info = ani.info;
+//   const squares = [];
+//   for (let i = 0; i < info.n; i++) {
+//     squares.push(<Rect
+//       x={info.x + info.w * i}
+//       y={info.y}
+//       width={info.w}
+//       height={info.h}
+//       stroke="red"
+//       // fill="red"
+//       strokeWidth={1}
+//     />);
+//   }
+//   return squares;
+// };
 
-function create() {
-  this.anims.create({
-    key: 'diamond',
-    frames: this.anims.generateFrameNames('atlas', {
-      prefix: 'diamond_',
-      end: 15,
-      zeroPad: 4,
-    }),
-    repeat: -1,
-  });
+// const SquareList = (ani) => {
+//   const info = ani.info;
+//   console.log(info);
 
-  console.log(this.anims);
-  const gem = this.add
-    .sprite(10, 10, 'atlas')
-    .play('diamond')
-    .setScale(2);
-}
+//   const squares = [];
+//   info.map((square) => {
+//     squares.push(<Rect
+//       x={square.frame.x}
+//       y={square.frame.y}
+//       width={square.frame.w}
+//       height={square.frame.h}
+//       stroke="red"
+//       // fill="red"
+//       strokeWidth={1}
+//     // onClick={()}
+//     />);
+//   });
+// for (let i = 0; i < info.length; i++) {
+//   squares.push(<Rect
+//     x={10}
+//     y={20}
+//     width={200}
+//     height={200}
+//     stroke="red"
+//     // fill="red"
+//     strokeWidth={1}
+//   />);
+// }
+//   return squares;
+// };
 
 class SpriteEditor extends React.Component {
   constructor(props) {
     super(props);
+    this.stage = React.createRef();
   }
-  componentDidUpdate() {
-    this.image = new window.Image();
-    this.image.src =
-      // `assets/${this.props.gameObject.filename}`;
-      this.props.selectedFile && this.props.selectedFile.src ? this.props.selectedFile.src : '';
-  }
-
-  config = {
-    type: Phaser.AUTO,
-    parent: 'animation-pv',
-    pixelArt: true,
-    width: 300,
-    height: 300,
-    scene: {
-      // preload: () => preload(this.props.selectedFile),
-      // create,
+  state = {
+    selectedImageKey: '',
+    frameKey: '',
+    imageFile: null,
+    animInfo: {
+      key: '',
+      frames: [],
+      frameRate: 30,
+      repeat: -1,
     },
-  };
+    animationPV: { example: [] },
+  }
 
   onChangeHandler = (event, name) => {
     if (FileReader && event.target.files[0]) {
@@ -124,23 +134,35 @@ class SpriteEditor extends React.Component {
     }
   };
 
-  getPreviewAnimations = (info) => {
+  getPreviewAnimations = (animInfo, jsonSprite) => {
     const animations = [];
-    for (let i = 0; i < info.n; i++) {
-      animations.push(info.x + info.w * i);
-      animations.push(info.y);
-      animations.push(info.w);
-      animations.push(info.h);
-    }
-    this.props.updateAnimations({ example: animations });
+    animInfo.frames.map((frame) => {
+      jsonSprite.filter(sprite => sprite.filename === frame.frame).map((sprite) => {
+        animations.push(sprite.frame.x);
+        animations.push(sprite.frame.y);
+        animations.push(sprite.frame.w);
+        animations.push(sprite.frame.h);
+      });
+    });
+    console.log(animations, animInfo.frames);
+
+    // const info = animInfo.frames;
+    // for (let i = 0; i < info.length; i++) {
+    //   animations.push(info.x + info.w * i);
+    //   animations.push(info.y);
+    //   animations.push(info.w);
+    //   animations.push(info.h);
+    // }
+    return animations;
   };
 
   render() {
     const { classes } = this.props;
+    const currentImage = this.props.images.find(image => image.filename === this.state.selectedImageKey);
     return (
       <div>
         <Dialog
-          ref={this.modalRef}
+          // ref={this.modalRef}
           open={this.props.spriteEditOpen}
           onClose={() => this.props.setSpriteEditorState(false)}
           scroll="paper"
@@ -152,6 +174,39 @@ class SpriteEditor extends React.Component {
           <DialogTitle id="scroll-dialog-title">Animation</DialogTitle>
           <DialogContent>
             <div className={classes.paper}>
+              <div>
+                <div className={classes.toolbar} />
+                <Divider />
+                <List>
+                  {this.props.images.map(image => (
+                    <ListItem
+                      button
+                      key={image.name}
+                      style={{ flexDirection: 'column' }}
+                      selected={this.state.selectedImageKey === image.filename}
+                      onClick={(event) => {
+                        // console.log(event.currentTarget.getAttribute('key'));
+                        const imageFile = new window.Image();
+                        imageFile.src = event.target.src;
+                        this.setState({ selectedImageKey: event.target.alt, imageFile, frameKey: image.name });
+                        console.log(this.state);
+                      }
+                      }
+                    >
+                      <img
+                        src={`assets/${image.filename}`}
+                        style={{
+                          width: 95,
+                          height: 95,
+                        }}
+                        alt={image.filename}
+                      />
+                      <ListItemText primary={image.filename} />
+                    </ListItem>
+                  ))}
+                </List>
+                <Divider />
+              </div>
               <div
                 style={{
                   margin: '0',
@@ -163,23 +218,80 @@ class SpriteEditor extends React.Component {
                   overflow: 'auto',
                 }}
               >
-                {/* {this.props.selectedFile &&
-                  this.props.gameObjects.find(gameObject => gameObject.key === this.props.selectedFile.alt) &&
-                  this.props.gameObjects.find(gameObject => gameObject.key === this.props.selectedFile.alt).jsonSprite ? ( */}
-                <Stage width={2000} height={3000}>
-                  <Layer>
-                    <Image image={this.image} />
-                    <SquareList info={this.props.animInfo} />
-                  </Layer>
-                </Stage>
-                {/* ) : (
-                    'Please import JSON file for the sprite'
-                  )} */}
-                {/* <input
-                  type="file"
-                  name="file"
-                  onChange={event => this.onChangeHandler(event, this.props.selectedFile.alt)}
-                /> */}
+                {this.state.selectedImageKey !== '' &&
+                  currentImage &&
+                  currentImage.jsonSprite ? (
+                    <Stage
+                      width={window.innerWidth}
+                      height={window.innerHeight}
+                      // scaleX={1}
+                      // scaleY={1}
+                      ref={(node) => {
+                        if (node) {
+                          this.stage = node;
+                          node.draggable(true);
+                        }
+                      }}
+                      onWheel={(e) => {
+                        const scaleBy = 1.01;
+                        e.evt.preventDefault();
+                        const oldScale = this.stage.scaleX();
+
+                        const mousePointTo = {
+                          x: this.stage.getPointerPosition().x / oldScale - this.stage.x() / oldScale,
+                          y: this.stage.getPointerPosition().y / oldScale - this.stage.y() / oldScale,
+                        };
+
+                        const newScale =
+                          e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+                        this.stage.scale({ x: newScale, y: newScale });
+
+                        const newPos = {
+                          x:
+                            -(mousePointTo.x - this.stage.getPointerPosition().x / newScale) *
+                            newScale,
+                          y:
+                            -(mousePointTo.y - this.stage.getPointerPosition().y / newScale) *
+                            newScale,
+                        };
+                        this.stage.position(newPos);
+                        this.stage.batchDraw();
+                      }}
+                    >
+                      <Layer>
+                        <Image image={this.state.imageFile} />
+                        {currentImage.jsonSprite.map(square =>
+                          (<Rect
+                            x={square.frame.x}
+                            y={square.frame.y}
+                            width={square.frame.w}
+                            height={square.frame.h}
+                            stroke="red"
+                            // fill="red"
+                            strokeWidth={1}
+                            onClick={() => {
+                              const frames = [...this.state.animInfo.frames];
+                              const selectedFrame = frames.find(frame => frame.frame === square.filename);
+                              if (selectedFrame) {
+                                this.setState({ animInfo: { ...this.state.animInfo, frames: frames.filter(frame => frame.frame !== selectedFrame.frame) } });
+                              } else {
+                                this.setState({ animInfo: { ...this.state.animInfo, frames: [...frames, { key: this.state.frameKey, frame: square.filename }] } });
+                              }
+                              this.setState({ animationPV: { example: this.getPreviewAnimations(this.state.animInfo, currentImage.jsonSprite) } });
+                            }}
+                          />))}
+                        {/* <SquareList info={this.props.images.find(image => image.filename === this.state.selectedImageKey).jsonSprite} /> */}
+                      </Layer>
+                    </Stage>
+                  ) : (
+                    this.state.selectedImageKey ? 'Please import JSON file for the sprite' : 'Select sprite to create animations'
+                  )}
+                {this.state.selectedImageKey ?
+                  <input
+                    type="file"
+                    name="file"
+                    onChange={event => this.onChangeHandler(event, this.state.selectedImageKey)}
+                  /> : null}
               </div>
               <div
                 style={{
@@ -189,132 +301,76 @@ class SpriteEditor extends React.Component {
                   flexDirection: 'column',
                 }}
               >
-                <div
+                {/* <div
                   id="animation-pv"
                   ref={(node) => {
                     if (node && !this.game) this.game = new Phaser.Game(this.config);
                   }}
-                />
-                {/* <Stage width={200} height={200}>
+                /> */}
+                <Stage width={200} height={200}>
                   <Layer>
                     <Sprite
                       x={0}
                       y={0}
-                      image={this.image}
+                      image={this.state.imageFile}
                       animation="example"
-                      animations={this.props.animations}
-                      frameRate={10}
+                      animations={this.state.animationPV}
+                      frameRate={this.state.animInfo.frameRate}
                       frameIndex={0}
                       ref={(node) => {
                         if (node && !node.isRunning()) node.start();
                       }}
                     />
                   </Layer>
-                </Stage> */}
+                </Stage>
+                {this.state.animInfo.frames.map(frame => (
+                  <Chip
+                    key={frame.frame}
+                    // icon={icon}
+                    label={frame.frame}
+                    onDelete={() => {
+                      this.setState({ animInfo: { ...this.state.animInfo, frames: this.state.animInfo.frames.filter(fm => fm.frame !== frame.frame) } },
+                      () => {
+                        this.setState({ animationPV: { example: this.getPreviewAnimations(this.state.animInfo, currentImage.jsonSprite) } });
+                      }
+                      );
+                      
+                    }}
+                  // className={classes.chip}
+                  />
+                ))
+
+                }
                 <TextField
                   id="standard-name"
-                  label="Animation name"
+                  label="Animation key"
                   className={classes.textField}
-                  value={this.props.animInfo.name}
+                  value={this.state.animInfo.key}
                   onChange={(event) => {
-                    this.props.updateSpriteInfo({
-                      ...this.props.animInfo,
-                      name: event.target.value,
+                    this.setState({
+                      animInfo: {
+                        ...this.state.animInfo,
+                        name: event.target.value,
+                      },
                     });
                   }}
                   margin="normal"
                 />
-                <TextField
-                  id="standard-name"
-                  label="prefix"
-                  className={classes.textField}
-                  value={this.props.animInfo.prefix}
-                  onChange={(event) => {
-                    const newAniInfo = {
-                      ...this.props.animInfo,
-                      prefix: event.target.value,
-                    };
-                    this.props.updateSpriteInfo(newAniInfo);
-                    // this.getPreviewAnimations(newAniInfo);
-                  }}
-                  margin="normal"
-                />
-                <TextField
-                  id="standard-name"
-                  label="subffix"
-                  className={classes.textField}
-                  value={this.props.animInfo.suffix}
-                  onChange={(event) => {
-                    const newAniInfo = {
-                      ...this.props.animInfo,
-                      suffix: event.target.value,
-                    };
-                    this.props.updateSpriteInfo(newAniInfo);
-                    // this.getPreviewAnimations(newAniInfo);
-                  }}
-                  margin="normal"
-                />
-                <TextField
-                  id="standard-name"
-                  label="start"
-                  className={classes.textField}
-                  type="number"
-                  value={this.props.animInfo.start}
-                  onChange={(event) => {
-                    const newAniInfo = {
-                      ...this.props.animInfo,
-                      start: parseFloat(event.target.value),
-                    };
-                    this.props.updateSpriteInfo(newAniInfo);
-                    // this.getPreviewAnimations(newAniInfo);
-                  }}
-                  margin="normal"
-                />
-                <TextField
-                  id="standard-name"
-                  label="end"
-                  className={classes.textField}
-                  type="number"
-                  value={this.props.animInfo.end}
-                  onChange={(event) => {
-                    const newAniInfo = {
-                      ...this.props.animInfo,
-                      end: parseFloat(event.target.value),
-                    };
-                    this.props.updateSpriteInfo(newAniInfo);
-                    // this.getPreviewAnimations(newAniInfo);
-                  }}
-                  margin="normal"
-                />
-                <TextField
-                  id="standard-name"
-                  label="zero-pad"
-                  className={classes.textField}
-                  type="number"
-                  value={this.props.animInfo.zeroPad}
-                  onChange={(event) => {
-                    const newAniInfo = {
-                      ...this.props.animInfo,
-                      zeroPad: parseFloat(event.target.value),
-                    };
-                    this.props.updateSpriteInfo(newAniInfo);
-                    // this.getPreviewAnimations(newAniInfo);
-                  }}
-                  margin="normal"
-                />
+
                 <TextField
                   id="standard-name"
                   label="Frame rate"
                   className={classes.textField}
                   type="number"
-                  value={this.props.animInfo.frameRate}
+                  value={this.state.animInfo.frameRate}
                   onChange={(event) => {
-                    const newAniInfo = {
-                      ...this.props.animInfo,
-                      frameRate: parseFloat(event.target.value),
-                    };
-                    this.props.updateSpriteInfo(newAniInfo);
-                    // this.getPreviewAnimations(newAniInfo);
+                    this.setState({
+                      animInfo: {
+                        ...this.state.animInfo,
+                        frameRate: parseFloat(event.target.value),
+                      },
+                    });
+                    // this.setState({ animationPV: { example: this.getPreviewAnimations(this.state.animInfo, currentImage.jsonSprite) } });
                   }}
                   margin="normal"
                 />
@@ -323,13 +379,14 @@ class SpriteEditor extends React.Component {
                   label="repeat"
                   className={classes.textField}
                   type="number"
-                  value={this.props.animInfo.repeat}
+                  value={this.state.animInfo.repeat}
                   onChange={(event) => {
-                    const newAniInfo = {
-                      ...this.props.animInfo,
-                      repeat: parseFloat(event.target.value),
-                    };
-                    this.props.updateSpriteInfo(newAniInfo);
+                    this.setState({
+                      animInfo: {
+                        ...this.state.animInfo,
+                        repeat: parseFloat(event.target.value),
+                      },
+                    });
                     // this.getPreviewAnimations(newAniInfo);
                   }}
                   margin="normal"
@@ -360,12 +417,12 @@ const mapStateToProps = state => ({
   animations: state.home.animations,
   animInfo: state.home.animInfo,
   gameObjects: state.home.gameObjects,
+  images: state.home.images,
 });
 
 const mapDispatchToProps = {
   setSpriteEditorState,
   updateAnimations,
-  updateSpriteInfo,
   uploadJson,
   addAnimations,
 };
