@@ -46,12 +46,14 @@ class scene1 extends Phaser.Scene {
     (this.cat2).x = 100;
     (this.cat2).y = 350;
     // (this.cat1).setDisplaySize(100, 100);
-    (this.cat2).play('bird');
+    (this.cat2).play('run');
     this.physics.world.enable(this.cat1, 0);
     this.physics.world.enable(this.cat2, 1);
     this.cat1.body.setSize(17, 10, false);
     this.cat2.body.updateFromGameObject();
     this.cat1.body.setGravity(0, 100);
+    // this.cat2.setDisplaySize(500, 500);
+    // this.cat2.body.updateFromGameObject();
     this.physics.world.collide(this.cat1, this.cat2);
 
     // create end

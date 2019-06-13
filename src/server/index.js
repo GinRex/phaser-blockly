@@ -232,14 +232,18 @@ app.post('/api/uploadJson', (req, res) => {
       .readFileSync(req.file.path)
       .toString());
 
-    const frames = [];
+    let frames = [];
     if (rawData.frames) {
-      Object.entries(rawData.frames).map((frame) => {
-        frame[1].filename = frame[0];
-        frames.push(frame[1]);
-      });
+      if (rawData.frames.length) {
+        frames = rawData.frames;
+      } else {
+        Object.entries(rawData.frames).map((frame) => {
+          frame[1].filename = frame[0];
+          frames.push(frame[1]);
+        });
+      }
     } else if (rawData.textures.length > 0) {
-
+      frames = awData.texture[0].frames;
     }
 
     // load image to loader

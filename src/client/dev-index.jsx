@@ -436,7 +436,7 @@ class BlocklyPart extends React.Component {
     for (let i = 0; i < audios.length; i++) {
       const blockText = '<xml>' +
         '<block type="audio">' +
-        `<field name="NAME">${audios[i]}</field>` +
+        `<field name="song_name">${audios[i].filename}</field>` +
         '</block>' +
         '</xml>';
       const block = Blockly.Xml.textToDom(blockText).firstChild;
@@ -706,6 +706,21 @@ class BlocklyPart extends React.Component {
           type="file"
           name="file"
           onChange={(event) => {
+            if (FileReader && event.target.files[0]) {
+              const fr = new FileReader();
+              const file = event.target.files[0];
+              fr.onloadend = () => {
+                file.src = fr.result;
+                const promise = new Promise((resolve, reject) => {
+                  resolve(this.props.uploadAudio(file));
+                });
+                promise.then((res) => {
+                  this.updateToolBox(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
+                });
+
+              };
+              fr.readAsDataURL(file);
+            }
             this.onChangeHandler(event);
             if (this.props.selectedFile.file) {
               console.log(this.props.selectedFile);

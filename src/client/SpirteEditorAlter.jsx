@@ -177,8 +177,6 @@ class SpriteEditor extends React.Component {
               const file = event.target.files[0];
               fr.onloadend = () => {
                 file.src = fr.result;
-                // this.props.selectFile(file);
-                // this.props.uploadJson(file, name);
                 this.props.uploadImage(file);
               };
               fr.readAsDataURL(file);
@@ -262,6 +260,12 @@ class SpriteEditor extends React.Component {
                   overflow: 'auto',
                 }}
               >
+                {this.state.selectedImageKey ?
+                  <input
+                    type="file"
+                    name="file"
+                    onChange={event => this.onChangeHandler(event, this.state.selectedImageKey)}
+                  /> : null}
                 {this.state.selectedImageKey !== '' &&
                   currentImage &&
                   currentImage.jsonSprite ? (
@@ -330,12 +334,6 @@ class SpriteEditor extends React.Component {
                   ) : (
                     this.state.selectedImageKey ? 'Please import JSON file for the sprite' : 'Select sprite to create animations'
                   )}
-                {this.state.selectedImageKey ?
-                  <input
-                    type="file"
-                    name="file"
-                    onChange={event => this.onChangeHandler(event, this.state.selectedImageKey)}
-                  /> : null}
               </div>
               <div
                 style={{

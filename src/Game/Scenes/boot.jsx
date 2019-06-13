@@ -30,6 +30,8 @@ this.load.atlas('Flapp', 'assets/flapp.png', 'assets/flapp.json');
 this.load.image('Cat', 'assets/cat.png');
 // load asset for mario-sprites.png
 this.load.atlas('Mario-sprites', 'assets/mario-sprites.png', 'assets/mario-sprites.json');
+// load asset for overworld.mp3
+this.load.audio('Overworld', 'assets/overworld.mp3');
     // launch scene start
     this.load.on('progress', (value) => {
       progressBar.clear();
@@ -42,9 +44,9 @@ this.load.atlas('Mario-sprites', 'assets/mario-sprites.png', 'assets/mario-sprit
     this.load.on('complete', () => {
       // create animations
 // create animation for run
-        this.anims.create({
+this.anims.create({
         key: 'run',
-        frames: [{"key":"Mario-sprites","frame":"59"},{"key":"Mario-sprites","frame":"60"},{"key":"Mario-sprites","frame":"61"}], 
+        frames: [{"key":"Mario-sprites","frame":"mario/walk1"},{"key":"Mario-sprites","frame":"mario/walk2"},{"key":"Mario-sprites","frame":"mario/walk3"}], 
         frameRate: 20,
         repeat: -1,
       });

@@ -1784,15 +1784,15 @@ Blockly.JavaScript.call_function_from = function (block) {
 
 Blockly.Blocks.audio = {
   init() {
-    this.appendValueInput('NAME')
+    this.appendValueInput('object_name')
       .setCheck(null);
     this.appendDummyInput()
       .appendField(' = init sound')
-      .appendField(new Blockly.FieldTextInput('default'), 'NAME')
+      .appendField(new Blockly.FieldTextInput('default'), 'song_name')
       .appendField('loop')
       .appendField(new Blockly.FieldCheckbox('TRUE'), 'loop');
     this.setPreviousStatement(true, null);
-    this.setEditable(false);
+    // this.setEditable(false);
     this.setNextStatement(true, null);
     this.setColour(230);
     this.setTooltip('');
@@ -1801,8 +1801,8 @@ Blockly.Blocks.audio = {
 };
 
 Blockly.JavaScript.audio = function (block) {
-  const value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
-  const text_name = block.getFieldValue('NAME');
+  const value_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
+  const text_name = block.getFieldValue('song_name');
   const checkbox_loop = block.getFieldValue('loop') == 'TRUE';
   // TODO: Assemble JavaScript into code variable.
   const code = `${value_name} = this.sound.add('${text_name}', { loop: ${checkbox_loop}});\n`;

@@ -77,9 +77,9 @@ export const uploadImage = file => (dispatch) => {
 };
 
 export const uploadAudio = file => (dispatch) => {
-  console.log(file.file);
+  console.log(file);
   const data = new FormData();
-  data.append('file', file.file);
+  data.append('file', file);
   return axios.post('http://localhost:8080/api/uploadAudio', data, {}).then((res) => {
     dispatch({
       type: 'ADD_AUDIO',
