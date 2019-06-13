@@ -108,6 +108,11 @@ export default [
     categories: [],
   },
   {
+    name: 'Animations',
+    colour: 150,
+    custom: 'CUSTOM_ANIMATIONS',
+  },
+  {
     name: 'Audio',
     colour: 250,
     custom: 'CUSTOM_AUDIO',

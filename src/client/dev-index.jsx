@@ -21,7 +21,6 @@ import {
   selectFile,
   uploadImage,
   uploadAudio,
-  uploadImageForTile,
   setSlectedGameobjectIndex,
   updateWorkspace,
   updateGame,
@@ -87,8 +86,6 @@ class BlocklyPart extends React.Component {
         Blockly.Blocks[`instance_${gameObject.name}`] = {
           init() {
             this.appendDummyInput()
-              .appendField(new Blockly.FieldImage(`assets/${gameObject.filename}`, 20, 20, '*'));
-            this.appendDummyInput()
               .appendField(new Blockly.FieldDropdown(currentScene.objects.filter(object =>
                 (object.class === gameObject.name)).map(object => [object.variableName, object.variableName])), 'object_list');
             this.setInputsInline(true);
@@ -100,8 +97,6 @@ class BlocklyPart extends React.Component {
         };
         Blockly.Blocks[`create_gameobject_${gameObject.name}`] = {
           init() {
-            this.appendDummyInput()
-              .appendField(new Blockly.FieldImage(`assets/${gameObject.filename}`, 20, 20, '*'));
             this.appendDummyInput()
               .appendField('create')
               .appendField(new Blockly.FieldDropdown(currentScene.objects.filter(object =>
@@ -117,8 +112,6 @@ class BlocklyPart extends React.Component {
         Blockly.Blocks[`update_gameobject_${gameObject.name}`] = {
           init() {
             this.appendDummyInput()
-              .appendField(new Blockly.FieldImage(`assets/${gameObject.filename}`, 20, 20, '*'));
-            this.appendDummyInput()
               .appendField('update')
               .appendField(new Blockly.FieldDropdown(currentScene.objects.filter(object =>
                 (object.class === gameObject.name)).map(object => [object.variableName, object.variableName])), 'object_list');
@@ -130,36 +123,6 @@ class BlocklyPart extends React.Component {
             this.setHelpUrl('');
           },
         };
-        if (gameObject.animations && gameObject.animations.length) {
-          Blockly.Blocks[`play_animation_${gameObject.name}`] = {
-            init() {
-              this.appendValueInput('object_name').setCheck(null);
-              this.appendDummyInput()
-                .appendField('play')
-                .appendField(
-                  new Blockly.FieldDropdown(gameObject.animations.map(animation => [animation.name, animation.name])),
-                  'animation',
-                );
-              this.setInputsInline(true);
-              this.setPreviousStatement(true, null);
-              this.setNextStatement(true, null);
-              this.setColour(160);
-              this.setTooltip('');
-              this.setHelpUrl('');
-            },
-          };
-          Blockly.JavaScript[`play_animation_${gameObject.name}`] = function (block) {
-            const value_object_name = Blockly.JavaScript.valueToCode(
-              block,
-              'object_name',
-              Blockly.JavaScript.ORDER_ATOMIC,
-            );
-            const dropdown_animation = block.getFieldValue('animation');
-            // TODO: Assemble JavaScript into code variable.
-            const code = `${value_object_name}.play('${dropdown_animation}');\n`;
-            return code;
-          };
-        }
         // code
         Blockly.JavaScript[`instance_${gameObject.name}`] = function (block) {
           const dropdown_variable_list = block.getFieldValue('object_list');
@@ -172,7 +135,7 @@ class BlocklyPart extends React.Component {
           const dropdown_variable_list = block.getFieldValue('object_list'); // TODO: Assemble JavaScript into code variable.
           const code = `this.${dropdown_variable_list} = new Class.${gameObject.name}({
             scene: this,
-            key: '${gameObject.name}',
+            key: '',
             x: 0,
             y: 0,
             w: 100,
@@ -481,6 +444,20 @@ class BlocklyPart extends React.Component {
     }
     return xmlList;
   };
+  customAnimationsCallback = (workspace, animations) => {
+    console.log(animations);
+    const xmlList = [];
+    for (let i = 0; i < animations.length; i++) {
+      const blockText = '<xml>' +
+        '<block type="play_animation">' +
+        `<field name="animation">${animations[i].key}</field>` +
+        '</block>' +
+        '</xml>';
+      const block = Blockly.Xml.textToDom(blockText).firstChild;
+      xmlList.push(block);
+    }
+    return xmlList;
+  };
 
   classInstanceCallback = (workspace, gameObject, scenes, slectedSceneIndex) => {
     let xmlList = [];
@@ -511,15 +488,15 @@ class BlocklyPart extends React.Component {
         const blockUpdate = Blockly.Xml.textToDom(blockUpdateText).firstChild;
         xmlList.push(blockUpdate);
       }
-      for (let i = 0; i < gameObject.animations.length; i++) {
-        const aniBlockText = '<xml>' +
-          `<block type="play_animation_${gameObject.name}">` +
-          `<field name="animation" variabletype="">${gameObject.animations[i].name}</field>` +
-          '</block>' +
-          '</xml>';
-        const aniBlock = Blockly.Xml.textToDom(aniBlockText).firstChild;
-        xmlList.push(aniBlock);
-      }
+      // for (let i = 0; i < gameObject.animations.length; i++) {
+      //   const aniBlockText = '<xml>' +
+      //     `<block type="play_animation_${gameObject.name}">` +
+      //     `<field name="animation" variabletype="">${gameObject.animations[i].name}</field>` +
+      //     '</block>' +
+      //     '</xml>';
+      //   const aniBlock = Blockly.Xml.textToDom(aniBlockText).firstChild;
+      //   xmlList.push(aniBlock);
+      // }
     }
     return xmlList;
   };
@@ -698,6 +675,7 @@ class BlocklyPart extends React.Component {
               node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_VARIABLE', () => this.customVariableCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex));
               node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_FUNCTION', () => this.customFunctionCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex, this.props.gameState));
               node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_AUDIO', () => this.customAudioCallback(node.workspace, this.props.audios));
+              node.workspace.state.workspace.registerToolboxCategoryCallback('CUSTOM_ANIMATIONS', () => this.customAnimationsCallback(node.workspace, this.props.animations));
 
               // node.workspace.state.workspace.registerToolboxCategoryCallback('TILE_CATEGORY', () => this.customTileCallback(node.workspace, this.props.scenes, this.props.slectedSceneIndex, this.props.gameObjects, this.props.slectedGameobjectIndex));
               this.props.gameObjects.map((object) => {
@@ -744,7 +722,7 @@ class BlocklyPart extends React.Component {
           ref={this.hiddenInput}
           style={{ display: 'none' }}
         />
-        <input
+        {/* <input
           type="file"
           name="file"
           onChange={this.onChangeHandler}
@@ -780,7 +758,7 @@ class BlocklyPart extends React.Component {
           }}
         >
           Upload Image
-        </button>
+        </button> */}
         <SpriteEditor updateToolBoxAnimations={() => this.updateToolBox(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images)} />
         <VariableDialog />
       </div>
@@ -797,6 +775,7 @@ const mapStateToProps = state => ({
   toolboxCategories: state.home.toolboxCategories,
   objectMenuOpen: state.home.objectMenuOpen.target,
   images: state.home.images,
+  animations: state.home.animations,
   audios: state.home.audios,
   gameState: state.home.gameState,
 });
@@ -805,7 +784,6 @@ const mapDispatchToProps = {
   selectFile,
   uploadImage,
   uploadAudio,
-  uploadImageForTile,
   setSlectedGameobjectIndex,
   updateWorkspace,
   updateGame,

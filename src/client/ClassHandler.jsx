@@ -3,17 +3,19 @@ import Popover from '@material-ui/core/Popover';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import SpeedDial from '@material-ui/lab/SpeedDial';
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
-import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
+import PersonIcon from '@material-ui/icons/Person';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+
 
 import {
   selectFile,
-  uploadImage,
-  uploadImageForTile,
+  addClass,
   setSlectedGameobjectIndex,
   updateWorkspace,
   updateGame,
@@ -22,28 +24,20 @@ import {
   updateToolbox,
   setSpriteEditorState,
   setObjectMenuState,
-  setVariableDialogState,
 } from './actions/home';
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
-  },
-  speedDial: {
-    position: 'absolute',
-    bottom: 10,
-    right: 3,
-    zIndex: 100,
+    margin: 5,
+    width: 100,
+    height: 100,
+    borderRadius: 20,
   },
 });
 
-const actions = [
-  { icon: <CloudUploadIcon />, name: 'Upload Image for use' },
-  { icon: <CreateNewFolderIcon />, name: 'Create Class from Image' },
-];
-
 const ClassHandler = (props) => {
   const [open, setOpen] = useState(false);
+  const [classname, setClassname] = useState('');
 
   return (
     <div >
@@ -65,40 +59,38 @@ const ClassHandler = (props) => {
         }}
         style={{ display: 'none' }}
       />
-      <SpeedDial
-        ariaLabel="SpeedDial tooltip example"
-        className={props.classes.speedDial}
-        hidden={!props.down}
-        icon={<SpeedDialIcon />}
-        onBlur={() => setOpen(false)}
-        onClick={() => setOpen(!open)}
-        onClose={() => setOpen(false)}
-        onFocus={() => {
-          if (props.down) setOpen(true);
-        }}
-        onMouseEnter={() => {
-          if (props.down) setOpen(true);
-        }}
-        onMouseLeave={() => setOpen(false)}
+      <Dialog
+        // ref={this.modalRef}
         open={open}
+        onClose={() => setOpen(false)}
+        scroll="paper"
+        aria-labelledby="scroll-dialog-title"
+        // TransitionComponent={Transition}
+        fullWidth
       >
-        {actions.map(action => (
-          <SpeedDialAction
-            key={action.name}
-            icon={action.icon}
-            tooltipTitle={action.name}
-            tooltipOpen
-            // onClick={() => {
-            //   this.inputRef.click();
-            //   console.log('aaa', this.inputRef);
-            //   setOpen(!open);
-            // }}
-            ButtonProps={{
-              onClick: e => console.log(e),
-            }}
+        <DialogTitle id="form-dialog-title">Create Class</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Class Name"
+            fullWidth
+            value={classname}
+            onChange={event => setClassname(event.target.value)}
           />
-        ))}
-      </SpeedDial>
+          <Button
+            onClick={() => {
+              props.addClass(classname);
+            }}
+            variant="contained"
+            color="primary"
+          // className={props.classes.button}
+          >
+            Create Class
+          </Button>
+        </DialogContent>
+      </Dialog>
       <SwipeableDrawer
         anchor="bottom"
         open={props.down}
@@ -135,8 +127,7 @@ const ClassHandler = (props) => {
                 borderColor: 'black',
               }}
             >
-              <img
-                src={`assets/${gameObject.filename}`}
+              <PersonIcon
                 style={{
                   width: 95,
                   height: 95,
@@ -154,26 +145,17 @@ const ClassHandler = (props) => {
                 }}
                 alt={gameObject.name}
               />
-              <Popover
-                id="simple-popper"
-                open={Boolean(props.objectMenuOpen)}
-                anchorEl={props.objectMenuOpen}
-                onClose={() => props.setObjectMenuState(null)}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-              >
-                <div onClick={() => props.setSpriteEditorState(true)}>
-                  Create Animation
-                </div>
-              </Popover>
+              {gameObject.name}
             </div>
           ))}
+          <PersonAddIcon
+            onClick={() => {
+              setOpen(true);
+            }}
+            variant="contained"
+            color="primary"
+            className={props.classes.button}
+          />
         </div>
       </SwipeableDrawer>
     </div>
@@ -194,8 +176,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   selectFile,
-  uploadImage,
-  uploadImageForTile,
+  addClass,
   setSlectedGameobjectIndex,
   updateWorkspace,
   updateGame,
@@ -204,7 +185,6 @@ const mapDispatchToProps = {
   updateToolbox,
   setSpriteEditorState,
   setObjectMenuState,
-  setVariableDialogState,
 };
 
 export default connect(

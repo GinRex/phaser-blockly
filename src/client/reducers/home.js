@@ -84,17 +84,14 @@ const gameReducer = (state = initState, action) => {
       return { ...state, images: newImages };
     }
     case 'ADD_ANIMATION': {
-      const newGameObjects = state.gameObjects.map(gameObject =>
-        (gameObject.key === action.className
-          ? {
-            ...gameObject,
-            animations: gameObject.animations.filter(animation => animation.name === state.animInfo.name).length
-              ? gameObject.animations.map(animation =>
-                (animation.name === state.animInfo.name ? state.animInfo : animation))
-              : [...gameObject.animations, state.animInfo],
-          }
-          : gameObject));
-      return { ...state, gameObjects: newGameObjects };
+      const newAnimations = state.animations.findIndex(animation => animation.key === action.animation.key) === -1 ?
+        [...state.animations, action.animation] :
+        state.animations.map(animation =>
+          (animation.key === action.animation.key
+            ? action.animation
+            : animation
+          ));
+      return { ...state, animations: newAnimations };
     }
     case 'ADD_VARIABLE': {
       const newScenes = state.scenes.map(scene =>

@@ -1893,3 +1893,35 @@ Blockly.JavaScript.stop_audio = function (block) {
   const code = `${value_name}.stop();\n`;
   return code;
 };
+
+
+Blockly.Blocks.play_animation = {
+  init() {
+    this.appendValueInput('object_name').setCheck(null);
+    this.appendDummyInput()
+      .appendField('play')
+      // .appendField(
+      //   new Blockly.FieldDropdown(gameObject.animations.map(animation => [animation.name, animation.name])),
+      //   'animation',
+      // );
+      .appendField(new Blockly.FieldTextInput(''), 'animation');
+    this.setEditable(false);
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(160);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+Blockly.JavaScript.play_animation = function (block) {
+  const value_object_name = Blockly.JavaScript.valueToCode(
+    block,
+    'object_name',
+    Blockly.JavaScript.ORDER_ATOMIC,
+  );
+  const dropdown_animation = block.getFieldValue('animation');
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_object_name}.play('${dropdown_animation}');\n`;
+  return code;
+};

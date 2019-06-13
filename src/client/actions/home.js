@@ -46,31 +46,26 @@ export const updateSceneWorkspace = scenes => ({
   scenes,
 });
 
+export const addClass = name => dispatch => axios.post('http://localhost:8080/api/addClass', { name }, {}).then((res) => {
+  console.log(res.data);
+  dispatch(addObject({
+    name: res.data,
+    workspace: ['', '', ''],
+    jsCode: ['', '', ''],
+    key: res.data,
+    variables: [],
+    instances: [],
+    functions: [],
+  }));
+});
+
+
 export const uploadImage = file => (dispatch) => {
-  console.log(file.file);
+  // console.log(file.file);
   const data = new FormData();
-  data.append('file', file.file);
+  data.append('file', file);
+  console.log(data.file);
   return axios.post('http://localhost:8080/api/uploadImage', data, {}).then((res) => {
-    dispatch(addObject({
-      name: res.data.name,
-      filename: res.data.filename,
-      workspace: ['', '', ''],
-      jsCode: ['', '', ''],
-      key: res.data.name,
-      animations: [],
-      variables: [],
-      instances: [],
-      functions: [],
-    }));
-  });
-};
-
-
-export const uploadImageForTile = file => (dispatch) => {
-  console.log(file.file);
-  const data = new FormData();
-  data.append('file', file.file);
-  return axios.post('http://localhost:8080/api/uploadImageForTile', data, {}).then((res) => {
     dispatch({
       type: 'ADD_IMAGE',
       image: {
@@ -182,13 +177,13 @@ export const updateAnimations = animations => ({
 //   className,
 // });
 
-export const addAnimations = (className, animation) => dispatch =>
+export const addAnimations = animation => dispatch =>
   axios
-    .post('http://localhost:8080/api/createAnimation', { className, animation }, {})
+    .post('http://localhost:8080/api/createAnimation', { animation }, {})
     .then((res) => {
       dispatch({
         type: 'ADD_ANIMATION',
-        className,
+        animation: res.data,
       });
     });
 

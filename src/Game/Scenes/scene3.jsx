@@ -2,14 +2,14 @@ import 'phaser';
 import * as Class from '../Classes';
 import key from '../keyBoardInput';
 
-class scene1 extends Phaser.Scene {
+class scene3 extends Phaser.Scene {
   constructor(props) {
     super({
-      key: 'scene1',
+      key: 'scene3',
     });
   }
-  scene1() {
-    Phaser.Scene.call(this, { key: 'scene1', active: false });
+  scene3() {
+    Phaser.Scene.call(this, { key: 'scene3', active: false });
   }
 
   preload() {
@@ -37,4 +37,4 @@ class scene1 extends Phaser.Scene {
 
 }
 
-export default scene1;
+export default scene3;

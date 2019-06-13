@@ -23,12 +23,15 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Chip from '@material-ui/core/Chip';
 
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+
 
 import {
   setSpriteEditorState,
   updateAnimations,
   uploadJson,
   addAnimations,
+  uploadImage,
 } from './actions/home';
 
 const styles = theme => ({
@@ -107,6 +110,7 @@ class SpriteEditor extends React.Component {
   constructor(props) {
     super(props);
     this.stage = React.createRef();
+    this.inputRef = React.createRef();
   }
   state = {
     selectedImageKey: '',
@@ -161,6 +165,27 @@ class SpriteEditor extends React.Component {
     const currentImage = this.props.images.find(image => image.filename === this.state.selectedImageKey);
     return (
       <div>
+        <input
+          ref={(node) => {
+            if (node) this.inputRef = node;
+          }}
+          type="file"
+          name="file"
+          onChange={(event) => {
+            if (FileReader && event.target.files[0]) {
+              const fr = new FileReader();
+              const file = event.target.files[0];
+              fr.onloadend = () => {
+                file.src = fr.result;
+                // this.props.selectFile(file);
+                // this.props.uploadJson(file, name);
+                this.props.uploadImage(file);
+              };
+              fr.readAsDataURL(file);
+            }
+          }}
+          style={{ display: 'none' }}
+        />
         <Dialog
           // ref={this.modalRef}
           open={this.props.spriteEditOpen}
@@ -202,10 +227,29 @@ class SpriteEditor extends React.Component {
                         alt={image.filename}
                       />
                       <ListItemText primary={image.filename} />
-                    </ListItem>
+                    </ListItem >
                   ))}
+                  <Button
+                    onClick={() => {
+                      this.inputRef.click();
+                    }}
+                    variant="contained"
+                    color="inherit"
+                  // className={props.classes.button}
+                  >
+                    <AddPhotoAlternateIcon
+                      // style={{
+                      //   width: 95,
+                      //   height: 95,
+
+                      // }}
+                      variant="contained"
+                      color="primary"
+                    />
+                    Upload
+                  </Button>
+
                 </List>
-                <Divider />
               </div>
               <div
                 style={{
@@ -329,12 +373,12 @@ class SpriteEditor extends React.Component {
                     // icon={icon}
                     label={frame.frame}
                     onDelete={() => {
-                      this.setState({ animInfo: { ...this.state.animInfo, frames: this.state.animInfo.frames.filter(fm => fm.frame !== frame.frame) } },
-                      () => {
-                        this.setState({ animationPV: { example: this.getPreviewAnimations(this.state.animInfo, currentImage.jsonSprite) } });
-                      }
+                      this.setState(
+                        { animInfo: { ...this.state.animInfo, frames: this.state.animInfo.frames.filter(fm => fm.frame !== frame.frame) } },
+                        () => {
+                          this.setState({ animationPV: { example: this.getPreviewAnimations(this.state.animInfo, currentImage.jsonSprite) } });
+                        },
                       );
-                      
                     }}
                   // className={classes.chip}
                   />
@@ -350,7 +394,7 @@ class SpriteEditor extends React.Component {
                     this.setState({
                       animInfo: {
                         ...this.state.animInfo,
-                        name: event.target.value,
+                        key: event.target.value,
                       },
                     });
                   }}
@@ -393,8 +437,8 @@ class SpriteEditor extends React.Component {
                 />
                 <Button
                   onClick={() => {
-                    this.props.addAnimations(this.props.selectedFile.alt, this.props.animInfo);
-                    this.props.updateToolBoxAnimations();
+                    this.props.addAnimations(this.state.animInfo);
+                    // this.props.updateToolBoxAnimations();
                   }}
                   variant="contained"
                   color="primary"
@@ -425,6 +469,7 @@ const mapDispatchToProps = {
   updateAnimations,
   uploadJson,
   addAnimations,
+  uploadImage,
 };
 
 export default connect(

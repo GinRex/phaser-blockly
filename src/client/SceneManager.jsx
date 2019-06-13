@@ -4,8 +4,11 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
-import { setSlectedSceneIndex, addScene } from './actions/home';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import MovieIcon from '@material-ui/icons/Movie';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+
+import { setSlectedSceneIndex, addScene } from './actions/home';
 
 const styles = theme => ({
   button: {
@@ -71,7 +74,7 @@ class SceneManager extends React.Component {
           >
             {this.props.scenes &&
               this.props.scenes.map(scene => (
-                <div
+                <MovieIcon
                   onClick={() => {
                     const promise = new Promise((resolve, reject) => {
                       resolve(this.props.setSlectedSceneIndex(scene.key));
@@ -98,16 +101,14 @@ class SceneManager extends React.Component {
                   alt={scene.name}
                 />
               ))}
-            <Button
+            <AddBoxIcon
               onClick={() => {
                 this.addNewScene(this.props.scenes);
               }}
               variant="contained"
               color="primary"
               className={classes.button}
-            >
-              +
-            </Button>
+            />
           </div>
         </SwipeableDrawer>
       </div>

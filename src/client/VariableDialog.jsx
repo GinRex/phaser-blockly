@@ -65,14 +65,6 @@ class VariableDialog extends React.Component {
           >
             <DialogTitle id="form-dialog-title">Create Object</DialogTitle>
             <DialogContent>
-              <img
-                src={`assets/${this.props.variableDialogOpen.filename}`}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 20,
-                }}
-              />
               <DialogContentText>
                 Enter object info
               </DialogContentText>
@@ -86,56 +78,6 @@ class VariableDialog extends React.Component {
                 value={this.state.variableName}
                 onChange={event => this.setState({ variableName: event.target.value })}
               />
-              {/* <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="x"
-                type="number"
-                fullWidth
-                value={this.state.x}
-                onChange={event => this.setState({ x: event.target.value })}
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="y"
-                type="number"
-                fullWidth
-                value={this.state.y}
-                onChange={event => this.setState({ y: event.target.value })}
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="width"
-                type="number"
-                fullWidth
-                value={this.state.w}
-                onChange={event => this.setState({ w: event.target.value })}
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="height"
-                type="number"
-                fullWidth
-                value={this.state.h}
-                onChange={event => this.setState({ h: event.target.value })}
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="order (to camera)"
-                type="number"
-                fullWidth
-                value={this.state.order}
-                onChange={event => this.setState({ order: event.target.value })}
-              /> */}
             </DialogContent>
             <DialogActions>
               <Button onClick={() => this.props.setVariableDialogState(null)} color="primary">
@@ -148,11 +90,6 @@ class VariableDialog extends React.Component {
                     resolve(this.props.addInstance({
                       variableName: this.state.variableName,
                       class: this.props.variableDialogOpen.name,
-                      // x: this.state.x,
-                      // y: this.state.y,
-                      // w: this.state.w,
-                      // h: this.state.h,
-                      // order: this.state.order,
                     }, this.props.slectedSceneIndex));
                   });
                   promise.then((res) => {

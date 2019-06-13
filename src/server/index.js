@@ -113,62 +113,33 @@ app.post('/api/loadGame', (req, res) => {
   return res.status(200).send(gameData);
 });
 
-app.post('/api/uploadImage', (req, res) => {
+app.post('/api/addClass', (req, res) => {
   // if (!req.file) {
   //   return res.status(404).send('file not found');
   // }
-  upload(req, res, (err) => {
-    if (err instanceof multer.MulterError) {
-      return res.status(500).json(err);
-    } else if (err) {
-      return res.status(500).json(err);
+  // req.body.name = capitalize(path.parse(req.file.filename).name);
+
+  // create class file
+  const objectName = `${__dirname}/../Game/Classes/${req.body.name}`;
+  fs.readFile(`${__dirname}/gameObjectTemplate.js`, 'utf8', (error, data) => {
+    if (error) {
+      return console.log(err);
     }
-
-    req.file.name = capitalize(path.parse(req.file.filename).name);
-
-    // load image to loader
-    try {
-      const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
-      const gameData = fs
-        .readFileSync(gameFile)
-        .toString()
-        .split('\n');
-      const selectedSceneEnd = gameData.indexOf('    // launch scene start');
-      gameData.splice(
-        selectedSceneEnd,
-        0,
-        `// load asset for ${req.file.filename}\nthis.load.image('${req.file.name}', 'assets/${req.file.filename}');`,
-      );
-
-      const text = gameData.join('\n');
-      fs.writeFile(gameFile, text, (err) => {
-        console.log(err);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-
-    // create object file
-    const objectName = `${__dirname}/../Game/Classes/${req.file.name}`;
-    fs.readFile(`${__dirname}/gameObjectTemplate.js`, 'utf8', (error, data) => {
-      if (error) {
-        return console.log(err);
-      }
-      const result = data.replace(/Name/g, req.file.name);
-      fs.writeFile(`${objectName}.jsx`, result, 'utf8', (e) => {
-        if (e) return console.log(err);
-      });
+    const result = data.replace(/Name/g, req.body.name);
+    fs.writeFile(`${objectName}.jsx`, result, 'utf8', (e) => {
+      if (e) return console.log(err);
     });
-    // export all objects file to index
-    const result = `export ${req.file.name} from './${req.file.name}';\n`;
-    fs.appendFile(`${__dirname}/../Game/Classes/index.js`, result, 'utf8', (err) => {
-      if (err) return console.log(err);
-    });
-    return res.status(200).send(req.file);
   });
+  // export all objects file to index
+  const result = `export ${req.body.name} from './${req.body.name}';\n`;
+  fs.appendFile(`${__dirname}/../Game/Classes/index.js`, result, 'utf8', (err) => {
+    if (err) return console.log(err);
+  });
+  return res.status(200).send(req.body.name);
 });
 
-app.post('/api/uploadImageForTile', (req, res) => {
+app.post('/api/uploadImage', (req, res) => {
+  console.log(req.file);
   // if (!req.file) {
   //   return res.status(404).send('file not found');
   // }
@@ -178,6 +149,7 @@ app.post('/api/uploadImageForTile', (req, res) => {
     } else if (err) {
       return res.status(500).json(err);
     }
+    console.log(req.file);
 
     req.file.name = capitalize(path.parse(req.file.filename).name);
     // Load image to loader
@@ -192,7 +164,7 @@ app.post('/api/uploadImageForTile', (req, res) => {
         selectedSceneEnd,
         0,
         `// load asset for ${req.file.filename}\nthis.load.image('${req.file.name}', 'assets/${
-        req.file.filename
+          req.file.filename
         }');`,
       );
 
@@ -231,7 +203,7 @@ app.post('/api/uploadAudio', (req, res) => {
         selectedSceneEnd,
         0,
         `// load asset for ${req.file.filename}\nthis.load.audio('${req.file.name}', 'assets/${
-        req.file.filename
+          req.file.filename
         }');`,
       );
 
@@ -282,7 +254,7 @@ app.post('/api/uploadJson', (req, res) => {
         selectedSceneEnd + 1,
         1,
         `this.load.atlas('${req.file.name}', 'assets/${req.body.filename}', 'assets/${
-        req.file.filename
+          req.file.filename
         }');`,
       );
 
@@ -299,8 +271,9 @@ app.post('/api/uploadJson', (req, res) => {
 
 app.post('/api/createAnimation', (req, res) => {
   const {
-    name, prefix, suffix, start, end, zeroPad, repeat, frameRate,
+    key, frames, repeat, frameRate,
   } = req.body.animation;
+  console.log(frames);
   try {
     const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
     const gameData = fs
@@ -308,35 +281,32 @@ app.post('/api/createAnimation', (req, res) => {
       .toString()
       .split('\n');
     const animationStart = gameData.indexOf('      // create animations');
-    const replaceAnimationStart = gameData.indexOf(`// create animation for ${name}`);
-    const replaceAnimationEnd = gameData.indexOf(`// end create animation for ${name}`);
+    const replaceAnimationStart = gameData.indexOf(`// create animation for ${key}`);
+    const replaceAnimationEnd = gameData.indexOf(`// end create animation for ${key}`);
     if (replaceAnimationStart !== -1) {
+      console.log('no', replaceAnimationStart);
       gameData.splice(
         replaceAnimationStart + 1,
-        replaceAnimationStart - replaceAnimationEnd - 1,
-        `// create animation for ${name}
-        this.anims.create({
-        key: '${name}',
-        frames: this.anims.generateFrameNames('${
-        req.body.className
-        }', { prefix: '${prefix}', suffix: '${suffix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
-        frameRate: $${frameRate},
+        replaceAnimationEnd - replaceAnimationStart - 1,
+        `this.anims.create({
+        key: '${key}',
+        frames: ${JSON.stringify(frames)}, 
+        frameRate: ${frameRate},
         repeat: ${repeat},
-      });\n// end create animation for ${name}`,
+      });`,
       );
     } else {
+      console.log('yes', animationStart);
       gameData.splice(
         animationStart + 1,
         0,
-        `// create animation for ${name}
+        `// create animation for ${key}
         this.anims.create({
-        key: '${name}',
-        frames: this.anims.generateFrameNames('${
-        req.body.className
-        }', { prefix: '${prefix}', suffix: '${suffix}', start: ${start}, end: ${end}, zeroPad: ${zeroPad} }),
+        key: '${key}',
+        frames: ${JSON.stringify(frames)}, 
         frameRate: ${frameRate},
         repeat: ${repeat},
-      });\n// end create animation for ${name}`,
+      });\n// end create animation for ${key}`,
       );
     }
 
@@ -347,7 +317,7 @@ app.post('/api/createAnimation', (req, res) => {
   } catch (err) {
     console.error(err);
   }
-  return res.status(200).send(req.body.className);
+  return res.status(200).send(req.body.animation);
 });
 
 app.post('/api/createGame', (req, res) => {
