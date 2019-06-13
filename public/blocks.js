@@ -1925,3 +1925,82 @@ Blockly.JavaScript.play_animation = function (block) {
   const code = `${value_object_name}.play('${dropdown_animation}');\n`;
   return code;
 };
+
+Blockly.Blocks.set_physic_size = {
+  init() {
+    this.appendValueInput('object_name')
+      .setCheck(null)
+      .appendField('set physics size');
+    this.appendValueInput('width')
+      .setCheck(null)
+      .appendField('width');
+    this.appendValueInput('height')
+      .setCheck(null)
+      .appendField('height');
+    this.appendDummyInput()
+      .appendField('center')
+      .appendField(new Blockly.FieldCheckbox('TRUE'), 'center');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(30);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.set_physic_size = function (block) {
+  const value_object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_width = Blockly.JavaScript.valueToCode(block, 'width', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_height = Blockly.JavaScript.valueToCode(block, 'height', Blockly.JavaScript.ORDER_ATOMIC);
+  const checkbox_center = block.getFieldValue('center') == 'TRUE';
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_object_name}.body.setSize(${value_width}, ${value_height}, ${checkbox_center});\n`;
+  return code;
+};
+
+Blockly.Blocks.update_static_size = {
+  init() {
+    this.appendValueInput('object_name')
+      .setCheck(null)
+      .appendField('update static size');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(130);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.update_static_size = function (block) {
+  const value_object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = '...;\n';
+  return code;
+};
+
+Blockly.Blocks.enable_phyisic = {
+  init() {
+    this.appendValueInput('object_name')
+      .setCheck(null)
+      .appendField('enable physics for');
+    this.appendDummyInput()
+      .appendField('static')
+      .appendField(new Blockly.FieldCheckbox('FALSE'), 'static');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.enable_phyisic = function (block) {
+  const value_object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
+  const checkbox_static = block.getFieldValue('static') == 'TRUE' ? 1 : 0;
+  // TODO: Assemble JavaScript into code variable.
+  const code = `this.physics.world.enable(${value_object_name}, ${checkbox_static});\n`;
+  return code;
+};

@@ -398,6 +398,8 @@ app.post('/api/updateGameSetting', (req, res) => {
   const GAME_NAME = req.body.game_name;
   const width = req.body.width;
   const height = req.body.height;
+  const gravity = req.body.gravity;
+  const debug = req.body.debug;
   console.log(GAME_NAME);
 
   // update game file
@@ -406,11 +408,22 @@ app.post('/api/updateGameSetting', (req, res) => {
     const data = fs.readFileSync(`${__dirname}/../Game/Game.jsx`).toString().split('\n');
     const updateEndIndex = data.indexOf('  // game width and height end');
     const updateStartIndex = data.indexOf('  // game width and height start');
-    console.log(data);
     data.splice(
       updateStartIndex + 1, updateEndIndex - updateStartIndex - 1,
       `width: ${width},
         height: ${height},`,
+    );
+    const gravityEndIndex = data.indexOf('        // game gravity end');
+    const gravityStartIndex = data.indexOf('        // game gravity start');
+    data.splice(
+      gravityStartIndex + 1, gravityEndIndex - gravityStartIndex - 1,
+      `y: ${gravity}`,
+    );
+    const debugEndIndex = data.indexOf('      // game debug end');
+    const debugStartIndex = data.indexOf('      // game debug start');
+    data.splice(
+      debugStartIndex + 1, debugEndIndex - debugStartIndex - 1,
+      `debug: ${debug},`,
     );
     const text = data.join('\n');
     fs.writeFile(`${__dirname}/../Game/Game.jsx`, text, (err) => {

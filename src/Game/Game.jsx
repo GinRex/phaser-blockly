@@ -8,24 +8,28 @@ const config = {
   type: Phaser.AUTO,
   pixelArt: true,
   // game width and height start
-  width: 500,
-  height: 400,
+width: 500,
+        height: 400,
   // game width and height end
   parent: 'phaser-game',
   physics: {
     default: 'arcade',
     arcade: {
       gravity: {
-        y: 0,
+        // game gravity start
+y: 0
+        // game gravity end
       },
-      debug: true,
+      // game debug start
+debug: false,
+      // game debug end
     },
   },
   scene: [
     boot,
     scene1,
-scene2,
-scene3,
+    scene2,
+    scene3,
     // scenes go here
   ],
 };

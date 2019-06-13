@@ -11,6 +11,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 import DoneIcon from '@material-ui/icons/Done';
+import Switch from '@material-ui/core/Switch';
+
 
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
@@ -100,6 +102,8 @@ class SubMenu extends React.Component {
       game_name: '',
       width: 500,
       height: 400,
+      gravity: 0,
+      debug: false,
       loadGameName: '',
       createOpen: false,
       settingOpen: false,
@@ -261,6 +265,34 @@ class SubMenu extends React.Component {
                           id="custom-css-outlined-input"
                           value={this.state.height}
                           onChange={event => this.setState({ height: event.target.value })}
+                        />
+                        <TextField
+                          className={classes.margin}
+                          InputLabelProps={{
+                            classes: {
+                              root: classes.cssLabel,
+                              focused: classes.cssFocused,
+                            },
+                          }}
+                          InputProps={{
+                            classes: {
+                              root: classes.cssOutlinedInput,
+                              focused: classes.cssFocused,
+                              notchedOutline: classes.notchedOutline,
+                            },
+                          }}
+                          label="Gravity"
+                          variant="outlined"
+                          id="custom-css-outlined-input"
+                          value={this.state.gravity}
+                          onChange={event => this.setState({ gravity: event.target.value })}
+                        />
+                        Debug
+                        <Switch
+                          checked={this.state.debug}
+                          onChange={event => this.setState({ debug: event.target.checked })}
+                          value={this.state.debug}
+                          inputProps={{ 'aria-label': 'secondary checkbox' }}
                         />
                         <Button
                           onClick={() => {

@@ -92,6 +92,9 @@ export default [
     name: 'Physic',
     colour: 50,
     blocks: [
+      { type: 'enable_phyisic' },
+      { type: 'set_physic_size' },
+      { type: 'update_static_size' },
       { type: 'world_bounce' },
       { type: 'set_bounce' },
       { type: 'set_velocity' },

@@ -14,9 +14,13 @@ const config = {
     default: 'arcade',
     arcade: {
       gravity: {
+        // game gravity start
         y: 0,
+        // game gravity end
       },
+      // game debug start
       debug: false,
+      // game debug end
     },
   },
   scene: [
