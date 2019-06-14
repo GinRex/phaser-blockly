@@ -199,62 +199,62 @@ class BlocklyPart extends React.Component {
       const code = `${value_variable} = this.add.tileSprite(${value_x}, ${value_y}, ${value_w}, ${value_h}, '${dropdown_image_list}');\n`;
       return code;
     };
-    if (gameObjects.length > 0) {
-      Blockly.Blocks.add_child = {
-        init() {
-          this.appendValueInput('parent')
-            .setCheck(null)
-            .appendField('add child to');
-          this.appendDummyInput()
-            .appendField('with Class =')
-            .appendField(new Blockly.FieldDropdown(gameObjects.map(gameObject => [gameObject.key, `${gameObject.key}`])), 'type');
-          this.appendValueInput('x')
-            .setCheck(null)
-            .appendField('x =');
-          this.appendValueInput('y')
-            .setCheck(null)
-            .appendField('y =');
-          this.appendValueInput('w')
-            .setCheck(null)
-            .appendField('width =');
-          this.appendValueInput('h')
-            .setCheck(null)
-            .appendField('height =');
-          // this.appendValueInput('order')
-          //   .setCheck(null)
-          //   .appendField('order =');
-          this.setInputsInline(true);
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(230);
-          this.setTooltip('');
-          this.setHelpUrl('');
-        },
-      };
+    // if (gameObjects.length > 0) {
+    //   Blockly.Blocks.add_child = {
+    //     init() {
+    //       this.appendValueInput('parent')
+    //         .setCheck(null)
+    //         .appendField('add child to');
+    //       this.appendDummyInput()
+    //         .appendField('with Class =')
+    //         .appendField(new Blockly.FieldDropdown(gameObjects.map(gameObject => [gameObject.key, `${gameObject.key}`])), 'type');
+    //       this.appendValueInput('x')
+    //         .setCheck(null)
+    //         .appendField('x =');
+    //       this.appendValueInput('y')
+    //         .setCheck(null)
+    //         .appendField('y =');
+    //       this.appendValueInput('w')
+    //         .setCheck(null)
+    //         .appendField('width =');
+    //       this.appendValueInput('h')
+    //         .setCheck(null)
+    //         .appendField('height =');
+    //       // this.appendValueInput('order')
+    //       //   .setCheck(null)
+    //       //   .appendField('order =');
+    //       this.setInputsInline(true);
+    //       this.setPreviousStatement(true, null);
+    //       this.setNextStatement(true, null);
+    //       this.setColour(230);
+    //       this.setTooltip('');
+    //       this.setHelpUrl('');
+    //     },
+    //   };
 
-      // this shouldn't be here
-      Blockly.JavaScript.add_child = function (block) {
-        const value_parent = Blockly.JavaScript.valueToCode(block, 'parent', Blockly.JavaScript.ORDER_ATOMIC);
-        const dropdown_type = block.getFieldValue('type');
-        const value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
-        const value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
-        const value_w = Blockly.JavaScript.valueToCode(block, 'w', Blockly.JavaScript.ORDER_ATOMIC);
-        const value_h = Blockly.JavaScript.valueToCode(block, 'h', Blockly.JavaScript.ORDER_ATOMIC);
-        // const value_order = Blockly.JavaScript.valueToCode(block, 'order', Blockly.JavaScript.ORDER_ATOMIC);
-        // TODO: Assemble JavaScript into code variable.
-        const code = `${value_parent}.add(
-          new Class.${dropdown_type} ({
-            scene: this,
-          key: '${dropdown_type}',
-          x: ${value_x},
-          y: ${value_y},
-          w: ${value_w},
-          h: ${value_h},
-          })
-        );\n`;
-        return code;
-      };
-    }
+    //   // this shouldn't be here
+    //   Blockly.JavaScript.add_child = function (block) {
+    //     const value_parent = Blockly.JavaScript.valueToCode(block, 'parent', Blockly.JavaScript.ORDER_ATOMIC);
+    //     const dropdown_type = block.getFieldValue('type');
+    //     const value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
+    //     const value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
+    //     const value_w = Blockly.JavaScript.valueToCode(block, 'w', Blockly.JavaScript.ORDER_ATOMIC);
+    //     const value_h = Blockly.JavaScript.valueToCode(block, 'h', Blockly.JavaScript.ORDER_ATOMIC);
+    //     // const value_order = Blockly.JavaScript.valueToCode(block, 'order', Blockly.JavaScript.ORDER_ATOMIC);
+    //     // TODO: Assemble JavaScript into code variable.
+    //     const code = `${value_parent}.add(
+    //       new Class.${dropdown_type} ({
+    //         scene: this,
+    //       key: '${dropdown_type}',
+    //       x: ${value_x},
+    //       y: ${value_y},
+    //       w: ${value_w},
+    //       h: ${value_h},
+    //       })
+    //     );\n`;
+    //     return code;
+    //   };
+    // }
   }
 
   updateToolBox = (gameObjects, scenes, slectedSceneIndex, slectedGameobjectIndex, images) => {

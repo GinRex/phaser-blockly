@@ -21,7 +21,7 @@ export default [
   {
     name: 'Game',
     colour: 50,
-    blocks: [{ type: 'game_state' }, { type: 'screen_width' }, { type: 'screen_height' }],
+    blocks: [{ type: 'pause_scene' }, { type: 'resume_scene' }, { type: 'restart_scene' }, { type: 'game_state' }, { type: 'screen_width' }, { type: 'screen_height' }],
   },
   {
     name: 'Tile',
@@ -86,7 +86,7 @@ export default [
   {
     name: 'Object',
     colour: 250,
-    blocks: [{ type: 'set_pos' }, { type: 'set_size' }, { type: 'self' }, { type: 'get_object_info' }],
+    blocks: [{ type: 'set_pos' }, { type: 'set_size' }, {type: 'set_depth'}, { type: 'set_visible'}, { type: 'self' }, { type: 'get_object_info' }],
   },
   {
     name: 'Physic',
@@ -94,6 +94,7 @@ export default [
     blocks: [
       { type: 'enable_phyisic' },
       { type: 'set_physic_size' },
+      { type: 'set_gravity' },
       { type: 'update_static_size' },
       { type: 'world_bounce' },
       { type: 'set_bounce' },

@@ -2,7 +2,7 @@ import * as Motion from '../../client/HandleMotion';
 import * as Sprite from '../../client/HandleSprite';
 import key from '../keyBoardInput';
 
-export default class Cat extends Phaser.GameObjects.Sprite {
+export default class Bird extends Phaser.GameObjects.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, config.key);
     // config.scene.physics.world.enable(this);
@@ -12,13 +12,12 @@ export default class Cat extends Phaser.GameObjects.Sprite {
     // this.body.maxVelocity.y = 0;
     this.x = config.x;
     this.y = config.y;
-
-    // create start
-    // this.body.setSize(20, 10, false);
     this.setDisplaySize(config.w, config.h);
-    // this.body.setSize(17, 10, false);
-    // this.body.setBounce(1, 1);
-    // this.body.setCollideWorldBounds(true);
+    // create start
+this.scene.physics.world.enable((this), 0);
+if ((this.scene.gamestart) == 0) {
+  (this).body.setAllowGravity(false);
+}
 
     // create end
   }
@@ -28,7 +27,18 @@ export default class Cat extends Phaser.GameObjects.Sprite {
   // functions end
 
   update() {
+    // console.log(this.scene.gameOver);
     // update start
+if (!(this.scene.gameOver) && (key(this.scene.input.keyboard, 'SPACE').isDown)) {
+  this.body.setVelocity(0, (-205));
+  (this.scene.centerVar).setVisible(false);
+}
+if ((this.scene.gameOver) && (key(this.scene.input.keyboard, 'SPACE').isDown)) {
+  this.scene.restart();
+}
+if (this.scene.gameOver) {
+  Motion.point_in_direction_degrees(this, 135);
+}
 
     // update end
   }

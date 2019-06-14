@@ -282,7 +282,7 @@ Blockly.Blocks.create_group = {
 
 Blockly.JavaScript.create_group = function (block) {
   // TODO: Assemble JavaScript into code variable.
-  const code = 'this.physics.add.group({runChildUpdate: true, allowGravity: false})';
+  const code = 'this.add.group({runChildUpdate: true, allowGravity: false})';
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
@@ -417,7 +417,7 @@ Blockly.JavaScript.add_function = function (block) {
   const text_function_name = block.getFieldValue('function_name');
   const statements_func_code = Blockly.JavaScript.statementToCode(block, 'func_code');
   // TODO: Assemble JavaScript into code variable.
-  const code = `${text_function_name} () {\n${statements_func_code}\n}\n`;
+  const code = `${text_function_name} = () => {\n${statements_func_code}\n}\n`;
   return code;
 };
 
@@ -495,7 +495,7 @@ Blockly.JavaScript.add_label = function (block) {
   const value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
   const value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  const code = `${value_name} = this.add.text(${value_x}, ${value_y}, ${value_text});\n`;
+  const code = `${value_name} = this.add.text(${value_x}, ${value_y}, ${value_text}, { font: '88px Arial', fill: '#000000' });\n`;
   return code;
 };
 
@@ -542,20 +542,51 @@ Blockly.Blocks.set_font_size = {
 };
 
 
+// Blockly.Blocks.add_child = {
+//   init() {
+//     this.appendValueInput('group_name')
+//       .setCheck(null)
+//       .appendField('add child to group');
+//     this.appendValueInput('object')
+//       .setCheck(null)
+//       .appendField('child');
+//     // this.appendValueInput('y')
+//     //   .setCheck(null)
+//     //   .appendField('y =');
+//     // this.appendDummyInput()
+//     //   .appendField('image =')
+//     //   .appendField(new Blockly.FieldTextInput('Class name'), 'key');
+//     this.setInputsInline(true);
+//     this.setPreviousStatement(true, null);
+//     this.setNextStatement(true, null);
+//     this.setColour(230);
+//     this.setTooltip('');
+//     this.setHelpUrl('');
+//   },
+// };
+
+// Blockly.JavaScript.add_child = function (block) {
+//   const value_group_name = Blockly.JavaScript.valueToCode(
+//     block,
+//     'group_name',
+//     Blockly.JavaScript.ORDER_ATOMIC,
+//   );
+//   const value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
+//   const value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
+//   const text_key = block.getFieldValue('key');
+//   // TODO: Assemble JavaScript into code variable.
+//   const code = `${value_group_name}.create(${value_x}, ${value_y}, '${text_key}');\n`;
+//   return code;
+// };
+
 Blockly.Blocks.add_child = {
   init() {
-    this.appendValueInput('group_name')
+    this.appendValueInput('child')
       .setCheck(null)
-      .appendField('add child to group');
-    this.appendValueInput('x')
+      .appendField('add');
+    this.appendValueInput('parent')
       .setCheck(null)
-      .appendField('with x =');
-    this.appendValueInput('y')
-      .setCheck(null)
-      .appendField('y =');
-    this.appendDummyInput()
-      .appendField('image =')
-      .appendField(new Blockly.FieldTextInput('Class name'), 'key');
+      .appendField('to');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -566,16 +597,10 @@ Blockly.Blocks.add_child = {
 };
 
 Blockly.JavaScript.add_child = function (block) {
-  const value_group_name = Blockly.JavaScript.valueToCode(
-    block,
-    'group_name',
-    Blockly.JavaScript.ORDER_ATOMIC,
-  );
-  const value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
-  const value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
-  const text_key = block.getFieldValue('key');
+  const value_child = Blockly.JavaScript.valueToCode(block, 'child', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_parent = Blockly.JavaScript.valueToCode(block, 'parent', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  const code = `${value_group_name}.create(${value_x}, ${value_y}, '${text_key}');\n`;
+  const code = `${value_parent}.add(${value_child});\n`;
   return code;
 };
 
@@ -752,13 +777,35 @@ Blockly.Blocks.set_velocity = {
   },
 };
 
+// Blockly.Blocks.add_collider = {
+//   init() {
+//     this.appendDummyInput().appendField('add collider of');
+//     this.appendValueInput('obj_1').setCheck(null);
+//     this.appendValueInput('obj_2')
+//       .setCheck(null)
+//       .appendField('and');
+//     this.setInputsInline(true);
+//     this.setPreviousStatement(true, null);
+//     this.setNextStatement(true, null);
+//     this.setColour(230);
+//     this.setTooltip('');
+//     this.setHelpUrl('');
+//   },
+// };
+
 Blockly.Blocks.add_collider = {
   init() {
-    this.appendDummyInput().appendField('add collider of');
-    this.appendValueInput('obj_1').setCheck(null);
+    this.appendValueInput('object_collider')
+      .setCheck(null);
+    this.appendDummyInput()
+      .appendField('add collider of');
+    this.appendValueInput('obj_1')
+      .setCheck(null);
     this.appendValueInput('obj_2')
       .setCheck(null)
       .appendField('and');
+    this.appendStatementInput('callback')
+      .setCheck(null);
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -766,6 +813,18 @@ Blockly.Blocks.add_collider = {
     this.setTooltip('');
     this.setHelpUrl('');
   },
+};
+
+Blockly.JavaScript.add_collider = function (block) {
+  const value_object_collider = Blockly.JavaScript.valueToCode(block, 'object_collider', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_obj_1 = Blockly.JavaScript.valueToCode(block, 'obj_1', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_obj_2 = Blockly.JavaScript.valueToCode(block, 'obj_2', Blockly.JavaScript.ORDER_ATOMIC);
+  const statements_callback = Blockly.JavaScript.statementToCode(block, 'callback');
+
+  const callback = statements_callback.slice(0, statements_callback.indexOf('('));
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_object_collider} = this.physics.add.collider(${value_obj_1}, ${value_obj_2}, ${callback});\n`;
+  return code;
 };
 
 Blockly.Blocks.sprites_destroy_current_sprite = {
@@ -1427,21 +1486,21 @@ Blockly.JavaScript.set_velocity = function (block) {
   return code;
 };
 
-Blockly.JavaScript.add_collider = function (block) {
-  const value_obj_1 = Blockly.JavaScript.valueToCode(
-    block,
-    'obj_1',
-    Blockly.JavaScript.ORDER_ATOMIC,
-  );
-  const value_obj_2 = Blockly.JavaScript.valueToCode(
-    block,
-    'obj_2',
-    Blockly.JavaScript.ORDER_ATOMIC,
-  );
-  // TODO: Assemble JavaScript into code variable.
-  const code = `this.physics.add.collider(${value_obj_1}, ${value_obj_2});\n`;
-  return code;
-};
+// Blockly.JavaScript.add_collider = function (block) {
+//   const value_obj_1 = Blockly.JavaScript.valueToCode(
+//     block,
+//     'obj_1',
+//     Blockly.JavaScript.ORDER_ATOMIC,
+//   );
+//   const value_obj_2 = Blockly.JavaScript.valueToCode(
+//     block,
+//     'obj_2',
+//     Blockly.JavaScript.ORDER_ATOMIC,
+//   );
+//   // TODO: Assemble JavaScript into code variable.
+//   const code = `this.physics.add.collider(${value_obj_1}, ${value_obj_2});\n`;
+//   return code;
+// };
 
 // ///
 
@@ -1976,7 +2035,7 @@ Blockly.Blocks.update_static_size = {
 Blockly.JavaScript.update_static_size = function (block) {
   const value_object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  const code = '...;\n';
+  const code = `${value_object_name}.body.updateFromGameObject();\n`;
   return code;
 };
 
@@ -2001,6 +2060,136 @@ Blockly.JavaScript.enable_phyisic = function (block) {
   const value_object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
   const checkbox_static = block.getFieldValue('static') == 'TRUE' ? 1 : 0;
   // TODO: Assemble JavaScript into code variable.
-  const code = `this.physics.world.enable(${value_object_name}, ${checkbox_static});\n`;
+  const code = `this.scene.physics.world.enable(${value_object_name}, ${checkbox_static});\n`;
+  return code;
+};
+
+Blockly.Blocks.set_gravity = {
+  init() {
+    this.appendValueInput('object_name')
+      .setCheck(null)
+      .appendField('set gravity');
+    this.appendValueInput('gravity')
+      .setCheck(null)
+      .appendField('to');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.set_gravity = function (block) {
+  const value_object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_gravity = Blockly.JavaScript.valueToCode(block, 'gravity', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_object_name}.body.setAllowGravity(false);\n`;
+  return code;
+};
+
+Blockly.Blocks.pause_scene = {
+  init() {
+    this.appendDummyInput()
+      .appendField('pause scene');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.pause_scene = function (block) {
+  // TODO: Assemble JavaScript into code variable.
+  const code = 'this.scene.pause();\n';
+  return code;
+};
+
+Blockly.Blocks.resume_scene = {
+  init() {
+    this.appendDummyInput()
+      .appendField('resume scene');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.resume_scene = function (block) {
+  // TODO: Assemble JavaScript into code variable.
+  const code = 'this.scene.resume();\n';
+  return code;
+};
+
+Blockly.Blocks.restart_scene = {
+  init() {
+    this.appendDummyInput()
+      .appendField('restart scene');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.restart_scene = function (block) {
+  // TODO: Assemble JavaScript into code variable.
+  const code = 'this.scene.restart();\n';
+  return code;
+};
+
+Blockly.Blocks['set_depth'] = {
+  init: function () {
+    this.appendValueInput("object")
+      .setCheck(null);
+    this.appendValueInput("depth")
+      .setCheck(null)
+      .appendField("set depth");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip("");
+    this.setHelpUrl("");
+  }
+};
+
+Blockly.JavaScript['set_depth'] = function (block) {
+  var value_object = Blockly.JavaScript.valueToCode(block, 'object', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_depth = Blockly.JavaScript.valueToCode(block, 'depth', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  var code = `${value_object}.setDepth(${value_depth});\n`;
+  return code;
+};
+
+Blockly.Blocks['set_visible'] = {
+  init: function() {
+    this.appendValueInput("object")
+        .setCheck(null);
+    this.appendValueInput("visible")
+        .setCheck(null)
+        .appendField("set visible");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.JavaScript['set_visible'] = function(block) {
+  var value_object = Blockly.JavaScript.valueToCode(block, 'object', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_visible = Blockly.JavaScript.valueToCode(block, 'visible', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  var code = `${value_object}.setVisible(${value_visible});\n`;
   return code;
 };

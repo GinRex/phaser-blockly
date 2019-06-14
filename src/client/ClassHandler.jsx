@@ -81,7 +81,12 @@ const ClassHandler = (props) => {
           />
           <Button
             onClick={() => {
-              props.addClass(classname);
+              const promise = new Promise((resolve, reject) => {
+                resolve(props.addClass(classname));
+              });
+              promise.then((res) => {
+                props.blockly.updateToolBox(props.gameObjects, props.scenes, props.slectedSceneIndex, props.slectedGameobjectIndex, props.images);
+              });
             }}
             variant="contained"
             color="primary"

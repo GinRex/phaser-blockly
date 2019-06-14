@@ -287,7 +287,7 @@ class App extends Component {
               <textarea id="code" style={{ height: 200, width: 400 }} value="" />
               {/* <textarea id="xml" style={{ height: 200, width: 400 }} value="" /> */}
             </main>
-            <ClassHandler down={this.state.openClassHandler} setClassHandler={val => this.setState({ openClassHandler: val })} />
+            <ClassHandler down={this.state.openClassHandler} blockly={this.blockly} setClassHandler={val => this.setState({ openClassHandler: val })} />
             <SceneManager down={this.state.openSceneHandler} setSceneHandler={val => this.setState({ openSceneHandler: val })} />
           </div>
         </PersistGate>
