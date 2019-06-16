@@ -12,7 +12,7 @@ import UpdateIcon from '@material-ui/icons/Cached';
 
 import ConfigFiles from './initContent/content';
 import parseWorkspaceXml from './BlocklyHelper';
-import ReactBlocklyComponent from './index';
+import ReactBlocklyComponent from 'react-blockly-component';
 import SpriteEditor from './SpirteEditorAlter';
 import VariableDialog from './VariableDialog';
 
@@ -717,7 +717,6 @@ class BlocklyPart extends React.Component {
                 promise.then((res) => {
                   this.updateToolBox(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);
                 });
-
               };
               fr.readAsDataURL(file);
             }

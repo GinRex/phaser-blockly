@@ -1,7 +1,7 @@
 {
-  "name": "react-blockly-component",
+  "name": "phaser-blockly",
   "version": "3.2.0",
-  "description": "A React wrapper for the Blockly visual programming editor",
+  "description": "Phaser 3 with blockly as code generator",
   "main": "dist-modules",
   "scripts": {
     "client": "webpack-dev-server --config webpack.config.js",
@@ -16,7 +16,7 @@
     "prepublish:watch": "babel ./src --watch --out-dir ./dist-modules",
     "prepare": "npm run prepublishOnly"
   },
-  "author": "Nat Budin <nbudin@patientslikeme.com>",
+  "author": "ginrex <dattgk97@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@material-ui/core": "^4.0.1",
@@ -39,6 +39,7 @@
     "nodemon": "^1.18.10",
     "phaser": "^3.16.2",
     "prop-types": "^15.6.0",
+    "react-blockly-component": "^3.3.0",
     "react-hot-loader": "^4.8.0",
     "react-immutable-proptypes": "^2.1.0",
     "react-konva": "^16.8.6",
@@ -75,6 +76,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/patientslikeme/react-blockly-component/"
+    "url": "https://github.com/GinRex/phaser-blockly"
   }
 }
