@@ -33,7 +33,6 @@
     "file-loader": "^3.0.1",
     "file-saver": "^2.0.1",
     "fs-extra": "^7.0.1",
-    "fsevents": "^2.0.6",
     "immutable": "^3.8.2",
     "konva": "^3.2.5",
     "multer": "^1.4.1",
