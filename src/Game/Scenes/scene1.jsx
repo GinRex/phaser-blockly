@@ -97,10 +97,12 @@ this.center = new Class.Label({
 (this.center).play('ready');
 this.s = 0;
 (this.center).setDepth(100);
-(this.scoreLabel) = this.add.text(((this.cameras.main.width) / 2 - 40), ((this.cameras.main.height) / 6), (this.s), { font: '88px Arial', fill: '#000000' });
+(this.scoreLabel) = this.add.text(((this.cameras.main.width) / 2 - 40), ((this.cameras.main.height) / 6), (this.s));
+(this.scoreLabel).setFontFamily('monospace');
 (this.scoreLabel).setFontSize(110);
 (this.scoreLabel).setDepth(99);
 this.centerVar = (this.center);
+(this.scoreLabel).setColor('#666666');
 
 this.Player = new Class.Bird({
             scene: this,

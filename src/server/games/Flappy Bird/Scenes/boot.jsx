@@ -26,6 +26,14 @@ class boot extends Phaser.Scene {
 
 // load asset for flapp.png
 this.load.atlas('Flapp', 'assets/flapp.png', 'assets/flapp.json');
+// load asset for wing.wav
+this.load.audio('wing.wav', 'assets/wing.wav');
+// load asset for point.wav
+this.load.audio('point.wav', 'assets/point.wav');
+// load asset for hit.wav
+this.load.audio('hit.wav', 'assets/hit.wav');
+// load asset for die.wav
+this.load.audio('die.wav', 'assets/die.wav');
     // launch scene start
     this.load.on('progress', (value) => {
       progressBar.clear();

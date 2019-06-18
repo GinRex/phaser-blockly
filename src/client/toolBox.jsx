@@ -76,7 +76,7 @@ export default [
   {
     name: 'Text',
     colour: 250,
-    blocks: [{ type: 'add_label' }, { type: 'label' }, { type: 'set_font_size' }, { type: 'text_color' }, { type: 'text_wrap' }],
+    blocks: [{ type: 'add_label' }, { type: 'label' }, { type: 'set_font_size' }, { type: 'set_font' }, { type: 'text_color' }, { type: 'text_wrap' }],
   },
   {
     name: 'Group Object',
@@ -86,7 +86,7 @@ export default [
   {
     name: 'Object',
     colour: 250,
-    blocks: [{ type: 'set_pos' }, { type: 'set_size' }, {type: 'set_depth'}, { type: 'set_visible'}, { type: 'self' }, { type: 'get_object_info' }],
+    blocks: [{ type: 'set_pos' }, { type: 'set_size' }, { type: 'set_depth' }, { type: 'set_visible' }, { type: 'self' }, { type: 'get_object_info' }],
   },
   {
     name: 'Physic',

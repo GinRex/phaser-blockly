@@ -495,7 +495,7 @@ Blockly.JavaScript.add_label = function (block) {
   const value_x = Blockly.JavaScript.valueToCode(block, 'x', Blockly.JavaScript.ORDER_ATOMIC);
   const value_y = Blockly.JavaScript.valueToCode(block, 'y', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  const code = `${value_name} = this.add.text(${value_x}, ${value_y}, ${value_text}, { font: '88px Arial', fill: '#000000' });\n`;
+  const code = `${value_name} = this.add.text(${value_x}, ${value_y}, ${value_text});\n`;
   return code;
 };
 
@@ -1628,7 +1628,7 @@ Blockly.Blocks.text_color = {
       .appendField('set');
     this.appendValueInput('color')
       .setCheck(null)
-      .appendField('cokor')
+      .appendField('color')
       .appendField('=');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
@@ -2145,50 +2145,75 @@ Blockly.JavaScript.restart_scene = function (block) {
   return code;
 };
 
-Blockly.Blocks['set_depth'] = {
-  init: function () {
-    this.appendValueInput("object")
+Blockly.Blocks.set_depth = {
+  init() {
+    this.appendValueInput('object')
       .setCheck(null);
-    this.appendValueInput("depth")
+    this.appendValueInput('depth')
       .setCheck(null)
-      .appendField("set depth");
+      .appendField('set depth');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
-    this.setTooltip("");
-    this.setHelpUrl("");
-  }
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
 };
 
-Blockly.JavaScript['set_depth'] = function (block) {
-  var value_object = Blockly.JavaScript.valueToCode(block, 'object', Blockly.JavaScript.ORDER_ATOMIC);
-  var value_depth = Blockly.JavaScript.valueToCode(block, 'depth', Blockly.JavaScript.ORDER_ATOMIC);
+Blockly.JavaScript.set_depth = function (block) {
+  const value_object = Blockly.JavaScript.valueToCode(block, 'object', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_depth = Blockly.JavaScript.valueToCode(block, 'depth', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  var code = `${value_object}.setDepth(${value_depth});\n`;
+  const code = `${value_object}.setDepth(${value_depth});\n`;
   return code;
 };
 
-Blockly.Blocks['set_visible'] = {
-  init: function () {
-    this.appendValueInput("object")
+Blockly.Blocks.set_visible = {
+  init() {
+    this.appendValueInput('object')
       .setCheck(null);
-    this.appendValueInput("visible")
+    this.appendValueInput('visible')
       .setCheck(null)
-      .appendField("set visible");
+      .appendField('set visible');
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
-    this.setTooltip("");
-    this.setHelpUrl("");
-  }
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
 };
 
-Blockly.JavaScript['set_visible'] = function (block) {
-  var value_object = Blockly.JavaScript.valueToCode(block, 'object', Blockly.JavaScript.ORDER_ATOMIC);
-  var value_visible = Blockly.JavaScript.valueToCode(block, 'visible', Blockly.JavaScript.ORDER_ATOMIC);
+Blockly.JavaScript.set_visible = function (block) {
+  const value_object = Blockly.JavaScript.valueToCode(block, 'object', Blockly.JavaScript.ORDER_ATOMIC);
+  const value_visible = Blockly.JavaScript.valueToCode(block, 'visible', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  var code = `${value_object}.setVisible(${value_visible});\n`;
+  const code = `${value_object}.setVisible(${value_visible});\n`;
+  return code;
+};
+
+
+Blockly.Blocks.set_font = {
+  init() {
+    this.appendValueInput('label_name')
+      .setCheck(null)
+      .appendField('set font ')
+      .appendField(new Blockly.FieldTextInput('monospace'), 'font')
+      .appendField('for');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  },
+};
+
+Blockly.JavaScript.set_font = function (block) {
+  const text_font = block.getFieldValue('font');
+  const value_label_name = Blockly.JavaScript.valueToCode(block, 'label_name', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  const code = `${value_label_name}.setFontFamily('${text_font}');\n`;
   return code;
 };

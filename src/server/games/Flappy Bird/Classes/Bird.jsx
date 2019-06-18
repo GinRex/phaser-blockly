@@ -32,12 +32,14 @@ if ((this.scene.gamestart) == 0) {
 if (!(this.scene.gameOver) && (key(this.scene.input.keyboard, 'SPACE').isDown)) {
   this.body.setVelocity(0, (-205));
   (this.scene.centerVar).setVisible(false);
+  (this.scene.wingFlapSound).play();
 }
 if ((this.scene.gameOver) && (key(this.scene.input.keyboard, 'SPACE').isDown)) {
   this.scene.restart();
 }
 if (this.scene.gameOver) {
   Motion.point_in_direction_degrees(this, 135);
+  (this.scene.dieSound).play();
 }
 
     // update end
