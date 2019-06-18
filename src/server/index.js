@@ -202,7 +202,7 @@ app.post('/api/uploadAudio', (req, res) => {
       gameData.splice(
         selectedSceneEnd,
         0,
-        `// load asset for ${req.file.filename}\nthis.load.audio('${req.file.name}', 'assets/${
+        `// load asset for ${req.file.filename}\nthis.load.audio('${req.file.filename}', 'assets/${
           req.file.filename
         }');`,
       );

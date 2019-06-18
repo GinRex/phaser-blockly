@@ -1592,7 +1592,6 @@ Blockly.Blocks.key_condition = {
     this.appendDummyInput()
       .appendField(new Blockly.FieldDropdown([...Array(26)].map((val, i) => {
         const keyCode = String.fromCharCode(i + 65);
-        console.log([keyCode, keyCode]);
         return [keyCode, keyCode];
       })
         .concat([...Array(10)].map(((val, i) => [i.toString(), i.toString()]))
@@ -2171,22 +2170,22 @@ Blockly.JavaScript['set_depth'] = function (block) {
 };
 
 Blockly.Blocks['set_visible'] = {
-  init: function() {
+  init: function () {
     this.appendValueInput("object")
-        .setCheck(null);
+      .setCheck(null);
     this.appendValueInput("visible")
-        .setCheck(null)
-        .appendField("set visible");
+      .setCheck(null)
+      .appendField("set visible");
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
- this.setTooltip("");
- this.setHelpUrl("");
+    this.setTooltip("");
+    this.setHelpUrl("");
   }
 };
 
-Blockly.JavaScript['set_visible'] = function(block) {
+Blockly.JavaScript['set_visible'] = function (block) {
   var value_object = Blockly.JavaScript.valueToCode(block, 'object', Blockly.JavaScript.ORDER_ATOMIC);
   var value_visible = Blockly.JavaScript.valueToCode(block, 'visible', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.

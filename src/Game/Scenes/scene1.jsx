@@ -23,6 +23,7 @@ collideCallback = () => {
   (this.center).y = ((this.cameras.main.height) / 2);
   (this.centerVar).setVisible(true);
   (this.center).play('gameover');
+  (this.hitSound).play();
 
 }
 
@@ -66,6 +67,11 @@ restart = () => {
 
   create() {
     // create start
+(this.wingFlapSound) = this.sound.add('wing.wav', { loop: false});
+(this.pointSound) = this.sound.add('point.wav', { loop: false});
+(this.hitSound) = this.sound.add('hit.wav', { loop: false});
+(this.dieSound) = this.sound.add('die.wav', { loop: false});
+
 this.gameOver = 0;
 this.gamestart = 1;
 this.Bg1 = new Class.Background({
@@ -131,10 +137,12 @@ if (!(this.gameOver)) {
   if (((this.Player).x) == ((this.pt1).x) + 30) {
     this.s = ((this.s) + 1);
     (this.scoreLabel).setText((this.s));
+    (this.pointSound).play();
   }
 }
 
 if (((this.Player).y) > (this.cameras.main.height) + 150) {
+  (this.dieSound).play();
   this.gameOver = 1;
 }
 
