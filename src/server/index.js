@@ -11,8 +11,8 @@ const { join } = require('path');
 const app = express();
 const bodyParser = require('body-parser');
 
-app.use(bodyParser.urlencoded({ extended: 'false' }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: 'false' }));
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cors());
 
 app.use(express.static('dist'));
@@ -50,6 +50,7 @@ app.post('/api/saveGame', (req, res) => {
     if (fs.existsSync(gameDir)) {
       fse.remove(gameDir, (err) => {
         fs.mkdirSync(gameDir);
+        console.log('xxx');
         // copy game.jsx file
         fse.copySync(`${gameRoot}/Game.jsx`, `${gameDir}/Game.jsx`);
         // save localstorage data
