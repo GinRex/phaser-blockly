@@ -221,7 +221,9 @@ export const addInstancesToScene = scene => (dispatch) => {
 };
 
 export const saveGame = gameName => (dispatch) => {
+  console.log('xxx');
   const data = localStorage.getItem('persist:root');
+  console.log('data', data);
   return axios.post('http://localhost:8080/api/saveGame', { gameName, data }, {}).then((res) => {
     console.log('aaa');
   });

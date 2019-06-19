@@ -823,7 +823,8 @@ Blockly.JavaScript.add_collider = function (block) {
 
   const callback = statements_callback.slice(0, statements_callback.indexOf('('));
   // TODO: Assemble JavaScript into code variable.
-  const code = `${value_object_collider} = this.physics.add.collider(${value_obj_1}, ${value_obj_2}, ${callback});\n`;
+  const code = statements_callback !== '' ? `${value_object_collider} = this.physics.add.collider(${value_obj_1}, ${value_obj_2}, ${callback});\n` :
+    `${value_object_collider} = this.physics.add.collider(${value_obj_1}, ${value_obj_2});\n`;
   return code;
 };
 
@@ -888,10 +889,14 @@ Blockly.Blocks.set_velocity_this = {
 
 Blockly.Blocks.add_collider_this = {
   init() {
+    this.appendValueInput('object_collider')
+      .setCheck(null);
     this.appendDummyInput().appendField('add collider');
     this.appendValueInput('obj_2')
       .setCheck(null)
       .appendField('with');
+    this.appendStatementInput('callback')
+      .setCheck(null);
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -1531,13 +1536,21 @@ Blockly.JavaScript.set_velocity_this = function (block) {
 };
 
 Blockly.JavaScript.add_collider_this = function (block) {
+  const value_object_collider = Blockly.JavaScript.valueToCode(block, 'object_collider', Blockly.JavaScript.ORDER_ATOMIC);
+
   const value_obj_2 = Blockly.JavaScript.valueToCode(
     block,
     'obj_2',
     Blockly.JavaScript.ORDER_ATOMIC,
   );
+  const statements_callback = Blockly.JavaScript.statementToCode(block, 'callback');
+
+  const callback = statements_callback.slice(0, statements_callback.indexOf('('));
   // TODO: Assemble JavaScript into code variable.
-  const code = `this.physics.add.collider(this, ${value_obj_2});\n`;
+  const code = statements_callback !== '' ? `${value_object_collider} = this.scene.physics.add.collider(this, ${value_obj_2}, ${callback});\n` :
+    `${value_object_collider} = this.scene.physics.add.collider(this, ${value_obj_2});\n`;
+  // TODO: Assemble JavaScript into code variable.
+  // const code = `this.scene.physics.add.collider(this, ${value_obj_2});\n`;
   return code;
 };
 
@@ -2084,7 +2097,7 @@ Blockly.JavaScript.set_gravity = function (block) {
   const value_object_name = Blockly.JavaScript.valueToCode(block, 'object_name', Blockly.JavaScript.ORDER_ATOMIC);
   const value_gravity = Blockly.JavaScript.valueToCode(block, 'gravity', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  const code = `${value_object_name}.body.setAllowGravity(false);\n`;
+  const code = `${value_object_name}.body.setGravityY(${value_gravity});\n`;
   return code;
 };
 
@@ -2215,5 +2228,49 @@ Blockly.JavaScript.set_font = function (block) {
   const value_label_name = Blockly.JavaScript.valueToCode(block, 'label_name', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
   const code = `${value_label_name}.setFontFamily('${text_font}');\n`;
+  return code;
+};
+
+Blockly.Blocks['active_collider'] = {
+  init: function () {
+    this.appendValueInput("collider_name")
+      .setCheck(null)
+      .appendField("set active collider")
+      .appendField(new Blockly.FieldCheckbox("TRUE"), "active");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip("");
+    this.setHelpUrl("");
+  }
+};
+
+Blockly.JavaScript['active_collider'] = function (block) {
+  var checkbox_active = block.getFieldValue('active') == 'TRUE';
+  var value_collider_name = Blockly.JavaScript.valueToCode(block, 'collider_name', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  var code = `${value_collider_name}.active = ${checkbox_active};\n`;
+  return code;
+};
+
+Blockly.Blocks['start_scene'] = {
+  init: function () {
+    this.appendDummyInput()
+      .appendField("start scene")
+      .appendField(new Blockly.FieldTextInput("scene1"), "scene_name");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip("");
+    this.setHelpUrl("");
+  }
+};
+
+Blockly.JavaScript['start_scene'] = function (block) {
+  var text_scene_name = block.getFieldValue('scene_name');
+  // TODO: Assemble JavaScript into code variable.
+  var code = `this.scene.start('${text_scene_name}');\n`;
   return code;
 };

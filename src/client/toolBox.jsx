@@ -21,7 +21,7 @@ export default [
   {
     name: 'Game',
     colour: 50,
-    blocks: [{ type: 'pause_scene' }, { type: 'resume_scene' }, { type: 'restart_scene' }, { type: 'game_state' }, { type: 'screen_width' }, { type: 'screen_height' }],
+    blocks: [{ type: 'start_scene' }, { type: 'pause_scene' }, { type: 'resume_scene' }, { type: 'restart_scene' }, { type: 'game_state' }, { type: 'screen_width' }, { type: 'screen_height' }],
   },
   {
     name: 'Tile',
@@ -104,6 +104,7 @@ export default [
       { type: 'set_bounce_this' },
       { type: 'set_velocity_this' },
       { type: 'add_collider_this' },
+      { type: 'active_collider' },
     ],
   },
   {

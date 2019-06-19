@@ -1,0 +1,255 @@
+{
+	"frames": {
+		"bg.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 81,
+				"h": 79
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 81,
+				"h": 79
+			},
+			"sourceSize": {
+				"w": 81,
+				"h": 79
+			}
+		},
+		"doo1.png": {
+			"frame": {
+				"x": 84,
+				"y": 1,
+				"w": 83,
+				"h": 79
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 83,
+				"h": 79
+			},
+			"sourceSize": {
+				"w": 83,
+				"h": 79
+			}
+		},
+		"doo2.png": {
+			"frame": {
+				"x": 169,
+				"y": 1,
+				"w": 83,
+				"h": 76
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 83,
+				"h": 76
+			},
+			"sourceSize": {
+				"w": 83,
+				"h": 76
+			}
+		},
+		"doo3.png": {
+			"frame": {
+				"x": 169,
+				"y": 79,
+				"w": 83,
+				"h": 76
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 83,
+				"h": 76
+			},
+			"sourceSize": {
+				"w": 83,
+				"h": 76
+			}
+		},
+		"doo4.png": {
+			"frame": {
+				"x": 1,
+				"y": 157,
+				"w": 83,
+				"h": 79
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 83,
+				"h": 79
+			},
+			"sourceSize": {
+				"w": 83,
+				"h": 79
+			}
+		},
+		"field1.png": {
+			"frame": {
+				"x": 1,
+				"y": 82,
+				"w": 101,
+				"h": 29
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 101,
+				"h": 29
+			},
+			"sourceSize": {
+				"w": 101,
+				"h": 29
+			}
+		},
+		"field2.png": {
+			"frame": {
+				"x": 86,
+				"y": 157,
+				"w": 101,
+				"h": 29
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 101,
+				"h": 29
+			},
+			"sourceSize": {
+				"w": 101,
+				"h": 29
+			}
+		},
+		"field3.png": {
+			"frame": {
+				"x": 86,
+				"y": 188,
+				"w": 101,
+				"h": 29
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 101,
+				"h": 29
+			},
+			"sourceSize": {
+				"w": 101,
+				"h": 29
+			}
+		},
+		"field4.png": {
+			"frame": {
+				"x": 86,
+				"y": 219,
+				"w": 104,
+				"h": 29
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 104,
+				"h": 29
+			},
+			"sourceSize": {
+				"w": 104,
+				"h": 29
+			}
+		},
+		"fieldbreak.png": {
+			"frame": {
+				"x": 254,
+				"y": 1,
+				"w": 110,
+				"h": 54
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 110,
+				"h": 54
+			},
+			"sourceSize": {
+				"w": 110,
+				"h": 54
+			}
+		},
+		"spring1.png": {
+			"frame": {
+				"x": 254,
+				"y": 57,
+				"w": 110,
+				"h": 44
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 110,
+				"h": 44
+			},
+			"sourceSize": {
+				"w": 110,
+				"h": 44
+			}
+		},
+		"spring2.png": {
+			"frame": {
+				"x": 254,
+				"y": 103,
+				"w": 110,
+				"h": 58
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 110,
+				"h": 58
+			},
+			"sourceSize": {
+				"w": 110,
+				"h": 58
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 365,
+			"h": 249
+		},
+		"scale": "1"
+	}
+}
