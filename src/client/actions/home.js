@@ -250,3 +250,13 @@ export const updateGameState = gameState => ({
   type: 'SET_GAME_STATE',
   gameState,
 });
+
+export const setGameSetting = settings => ({
+  type: 'UPDATE_SETTINGS',
+  data: settings,
+});
+
+export const setSelectedGame = settings => ({
+  type: 'SELECT_PROJECT',
+  data: settings,
+});

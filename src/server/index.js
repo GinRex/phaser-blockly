@@ -396,12 +396,12 @@ app.post('/api/createGame', (req, res) => {
 });
 
 app.post('/api/updateGameSetting', (req, res) => {
-  const GAME_NAME = req.body.game_name;
+  // const GAME_NAME = req.body.game_name;
   const width = req.body.width;
   const height = req.body.height;
   const gravity = req.body.gravity;
   const debug = req.body.debug;
-  console.log(GAME_NAME);
+  // console.log(GAME_NAME);
 
   // update game file
   try {
@@ -433,7 +433,7 @@ app.post('/api/updateGameSetting', (req, res) => {
   } catch (err) {
     console.error(err);
   }
-  return res.status(200).send(GAME_NAME);
+  return res.status(200).send('ok');
 });
 
 app.post('/api/createScene', (req, res) => {

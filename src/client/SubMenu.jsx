@@ -22,7 +22,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import { connect } from 'react-redux';
 
-import { createNewGame, updateGameSetting, saveGame, loadGame, loadListGame } from './actions/home';
+import { createNewGame, updateGameSetting, setGameSetting, saveGame, loadGame, loadListGame, setSelectedGame } from './actions/home';
 
 const BootstrapInput = withStyles(theme => ({
   root: {
@@ -100,11 +100,6 @@ class SubMenu extends React.Component {
     super(props);
     this.state = {
       game_name: '',
-      width: 500,
-      height: 400,
-      gravity: 0,
-      debug: false,
-      loadGameName: '',
       createOpen: false,
       settingOpen: false,
     };
@@ -139,15 +134,15 @@ class SubMenu extends React.Component {
           }}
         >
           <Select
-            value={this.state.loadGameName}
-            onChange={event => this.setState({ loadGameName: event.target.value })}
+            value={this.props.selectedGame}
+            onChange={event => this.props.setSelectedGame(event.target.value)}
             input={<BootstrapInput name="age" id="age-customized-select" />}
           >
             {this.props.listGames.map(game => <MenuItem value={game}>{game}</MenuItem>)}game_name
           </Select>
           <Button
             onClick={() => {
-              this.props.loadGame(this.state.loadGameName);
+              this.props.loadGame(this.props.selectedGame || 'Flappy Bird');
             }}
             variant="contained"
             color="secondary"
@@ -157,7 +152,7 @@ class SubMenu extends React.Component {
           </Button>
           <Button
             onClick={() => {
-              this.props.saveGame(this.state.loadGameName);
+              this.props.saveGame(this.props.selectedGame || '');
             }}
             variant="contained"
             color="secondary"
@@ -242,8 +237,8 @@ class SubMenu extends React.Component {
                           label="Width"
                           variant="outlined"
                           id="custom-css-outlined-input"
-                          value={this.state.width}
-                          onChange={event => this.setState({ width: event.target.value })}
+                          value={this.props.setting.width}
+                          onChange={event => this.props.setGameSetting({ ...this.props.setting, width: event.target.value })}
                         />
                         <TextField
                           className={classes.margin}
@@ -263,8 +258,8 @@ class SubMenu extends React.Component {
                           label="Height"
                           variant="outlined"
                           id="custom-css-outlined-input"
-                          value={this.state.height}
-                          onChange={event => this.setState({ height: event.target.value })}
+                          value={this.props.setting.height}
+                          onChange={event => this.props.setGameSetting({ ...this.props.setting, height: event.target.value })}
                         />
                         <TextField
                           className={classes.margin}
@@ -284,19 +279,19 @@ class SubMenu extends React.Component {
                           label="Gravity"
                           variant="outlined"
                           id="custom-css-outlined-input"
-                          value={this.state.gravity}
-                          onChange={event => this.setState({ gravity: event.target.value })}
+                          value={this.props.setting.gravity}
+                          onChange={event => this.props.setGameSetting({ ...this.props.setting, gravity: event.target.value })}
                         />
                         Debug
                         <Switch
-                          checked={this.state.debug}
-                          onChange={event => this.setState({ debug: event.target.checked })}
-                          value={this.state.debug}
+                          checked={this.props.setting.debug}
+                          onChange={event => this.props.setGameSetting({ ...this.props.setting, debug: event.target.checked })}
+                          value={this.props.setting.debug}
                           inputProps={{ 'aria-label': 'secondary checkbox' }}
                         />
                         <Button
                           onClick={() => {
-                            this.props.updateGameSetting(this.state);
+                            this.props.updateGameSetting(this.props.setting);
                             // this.props.saveGame(this.state.game_name);
                             // this.props.loadListGame();
                           }}
@@ -389,8 +384,8 @@ class SubMenu extends React.Component {
                           label="Width"
                           variant="outlined"
                           id="custom-css-outlined-input"
-                          value={this.state.width}
-                          onChange={event => this.setState({ width: event.target.value })}
+                          value={this.props.setting.width}
+                          onChange={event => this.props.setGameSetting({ ...this.props.setting, width: event.target.value })}
                         />
                         <TextField
                           className={classes.margin}
@@ -410,12 +405,12 @@ class SubMenu extends React.Component {
                           label="Height"
                           variant="outlined"
                           id="custom-css-outlined-input"
-                          value={this.state.height}
-                          onChange={event => this.setState({ height: event.target.value })}
+                          value={this.props.setting.height}
+                          onChange={event => this.props.setGameSetting({ ...this.props.setting, height: event.target.value })}
                         />
                         <Button
                           onClick={() => {
-                            this.props.createNewGame(this.state);
+                            this.props.createNewGame({ ...this.props.setting, game_name: this.state.game_name });
                             // this.props.saveGame(this.state.game_name);
                             // this.props.loadListGame();
                           }}
@@ -440,6 +435,8 @@ class SubMenu extends React.Component {
 
 const mapStateToProps = state => ({
   listGames: state.home.listGames,
+  setting: state.home.gameInfo.setting,
+  selectedGame: state.home.gameInfo.selectedGame,
 });
 
 const mapDispatchToProps = {
@@ -448,6 +445,8 @@ const mapDispatchToProps = {
   loadGame,
   loadListGame,
   updateGameSetting,
+  setGameSetting,
+  setSelectedGame,
 };
 
 export default connect(

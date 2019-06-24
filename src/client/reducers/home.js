@@ -1,6 +1,15 @@
 import toolboxCategories from '../toolBox';
 
 const initState = {
+  gameInfo: {
+    selectedGame: '',
+    setting: {
+      width: 500,
+      height: 500,
+      gravity: 0,
+      debug: true,
+    },
+  },
   listGames: [],
   selectedFile: {},
   gameObjects: [],
@@ -132,6 +141,22 @@ const gameReducer = (state = initState, action) => {
               ? { ...gameObject, functions: action.data.functions }
               : gameObject)),
         };
+    }
+    case 'UPDATE_SETTINGS': {
+      return {
+        ...state,
+        gameInfo: {
+          ...state.gameInfo, setting: action.data,
+        },
+      };
+    }
+    case 'SELECT_PROJECT': {
+      return {
+        ...state,
+        gameInfo: {
+          ...state.gameInfo, selectedGame: action.data,
+        },
+      };
     }
     default:
       return state;
