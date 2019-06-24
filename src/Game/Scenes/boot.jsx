@@ -24,16 +24,10 @@ class boot extends Phaser.Scene {
     progressBox.fillStyle(0x222222, 0.8);
     progressBox.fillRect(width / 4, height / 2, width / 2, height / 12);
 
-// load asset for flapp.png
-this.load.atlas('Flapp', 'assets/flapp.png', 'assets/flapp.json');
-// load asset for wing.wav
-this.load.audio('wing.wav', 'assets/wing.wav');
-// load asset for point.wav
-this.load.audio('point.wav', 'assets/point.wav');
-// load asset for hit.wav
-this.load.audio('hit.wav', 'assets/hit.wav');
-// load asset for die.wav
-this.load.audio('die.wav', 'assets/die.wav');
+// load asset for spritesheet.png
+this.load.atlas('Spritesheet', 'assets/spritesheet.png', 'assets/spritesheet.json');
+// load asset for bg.png
+this.load.image('Bg', 'assets/bg.png');
     // launch scene start
     this.load.on('progress', (value) => {
       progressBar.clear();
@@ -45,54 +39,94 @@ this.load.audio('die.wav', 'assets/die.wav');
     });
     this.load.on('complete', () => {
       // create animations
-// create animation for ready
+// create animation for fieldOnce
         this.anims.create({
-        key: 'ready',
-        frames: [{"key":"Flapp","frame":"get-ready.png"}], 
+        key: 'fieldOnce',
+        frames: [{"key":"Spritesheet","frame":"field4.png"}], 
         frameRate: 1,
         repeat: -1,
       });
-// end create animation for ready
-// create animation for gameover
+// end create animation for fieldOnce
+// create animation for standLeft
         this.anims.create({
-        key: 'gameover',
-        frames: [{"key":"Flapp","frame":"game-over.png"}], 
+        key: 'standLeft',
+        frames: [{"key":"Spritesheet","frame":"doo3.png"}], 
         frameRate: 1,
         repeat: -1,
       });
-// end create animation for gameover
-// create animation for pipeBot
+// end create animation for standLeft
+// create animation for standRight
         this.anims.create({
-        key: 'pipeBot',
-        frames: [{"key":"Flapp","frame":"down-green-pipe.png"}], 
+        key: 'standRight',
+        frames: [{"key":"Spritesheet","frame":"doo1.png"}], 
         frameRate: 1,
         repeat: -1,
       });
-// end create animation for pipeBot
-// create animation for pipeTop
+// end create animation for standRight
+// create animation for SpringShoot
         this.anims.create({
-        key: 'pipeTop',
-        frames: [{"key":"Flapp","frame":"up-green-pipe.png"}], 
-        frameRate: 1,
-        repeat: -1,
-      });
-// end create animation for pipeTop
-// create animation for fly
-        this.anims.create({
-        key: 'fly',
-        frames: [{"key":"Flapp","frame":"yellow-bird-1.png"},{"key":"Flapp","frame":"yellow-bird-2.png"},{"key":"Flapp","frame":"yellow-bird-3.png"}], 
+        key: 'SpringShoot',
+        frames: [{"key":"Spritesheet","frame":"spring1.png"},{"key":"Spritesheet","frame":"spring2.png"}], 
         frameRate: 10,
-        repeat: -1,
+        repeat: 1,
       });
-// end create animation for fly
-// create animation for Bg
+// end create animation for SpringShoot
+// create animation for Spring
         this.anims.create({
-        key: 'Bg',
-        frames: [{"key":"Flapp","frame":"day-bg.png"}], 
-        frameRate: 0,
+        key: 'Spring',
+        frames: [{"key":"Spritesheet","frame":"spring1.png"}], 
+        frameRate: 1,
+        repeat: 1,
+      });
+// end create animation for Spring
+// create animation for jumpLeft
+this.anims.create({
+        key: 'jumpLeft',
+        frames: [{"key":"Spritesheet","frame":"doo4.png"}], 
+        frameRate: 1,
         repeat: -1,
       });
-// end create animation for Bg
+// end create animation for jumpLeft
+// create animation for jumpRight
+this.anims.create({
+        key: 'jumpRight',
+        frames: [{"key":"Spritesheet","frame":"doo2.png"}], 
+        frameRate: 1,
+        repeat: -1,
+      });
+// end create animation for jumpRight
+// create animation for fieldBroken
+        this.anims.create({
+        key: 'fieldBroken',
+        frames: [{"key":"Spritesheet","frame":"fieldbreak.png"}], 
+        frameRate: 1,
+        repeat: -1,
+      });
+// end create animation for fieldBroken
+// create animation for fieldBreak
+        this.anims.create({
+        key: 'fieldBreak',
+        frames: [{"key":"Spritesheet","frame":"field2.png"}], 
+        frameRate: 1,
+        repeat: -1,
+      });
+// end create animation for fieldBreak
+// create animation for fieldMove
+        this.anims.create({
+        key: 'fieldMove',
+        frames: [{"key":"Spritesheet","frame":"field3.png"}], 
+        frameRate: 1,
+        repeat: -1,
+      });
+// end create animation for fieldMove
+// create animation for field
+        this.anims.create({
+        key: 'field',
+        frames: [{"key":"Spritesheet","frame":"field1.png"}], 
+        frameRate: 1,
+        repeat: -1,
+      });
+// end create animation for field
       // select scene
       this.scene.start('scene1');
     });
