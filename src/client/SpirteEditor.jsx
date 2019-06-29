@@ -81,7 +81,7 @@ function create() {
     repeat: -1,
   });
 
-  console.log(this.anims);
+  // console.log(this.anims);
   const gem = this.add
     .sprite(10, 10, 'atlas')
     .play('diamond')

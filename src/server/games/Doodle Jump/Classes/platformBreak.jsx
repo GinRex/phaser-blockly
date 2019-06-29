@@ -39,7 +39,7 @@ if (!(this.standAble) && ((this.scene.playerVar).y) <= ((this).y) - 20) {
 }
 
 if (((this.scene.playerVar).y) <= (this.scene.cameraHeight) / 2) {
-  Motion.set_y_to(this, ((this).y) + 5);
+  Motion.set_y_to(this, ((this).y) + 3);
   (this).body.updateFromGameObject();
 }
 

@@ -20,7 +20,7 @@ y: 0
         // game gravity end
       },
       // game debug start
-debug: false,
+debug: true,
       // game debug end
     },
   },

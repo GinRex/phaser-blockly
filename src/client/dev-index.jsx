@@ -445,7 +445,7 @@ class BlocklyPart extends React.Component {
     return xmlList;
   };
   customAnimationsCallback = (workspace, animations) => {
-    console.log(animations);
+    // console.log(animations);
     const xmlList = [];
     for (let i = 0; i < animations.length; i++) {
       const blockText = '<xml>' +
@@ -722,10 +722,10 @@ class BlocklyPart extends React.Component {
             }
             this.onChangeHandler(event);
             if (this.props.selectedFile.file) {
-              console.log(this.props.selectedFile);
+              // console.log(this.props.selectedFile);
               const promise = new Promise((resolve, reject) => {
                 resolve(this.props.uploadAudio(this.props.selectedFile));
-                console.log(this.props.selectedFile);
+                // console.log(this.props.selectedFile);
               });
               promise.then((res) => {
                 this.updateToolBox(this.props.gameObjects, this.props.scenes, this.props.slectedSceneIndex, this.props.slectedGameobjectIndex, this.props.images);

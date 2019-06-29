@@ -50,7 +50,6 @@ app.post('/api/saveGame', (req, res) => {
     if (fs.existsSync(gameDir)) {
       fse.remove(gameDir, (err) => {
         fs.mkdirSync(gameDir);
-        console.log('xxx');
         // copy game.jsx file
         fse.copySync(`${gameRoot}/Game.jsx`, `${gameDir}/Game.jsx`);
         // save localstorage data
@@ -140,7 +139,6 @@ app.post('/api/addClass', (req, res) => {
 });
 
 app.post('/api/uploadImage', (req, res) => {
-  console.log(req.file);
   // if (!req.file) {
   //   return res.status(404).send('file not found');
   // }
@@ -150,7 +148,6 @@ app.post('/api/uploadImage', (req, res) => {
     } else if (err) {
       return res.status(500).json(err);
     }
-    console.log(req.file);
 
     req.file.name = capitalize(path.parse(req.file.filename).name);
     // Load image to loader
@@ -226,7 +223,6 @@ app.post('/api/uploadJson', (req, res) => {
     } else if (err) {
       return res.status(500).json(err);
     }
-    console.log(req.body);
 
     req.file.name = capitalize(path.parse(req.file.filename).name);
     const rawData = JSON.parse(fs
@@ -278,7 +274,6 @@ app.post('/api/createAnimation', (req, res) => {
   const {
     key, frames, repeat, frameRate,
   } = req.body.animation;
-  console.log(frames);
   try {
     const gameFile = `${__dirname}/../Game/Scenes/boot.jsx`;
     const gameData = fs
@@ -289,7 +284,6 @@ app.post('/api/createAnimation', (req, res) => {
     const replaceAnimationStart = gameData.indexOf(`// create animation for ${key}`);
     const replaceAnimationEnd = gameData.indexOf(`// end create animation for ${key}`);
     if (replaceAnimationStart !== -1) {
-      console.log('no', replaceAnimationStart);
       gameData.splice(
         replaceAnimationStart + 1,
         replaceAnimationEnd - replaceAnimationStart - 1,
@@ -301,7 +295,6 @@ app.post('/api/createAnimation', (req, res) => {
       });`,
       );
     } else {
-      console.log('yes', animationStart);
       gameData.splice(
         animationStart + 1,
         0,
@@ -329,7 +322,6 @@ app.post('/api/createGame', (req, res) => {
   const GAME_NAME = req.body.game_name;
   const width = req.body.width;
   const height = req.body.height;
-  console.log(GAME_NAME);
   // create scenes folder and default scene
   const scenesFolder = `${__dirname}/../Game/Scenes`;
   const classesFolder = `${__dirname}/../Game/Classes`;

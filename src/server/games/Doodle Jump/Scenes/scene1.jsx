@@ -19,7 +19,7 @@ class scene1 extends Phaser.Scene {
   // functions start
 initPlatform = () => {
   this.i = 0;
-  for (var count = 0; count < 10; count++) {
+  for (var count = 0; count < 8; count++) {
     this.platform1 = new Class.platform({
                 scene: this,
                 key: '',
@@ -29,8 +29,8 @@ initPlatform = () => {
                 h: 100,
               });
     (this.platform1).x = (Math.random() * ((this.cameras.main.width) - 50) + 50);
-    (this.platform1).y = (((this.cameras.main.height) / 10) * (this.i));
-    (this.platform1).setDisplaySize(30, 20);
+    (this.platform1).y = (((this.cameras.main.height) / 8) * (this.i));
+    (this.platform1).setDisplaySize(25, 20);
     (this.platform1).play('field');
     (this.platform1).body.updateFromGameObject();
     this.i = ((this.i) + 1);
@@ -40,8 +40,8 @@ initPlatform = () => {
 }
 
 createPlatform = () => {
-  this.platformType = (Math.random() * (4 - 0) + 0);
-  if ((this.platformType) < 1) {
+  this.platformType = (Math.random() * (3 - 0) + 0);
+  if ((this.platformType) < 0.3) {
     this.platform4 = new Class.platformBreak({
                 scene: this,
                 key: '',
@@ -50,13 +50,13 @@ createPlatform = () => {
                 w: 100,
                 h: 100,
               });
-    (this.platform4).x = (Math.random() * ((this.cameras.main.width) - 50) + 50);
+    (this.platform4).x = (Math.random() * (((this.cameras.main.width) - 100) - 50) + 50);
     (this.platform4).y = (-20);
-    (this.platform4).setDisplaySize(30, 20);
+    (this.platform4).setDisplaySize(25, 20);
     (this.platform4).play('fieldBreak');
     (this.platform4).body.updateFromGameObject();
     (this.platformGroup).add((this.platform4));
-  } else if ((this.platformType) >= 1 && (this.platformType) < 2) {
+  } else if ((this.platformType) >= 0.3 && (this.platformType) < 1.5) {
     this.platform2 = new Class.platformMove({
                 scene: this,
                 key: '',
@@ -65,13 +65,13 @@ createPlatform = () => {
                 w: 100,
                 h: 100,
               });
-    (this.platform2).x = (Math.random() * ((this.cameras.main.width) - 50) + 50);
+    (this.platform2).x = (Math.random() * (((this.cameras.main.width) - 100) - 50) + 50);
     (this.platform2).y = (-20);
-    (this.platform2).setDisplaySize(30, 20);
+    (this.platform2).setDisplaySize(25, 20);
     (this.platform2).play('fieldMove');
     (this.platform2).body.updateFromGameObject();
     (this.platformGroup).add((this.platform2));
-  } else if ((this.platformType) >= 2 && (this.platformType) < 3) {
+  } else if ((this.platformType) >= 1.5 && (this.platformType) < 1.8) {
     this.platform3 = new Class.platformOnce({
                 scene: this,
                 key: '',
@@ -80,9 +80,9 @@ createPlatform = () => {
                 w: 100,
                 h: 100,
               });
-    (this.platform3).x = (Math.random() * ((this.cameras.main.width) - 50) + 50);
+    (this.platform3).x = (Math.random() * (((this.cameras.main.width) - 100) - 50) + 50);
     (this.platform3).y = (-20);
-    (this.platform3).setDisplaySize(30, 20);
+    (this.platform3).setDisplaySize(25, 20);
     (this.platform3).play('fieldOnce');
     (this.platform3).body.updateFromGameObject();
     (this.platformGroup).add((this.platform3));
@@ -95,9 +95,9 @@ createPlatform = () => {
                 w: 100,
                 h: 100,
               });
-    (this.platform1).x = (Math.random() * ((this.cameras.main.width) - 50) + 50);
+    (this.platform1).x = (Math.random() * (((this.cameras.main.width) - 100) - 50) + 50);
     (this.platform1).y = (-20);
-    (this.platform1).setDisplaySize(30, 20);
+    (this.platform1).setDisplaySize(25, 20);
     (this.platform1).play('field');
     (this.platform1).body.updateFromGameObject();
     (this.platformGroup).add((this.platform1));
@@ -151,7 +151,7 @@ this.initPlatform();
     // update start
 this.player.update();
 
-if (((this.platformGroup).getLength()) < 10) {
+if (((this.platformGroup).getLength()) < 8) {
   this.createPlatform();
 }
 

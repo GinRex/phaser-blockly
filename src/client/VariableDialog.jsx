@@ -85,7 +85,6 @@ class VariableDialog extends React.Component {
               </Button>
               <Button
                 onClick={() => {
-                  // console.log(this.state.variableName);
                   const promise = new Promise((resolve, reject) => {
                     resolve(this.props.addInstance({
                       variableName: this.state.variableName,

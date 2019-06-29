@@ -47,7 +47,7 @@ export const updateSceneWorkspace = scenes => ({
 });
 
 export const addClass = name => dispatch => axios.post('http://localhost:8080/api/addClass', { name }, {}).then((res) => {
-  console.log(res.data);
+  // console.log(res.data);
   dispatch(addObject({
     name: res.data,
     workspace: ['', '', ''],
@@ -64,7 +64,7 @@ export const uploadImage = file => (dispatch) => {
   // console.log(file.file);
   const data = new FormData();
   data.append('file', file);
-  console.log(data.file);
+  // console.log(data.file);
   return axios.post('http://localhost:8080/api/uploadImage', data, {}).then((res) => {
     dispatch({
       type: 'ADD_IMAGE',
@@ -77,7 +77,7 @@ export const uploadImage = file => (dispatch) => {
 };
 
 export const uploadAudio = file => (dispatch) => {
-  console.log(file);
+  // console.log(file);
   const data = new FormData();
   data.append('file', file);
   return axios.post('http://localhost:8080/api/uploadAudio', data, {}).then((res) => {
@@ -92,13 +92,13 @@ export const uploadAudio = file => (dispatch) => {
 };
 
 export const uploadJson = (file, name) => (dispatch) => {
-  console.log(file);
+  // console.log(file);
   const data = new FormData();
   data.append('file', file);
   data.append('filename', name);
-  console.log(data);
+  // console.log(data);
   return axios.post('http://localhost:8080/api/uploadJson', data, {}).then((res) => {
-    console.log(res.data);
+    // console.log(res.data);
     dispatch({
       type: 'UPDATE_JSON_SPRITE',
       data: res.data,
@@ -223,7 +223,7 @@ export const addInstancesToScene = scene => (dispatch) => {
 export const saveGame = gameName => (dispatch) => {
   console.log('xxx');
   const data = localStorage.getItem('persist:root');
-  console.log('data', data);
+  // console.log('data', data);
   return axios.post('http://localhost:8080/api/saveGame', { gameName, data }, {}).then((res) => {
     console.log('aaa');
   });

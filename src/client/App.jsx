@@ -5,6 +5,7 @@ import Fab from '@material-ui/core/Fab';
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import CodeIcon from '@material-ui/icons/Code';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 
@@ -120,6 +121,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.blockly = React.createRef();
+    this.iframeRef = React.createRef();
   }
   state = {
     iframeContainerW: 600,
@@ -131,6 +133,7 @@ class App extends Component {
     openGame: true,
     openClassHandler: false,
     openSceneHandler: false,
+    iframeKey: 0,
   }
 
   componentDidMount() { }
@@ -229,7 +232,17 @@ class App extends Component {
               })}
             >
               <div className={classes.drawerHeader} style={{ marginTop: 50, justifyContent: 'flex-end' }}>
-
+                <IconButton
+                  color="inherit"
+                  aria-label="Zoom in"
+                  onClick={() => {
+                    this.setState({ iframeKey: this.state.iframeKey + 1 });
+                  }}
+                  edge="start"
+                  className={clsx(classes.menuButton)}
+                >
+                  <RefreshIcon />
+                </IconButton>
                 <IconButton
                   color="inherit"
                   aria-label="Zoom in"
@@ -272,11 +285,17 @@ class App extends Component {
                 }}
               >
                 <iframe
+                  key={this.state.iframeKey}
                   width={`${this.state.iframeW}%`}
                   height={`${this.state.iframeH}%`}
                   style={{
                     WebkitTransform: `scale(${this.state.scaleRatio})`,
                     WebkitTransformOrigin: 'top left',
+                  }}
+                  ref={(node) => {
+                    if (node) {
+                      this.iframeRef = node;
+                    }
                   }}
                   title="phaser-game"
                   id="sandboxed"

@@ -148,7 +148,7 @@ class SpriteEditor extends React.Component {
         animations.push(sprite.frame.h);
       });
     });
-    console.log(animations, animInfo.frames);
+    // console.log(animations, animInfo.frames);
 
     // const info = animInfo.frames;
     // for (let i = 0; i < info.length; i++) {
@@ -208,11 +208,9 @@ class SpriteEditor extends React.Component {
                       style={{ flexDirection: 'column' }}
                       selected={this.state.selectedImageKey === image.filename}
                       onClick={(event) => {
-                        // console.log(event.currentTarget.getAttribute('key'));
                         const imageFile = new window.Image();
                         imageFile.src = event.target.src;
                         this.setState({ selectedImageKey: event.target.alt, imageFile, frameKey: image.name });
-                        console.log(this.state);
                       }
                       }
                     >
