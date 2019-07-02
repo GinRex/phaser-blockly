@@ -62,7 +62,11 @@ const ClassHandler = (props) => {
       <Dialog
         // ref={this.modalRef}
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          console.log('###');
+          props.blockly.updateToolBox(props.gameObjects, props.scenes, props.slectedSceneIndex, props.slectedGameobjectIndex, props.images);
+        }}
         scroll="paper"
         aria-labelledby="scroll-dialog-title"
         // TransitionComponent={Transition}
@@ -81,12 +85,14 @@ const ClassHandler = (props) => {
           />
           <Button
             onClick={() => {
-              const promise = new Promise((resolve, reject) => {
-                resolve(props.addClass(classname));
-              });
-              promise.then((res) => {
-                props.blockly.updateToolBox(props.gameObjects, props.scenes, props.slectedSceneIndex, props.slectedGameobjectIndex, props.images);
-              });
+              props.addClass(classname);
+              // const promise = new Promise((resolve, reject) => {
+              // resolve(props.addClass(classname));
+              // });
+              // promise.then((res) => {
+              //   console.log('###', res);
+              //   props.blockly.updateToolBox(props.gameObjects, props.scenes, props.slectedSceneIndex, props.slectedGameobjectIndex, props.images);
+              // });
             }}
             variant="contained"
             color="primary"
