@@ -603,7 +603,7 @@ class BlocklyPart extends React.Component {
       }
       this.props.updateFunctions(currentScene ? 'scene' : 'object', currentScene.key || currentGameobject.key, functionList);
     }
-    document.getElementById('code').value = code;
+    // document.getElementById('code').value = code;
   };
 
   render() {

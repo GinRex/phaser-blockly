@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContentText from '@material-ui/core/DialogContentText';
+
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
@@ -38,6 +41,7 @@ const styles = theme => ({
 const ClassHandler = (props) => {
   const [open, setOpen] = useState(false);
   const [classname, setClassname] = useState('');
+  const [noticeDialog, setNoticeDialog] = useState(0);
 
   return (
     <div >
@@ -86,6 +90,11 @@ const ClassHandler = (props) => {
           <Button
             onClick={() => {
               props.addClass(classname);
+              setTimeout(() => {
+                setNoticeDialog(1);
+                setOpen(false);
+                props.blockly.updateToolBox(props.gameObjects, props.scenes, props.slectedSceneIndex, props.slectedGameobjectIndex, props.images);
+              }, 800);
               // const promise = new Promise((resolve, reject) => {
               // resolve(props.addClass(classname));
               // });
@@ -169,6 +178,31 @@ const ClassHandler = (props) => {
           />
         </div>
       </SwipeableDrawer>
+      <Dialog
+        open={noticeDialog}
+        onClose={() => {
+          setNoticeDialog(0);
+          props.blockly.updateToolBox(props.gameObjects, props.scenes, props.slectedSceneIndex, props.slectedGameobjectIndex, props.images);
+        }}
+      // aria-labelledby="draggable-dialog-title"
+      >
+        <DialogContent>
+          <DialogContentText>
+            Class Created!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setNoticeDialog(0);
+              props.blockly.updateToolBox(props.gameObjects, props.scenes, props.slectedSceneIndex, props.slectedGameobjectIndex, props.images);
+            }}
+            color="primary"
+          >
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

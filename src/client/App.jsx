@@ -303,7 +303,7 @@ class App extends Component {
                 />
 
               </div>
-              <textarea id="code" style={{ height: 200, width: 400 }} value="" />
+              {/* <textarea id="code" style={{ height: 200, width: 400 }} value="" /> */}
               {/* <textarea id="xml" style={{ height: 200, width: 400 }} value="" /> */}
             </main>
             <ClassHandler down={this.state.openClassHandler} blockly={this.blockly} setClassHandler={val => this.setState({ openClassHandler: val })} />

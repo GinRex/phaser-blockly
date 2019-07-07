@@ -123,6 +123,8 @@ class SpriteEditor extends React.Component {
       repeat: -1,
     },
     animationPV: { example: [] },
+    dialogConfirm: 0,
+    noticeDialog: 0,
   }
 
   onChangeHandler = (event, name) => {
@@ -433,7 +435,7 @@ class SpriteEditor extends React.Component {
                 />
                 <Button
                   onClick={() => {
-                    this.props.addAnimations(this.state.animInfo);
+                    this.setState({ dialogConfirm: 1 });
                     // this.props.updateToolBoxAnimations();
                   }}
                   variant="contained"
@@ -445,6 +447,61 @@ class SpriteEditor extends React.Component {
               </div>
             </div>
           </DialogContent>
+        </Dialog>
+        <Dialog
+          open={this.state.dialogConfirm}
+          onClose={() => this.setState({ dialogConfirm: 0 })}
+          fullWidth
+          maxWidth="xs"
+        // aria-labelledby="draggable-dialog-title"
+        >
+          <DialogContent>
+            <DialogContentText>
+              Create this Animation?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                this.setState({ dialogConfirm: 0 });
+              }}
+              color="primary"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                this.props.addAnimations(this.state.animInfo);
+                setTimeout(() => {
+                  this.setState({ noticeDialog: 1, dialogConfirm: 0 });
+                }, 500);
+              }}
+              color="primary"
+            >
+              Create
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={this.state.noticeDialog}
+          onClose={() => this.setState({ noticeDialog: 0 })}
+        // aria-labelledby="draggable-dialog-title"
+        >
+          <DialogContent>
+            <DialogContentText>
+              Animation Created!
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                this.setState({ noticeDialog: 0 });
+              }}
+              color="primary"
+            >
+              Ok
+            </Button>
+          </DialogActions>
         </Dialog>
       </div>
     );

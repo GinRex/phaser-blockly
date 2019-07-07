@@ -1,4 +1,3 @@
-import scene2 from './Scenes/scene2';
 import boot from './Scenes/boot';
 import Phaser from 'phaser';
 import scene1 from './Scenes/scene1';
@@ -16,7 +15,7 @@ width: 500,
     arcade: {
       gravity: {
         // game gravity start
-y: 0
+y: 600
         // game gravity end
       },
       // game debug start
@@ -27,7 +26,6 @@ debug: false,
   scene: [
     boot,
     scene1,
-scene2,
     // scenes go here
   ],
 };

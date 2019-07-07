@@ -17,91 +17,48 @@ class scene1 extends Phaser.Scene {
   }
 
   // functions start
-initPlatform = () => {
-  this.i = 0;
-  for (var count = 0; count < 8; count++) {
-    this.platform1 = new Class.platform({
-                scene: this,
-                key: '',
-                x: 0,
-                y: 0,
-                w: 100,
-                h: 100,
-              });
-    (this.platform1).x = (Math.random() * ((this.cameras.main.width) - 50) + 50);
-    (this.platform1).y = (((this.cameras.main.height) / 8) * (this.i));
-    (this.platform1).setDisplaySize(25, 20);
-    (this.platform1).play('field');
-    (this.platform1).body.updateFromGameObject();
-    this.i = ((this.i) + 1);
-    (this.platformGroup).add((this.platform1));
-  }
+collideCallback = () => {
+  this.gameOver = 1;
+  (this.center).x = ((this.cameras.main.width) / 2);
+  (this.center).y = ((this.cameras.main.height) / 2);
+  (this.centerVar).setVisible(true);
+  (this.center).play('gameover');
+  (this.hitSound).play();
 
 }
 
-createPlatform = () => {
-  this.platformType = (Math.random() * (3 - 0) + 0);
-  if ((this.platformType) < 0.3) {
-    this.platform4 = new Class.platformBreak({
-                scene: this,
-                key: '',
-                x: 0,
-                y: 0,
-                w: 100,
-                h: 100,
-              });
-    (this.platform4).x = (Math.random() * (((this.cameras.main.width) - 100) - 50) + 50);
-    (this.platform4).y = (-20);
-    (this.platform4).setDisplaySize(25, 20);
-    (this.platform4).play('fieldBreak');
-    (this.platform4).body.updateFromGameObject();
-    (this.platformGroup).add((this.platform4));
-  } else if ((this.platformType) >= 0.3 && (this.platformType) < 1.5) {
-    this.platform2 = new Class.platformMove({
-                scene: this,
-                key: '',
-                x: 0,
-                y: 0,
-                w: 100,
-                h: 100,
-              });
-    (this.platform2).x = (Math.random() * (((this.cameras.main.width) - 100) - 50) + 50);
-    (this.platform2).y = (-20);
-    (this.platform2).setDisplaySize(25, 20);
-    (this.platform2).play('fieldMove');
-    (this.platform2).body.updateFromGameObject();
-    (this.platformGroup).add((this.platform2));
-  } else if ((this.platformType) >= 1.5 && (this.platformType) < 1.8) {
-    this.platform3 = new Class.platformOnce({
-                scene: this,
-                key: '',
-                x: 0,
-                y: 0,
-                w: 100,
-                h: 100,
-              });
-    (this.platform3).x = (Math.random() * (((this.cameras.main.width) - 100) - 50) + 50);
-    (this.platform3).y = (-20);
-    (this.platform3).setDisplaySize(25, 20);
-    (this.platform3).play('fieldOnce');
-    (this.platform3).body.updateFromGameObject();
-    (this.platformGroup).add((this.platform3));
-  } else {
-    this.platform1 = new Class.platform({
-                scene: this,
-                key: '',
-                x: 0,
-                y: 0,
-                w: 100,
-                h: 100,
-              });
-    (this.platform1).x = (Math.random() * (((this.cameras.main.width) - 100) - 50) + 50);
-    (this.platform1).y = (-20);
-    (this.platform1).setDisplaySize(25, 20);
-    (this.platform1).play('field');
-    (this.platform1).body.updateFromGameObject();
-    (this.platformGroup).add((this.platform1));
-  }
+initPipeGroup = () => {
+  this.pt1 = new Class.Pipe({
+              scene: this,
+              key: '',
+              x: 0,
+              y: 0,
+              w: 100,
+              h: 100,
+            });
+  (this.pt1).x = ((this.cameras.main.width) + 100);
+  (this.pt1).y = (Math.random() * (200 - 0) + 0);
+  (this.pt1).play('pipeTop');
+  (this.pt1).body.setSize(25, 160, false);
+  this.pb1 = new Class.Pipe({
+              scene: this,
+              key: '',
+              x: 0,
+              y: 0,
+              w: 100,
+              h: 100,
+            });
+  (this.pb1).x = ((this.cameras.main.width) + 100);
+  (this.pb1).y = (((this.pt1).y) + 600);
+  (this.pb1).play('pipeBot');
+  (this.pb1).body.setSize(25, 160, false);
+  (this.pipeGroup).add((this.pt1));
+  (this.pipeGroup).add((this.pb1));
+
+}
+
+restart = () => {
+  this.scene.restart();
 
 }
 
@@ -110,16 +67,14 @@ createPlatform = () => {
 
   create() {
     // create start
-(this.bg) = this.add.tileSprite(((this.cameras.main.width) / 2), ((this.cameras.main.height) / 2), (this.cameras.main.width), (this.cameras.main.height), 'Bg');
-this.score = 0;
-(this.scoreLabel) = this.add.text(15, 15, (this.score));
-(this.scoreLabel).setFontFamily('monospace');
-(this.scoreLabel).setFontSize(60);
-(this.scoreLabel).setColor('#993300');
-(this.scoreLabel).setDepth(100);
-this.gameOver = false;
+(this.wingFlapSound) = this.sound.add('wing.wav', { loop: false});
+(this.pointSound) = this.sound.add('point.wav', { loop: false});
+(this.hitSound) = this.sound.add('hit.wav', { loop: false});
+(this.dieSound) = this.sound.add('die.wav', { loop: false});
 
-this.player = new Class.dude({
+this.gameOver = 0;
+this.gamestart = 1;
+this.Bg1 = new Class.Background({
             scene: this,
             key: '',
             x: 0,
@@ -127,41 +82,74 @@ this.player = new Class.dude({
             w: 100,
             h: 100,
           });
-(this.player).x = ((this.cameras.main.width) / 2);
-(this.player).y = ((this.cameras.main.height) / 1.5);
-(this.player).setDisplaySize(20, 20);
-(this.player).body.setSize(90, 75, false);
-(this.player).play('standLeft');
-(this.player).body.setGravityY(500);
-(this.player).body.setCollideWorldBounds(true);
-(this.player).body.setBounce(1);
-this.playerVar = (this.player);
-this.cameraWidth = (this.cameras.main.width);
-this.cameraHeight = (this.cameras.main.height);
+(this.Bg1).setDisplaySize(250, 200);
+(this.Bg1).play('Bg');
+this.center = new Class.Label({
+            scene: this,
+            key: '',
+            x: 0,
+            y: 0,
+            w: 100,
+            h: 100,
+          });
+(this.center).x = ((this.cameras.main.width) / 2);
+(this.center).y = ((this.cameras.main.height) / 3);
+(this.center).play('ready');
+this.s = 0;
+(this.center).setDepth(100);
+(this.scoreLabel) = this.add.text(((this.cameras.main.width) / 2 - 40), ((this.cameras.main.height) / 6), (this.s));
+(this.scoreLabel).setFontFamily('monospace');
+(this.scoreLabel).setFontSize(110);
+(this.scoreLabel).setDepth(99);
+this.centerVar = (this.center);
+(this.scoreLabel).setColor('#666666');
 
-this.platformGroup = (this.add.group({runChildUpdate: true, allowGravity: false}));
-this.initPlatform();
+this.Player = new Class.Bird({
+            scene: this,
+            key: '',
+            x: 0,
+            y: 0,
+            w: 100,
+            h: 100,
+          });
+(this.Player).x = ((this.cameras.main.width) / 2);
+(this.Player).y = ((this.cameras.main.height) / 2);
+(this.Player).play('fly');
+(this.Player).body.setSize(17, 12, false);
+(this.Player).body.setBounce(3);
+this.initPos = ((this.Player).x);
+this.pipeGroup = (this.add.group({runChildUpdate: true, allowGravity: false}));
+this.initPipeGroup();
+
+(this.collider1) = this.physics.add.collider((this.Player), (this.pipeGroup),   this.collideCallback);
+(this.collider2) = this.physics.add.collider((this.Player), (this.pipeGroup),   this.collideCallback);
 
     // create end
   }
 
 
-
   update() {
     // update start
-this.player.update();
+this.Player.update();
 
-if (((this.platformGroup).getLength()) < 8) {
-  this.createPlatform();
+if (!(this.gameOver)) {
+  if (((this.Player).x) > ((this.pt1).x) + 100) {
+    this.initPipeGroup();
+  }
+  if (((this.Player).x) == ((this.pt1).x) + 30) {
+    this.s = ((this.s) + 1);
+    (this.scoreLabel).setText((this.s));
+    (this.pointSound).play();
+  }
 }
 
-if (this.gameOver) {
-  this.scene.start('scene2');
+if (((this.Player).y) > (this.cameras.main.height) + 150) {
+  (this.dieSound).play();
+  this.gameOver = 1;
 }
 
     // update end
   }
-
 }
 
 export default scene1;

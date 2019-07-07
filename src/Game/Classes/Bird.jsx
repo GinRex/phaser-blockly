@@ -2,7 +2,7 @@ import * as Motion from '../../client/HandleMotion';
 import * as Sprite from '../../client/HandleSprite';
 import key from '../keyBoardInput';
 
-export default class dude extends Phaser.GameObjects.Sprite {
+export default class Bird extends Phaser.GameObjects.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, config.key);
     // config.scene.physics.world.enable(this);
@@ -15,6 +15,9 @@ export default class dude extends Phaser.GameObjects.Sprite {
     this.setDisplaySize(config.w, config.h);
     // create start
 this.scene.physics.world.enable((this), 0);
+if ((this.scene.gamestart) == 0) {
+  (this).body.setAllowGravity(false);
+}
 
     // create end
   }
@@ -24,31 +27,19 @@ this.scene.physics.world.enable((this), 0);
   // functions end
 
   update() {
+    // console.log(this.scene.gameOver);
     // update start
-if (key(this.scene.input.keyboard, 'LEFT').isDown) {
-  Motion.foward( this, -5);
-  (this).play('standLeft');
+if (!(this.scene.gameOver) && (key(this.scene.input.keyboard, 'SPACE').isDown)) {
+  this.body.setVelocity(0, (-205));
+  (this.scene.centerVar).setVisible(false);
+  (this.scene.wingFlapSound).play();
 }
-
-if (key(this.scene.input.keyboard, 'RIGHT').isDown) {
-  Motion.foward( this, 5);
-  (this).play('standRight');
+if ((this.scene.gameOver) && (key(this.scene.input.keyboard, 'SPACE').isDown)) {
+  this.scene.restart();
 }
-
-if (((this).x) < -10) {
-  Motion.set_x_to(this, this.scene.cameraWidth);
-}
-if (((this).x) > (this.scene.cameraWidth)) {
-  Motion.set_x_to(this, -10);
-}
-
-if (((this).y) <= (this.scene.cameraHeight) / 2) {
-  this.scene.score = ((this.scene.score) + 1);
-  (this.scene.scoreLabel).setText((this.scene.score));
-}
-
-if (((this).y) > (this.scene.cameraHeight) + 30) {
-  this.scene.gameOver = true;
+if (this.scene.gameOver) {
+  Motion.point_in_direction_degrees(this, 135);
+  (this.scene.dieSound).play();
 }
 
     // update end
