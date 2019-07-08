@@ -21,6 +21,16 @@ const styles = theme => ({
   },
 });
 
+function makeid(length) {
+  let result = '';
+  const characters = '&ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 const SubHeader = props => (
   <div >
     <Button
@@ -41,7 +51,8 @@ const SubHeader = props => (
     </Button>
     <Button
       onClick={() => {
-        const myWindow = window.open(`${window.location.href}game_iframe.html`, 'game');
+        const id = makeid(16);
+        const myWindow = window.open(`${window.location.href}game_iframe.html#${id}`, 'game');
         myWindow.focus();
         // if (this.props.slectedGameobjectIndex) {
         //   this.props.updateGame(this.props.gameObjects);
