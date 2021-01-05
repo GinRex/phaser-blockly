@@ -23,7 +23,7 @@
     "@material-ui/icons": "^4.0.1",
     "@material-ui/lab": "^4.0.0-alpha.14",
     "@material-ui/styles": "^4.0.1",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-preset-react-hmre": "^1.1.1",
     "body-parser": "^1.18.3",
     "clsx": "^1.0.4",
